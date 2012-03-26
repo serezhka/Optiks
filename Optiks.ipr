@@ -30,6 +30,7 @@
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
+  <component name="IdProvider" IDEtalkID="AA2236D8C4EA8F71ECA1CE70907DBA4E" />
   <component name="InspectionProjectProfileManager">
     <profiles>
       <profile version="1.0" is_locked="false">
@@ -170,17 +171,19 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Optiks.iml" filepath="$PROJECT_DIR$/Optiks.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Optiks.iml" filepath="$PROJECT_DIR$/Optiks.iml" />
     </modules>
   </component>
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="Android 2.3.3 Platform" project-jdk-type="Android SDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
   </component>
+  <component name="WebServicesPlugin" addRequiredLibraries="true" />
   <component name="libraryTable">
     <library name="libs">
       <CLASSES>
@@ -190,6 +193,21 @@
       <JAVADOC />
       <SOURCES />
       <jarDirectory url="file://$PROJECT_DIR$/libs" recursive="false" />
+    </library>
+    <library name="libs1">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/libs/andenginesvgtextureregionextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andengineaugmentedrealityextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andenginelivewallpaperextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andenginephysicsbox2dextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andenginemultitouchextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andenginetexturepackerextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andengine.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andenginemultiplayerextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andenginemodplayerextension.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
     </library>
   </component>
 </project>
