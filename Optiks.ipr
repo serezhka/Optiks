@@ -209,6 +209,21 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="libs2">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/libs/andenginesvgtextureregionextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andengineaugmentedrealityextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andenginelivewallpaperextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andenginephysicsbox2dextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andenginemultitouchextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andenginetexturepackerextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andengine.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andenginemultiplayerextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/libs/andenginemodplayerextension.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
   </component>
 </project>
 
