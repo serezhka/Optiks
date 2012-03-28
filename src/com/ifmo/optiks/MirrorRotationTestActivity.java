@@ -76,19 +76,8 @@ public class MirrorRotationTestActivity extends BaseGameActivity {
         /* Rotation control */
         final int x = CAMERA_WIDTH - this.rotationBaseTextureRegion.getWidth();
         final int y = CAMERA_HEIGHT - this.rotationBaseTextureRegion.getHeight();
-        final KnobRotationControl rotationControl = new KnobRotationControl(x, y, this.mCamera, this.rotationBaseTextureRegion, this.rotationKnobTextureRegion, 0.1f, new KnobRotationControl.IKnobRotationControlListener() {
-            @Override
-            public void onControlChange(final BaseOnScreenControl pBaseOnScreenControl, final float pValueX, final float pValueY) {
-                if (!(pValueX == 0 && pValueY == 0)) {
-                    mirror.setRotation(MathUtils.radToDeg((float) Math.atan2(pValueX, -pValueY)));
-                }
-            }
-
-            @Override
-            public void onControlClick(final KnobRotationControl pKnobRotationControl) {
-                /* Nothing */
-            }
-        });
+        final KnobRotationControl rotationControl = new KnobRotationControl(x, y, this.mCamera, this.rotationBaseTextureRegion, this.rotationKnobTextureRegion, 0.1f);
+        rotationControl.setTarget(mirror);
         rotationControl.getControlBase().setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
         rotationControl.getControlBase().setAlpha(0.5f);
 

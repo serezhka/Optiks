@@ -3,6 +3,7 @@ package com.ifmo.optiks.control;
 import android.util.FloatMath;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.camera.hud.controls.BaseOnScreenControl;
+import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.input.touch.TouchEvent;
 import org.anddev.andengine.input.touch.detector.ClickDetector;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
@@ -15,7 +16,16 @@ import org.anddev.andengine.util.MathUtils;
 
 public class KnobRotationControl extends BaseOnScreenControl implements ClickDetector.IClickDetectorListener {
 
+    private KnobRotationControlListener listener;
+
     private final ClickDetector mClickDetector = new ClickDetector(this);
+
+    public KnobRotationControl(final float pX, final float pY, final Camera pCamera, final TextureRegion pControlBaseTextureRegion, final TextureRegion pControlKnobTextureRegion, final float pTimeBetweenUpdates) {
+        super(pX, pY, pCamera, pControlBaseTextureRegion, pControlKnobTextureRegion, pTimeBetweenUpdates, new KnobRotationControlListener());
+        this.mClickDetector.setEnabled(false);
+        this.listener = (KnobRotationControlListener) super.getOnScreenControlListener();
+        onUpdateControlKnob(0, 30);
+    }
 
     public KnobRotationControl(final float pX, final float pY, final Camera pCamera, final TextureRegion pControlBaseTextureRegion, final TextureRegion pControlKnobTextureRegion, final float pTimeBetweenUpdates, final IKnobRotationControlListener pAnalogOnScreenControlListener) {
         super(pX, pY, pCamera, pControlBaseTextureRegion, pControlKnobTextureRegion, pTimeBetweenUpdates, pAnalogOnScreenControlListener);
@@ -60,6 +70,14 @@ public class KnobRotationControl extends BaseOnScreenControl implements ClickDet
     @Override
     protected void onHandleControlKnobReleased() {
 
+    }
+
+    public Sprite getTarget() {
+        return listener.getSprite();
+    }
+
+    public void setTarget(Sprite target) {
+        listener.setSprite(target);
     }
 
     public interface IKnobRotationControlListener extends IOnScreenControlListener {
