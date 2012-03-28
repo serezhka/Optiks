@@ -54,11 +54,11 @@ public class KnobRotationControl extends BaseOnScreenControl implements ClickDet
 
     @Override
     protected void onUpdateControlKnob(final float pRelativeX, final float pRelativeY) {
-        if (pRelativeX * pRelativeX + pRelativeY * pRelativeY == 0.25f) {
+        if (pRelativeX * pRelativeX + pRelativeY * pRelativeY == 0.20f) {
             super.onUpdateControlKnob(pRelativeX, pRelativeY);
         } else {
             final float angleRad = MathUtils.atan2(pRelativeY, pRelativeX);
-            super.onUpdateControlKnob(FloatMath.cos(angleRad) * 0.5f, FloatMath.sin(angleRad) * 0.5f);
+            super.onUpdateControlKnob(FloatMath.cos(angleRad) * 0.35f, FloatMath.sin(angleRad) * 0.35f);
         }
     }
 
@@ -78,7 +78,7 @@ public class KnobRotationControl extends BaseOnScreenControl implements ClickDet
 
     public void setTarget(Sprite target) {
         final float angleRad = (float) Math.toRadians(target.getAlpha());
-        onUpdateControlKnob(FloatMath.cos(angleRad) * 0.5f, FloatMath.sin(angleRad) * 0.5f);
+        onUpdateControlKnob(FloatMath.cos(angleRad) * 0.35f, FloatMath.sin(angleRad) * 0.35f);
         listener.setSprite(target);
     }
 

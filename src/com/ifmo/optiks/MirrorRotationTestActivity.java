@@ -79,6 +79,7 @@ public class MirrorRotationTestActivity extends BaseGameActivity {
         rotationControl.setTarget(mirror);
         rotationControl.getControlBase().setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
         rotationControl.getControlBase().setAlpha(0.5f);
+        rotationControl.getControlKnob().setScale(0.5f);
 
         scene.setChildScene(rotationControl);
 
