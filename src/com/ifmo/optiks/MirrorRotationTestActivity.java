@@ -3,7 +3,6 @@ package com.ifmo.optiks;
 import com.ifmo.optiks.control.KnobRotationControl;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
-import org.anddev.andengine.engine.camera.hud.controls.BaseOnScreenControl;
 import org.anddev.andengine.engine.handler.physics.PhysicsHandler;
 import org.anddev.andengine.engine.options.EngineOptions;
 import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
@@ -16,7 +15,6 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
-import org.anddev.andengine.util.MathUtils;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -68,6 +66,7 @@ public class MirrorRotationTestActivity extends BaseGameActivity {
         final int centerY = (CAMERA_HEIGHT - this.mirrorTextureRegion.getHeight()) / 2;
 
         final Sprite mirror = new Sprite(centerX, centerY, this.mirrorTextureRegion);
+        mirror.setAlpha(45);
         final PhysicsHandler physicsHandler = new PhysicsHandler(mirror);
         mirror.registerUpdateHandler(physicsHandler);
 

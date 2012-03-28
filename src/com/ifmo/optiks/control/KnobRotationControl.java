@@ -24,7 +24,7 @@ public class KnobRotationControl extends BaseOnScreenControl implements ClickDet
         super(pX, pY, pCamera, pControlBaseTextureRegion, pControlKnobTextureRegion, pTimeBetweenUpdates, new KnobRotationControlListener());
         this.mClickDetector.setEnabled(false);
         this.listener = (KnobRotationControlListener) super.getOnScreenControlListener();
-        onUpdateControlKnob(0, 30);
+        onUpdateControlKnob(0, 0);
     }
 
     public KnobRotationControl(final float pX, final float pY, final Camera pCamera, final TextureRegion pControlBaseTextureRegion, final TextureRegion pControlKnobTextureRegion, final float pTimeBetweenUpdates, final IKnobRotationControlListener pAnalogOnScreenControlListener) {
@@ -77,6 +77,8 @@ public class KnobRotationControl extends BaseOnScreenControl implements ClickDet
     }
 
     public void setTarget(Sprite target) {
+        final float angleRad = (float) Math.toRadians(target.getAlpha());
+        onUpdateControlKnob(FloatMath.cos(angleRad) * 0.5f, FloatMath.sin(angleRad) * 0.5f);
         listener.setSprite(target);
     }
 
