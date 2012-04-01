@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+
+
+        <Button
+                android:id="@+id/button1_connection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="connect to server"/>
+        <Button
+                android:id="@+id/button2_connection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="load from base"/>
+    <Button
+            android:id="@+id/button3_connection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="delite from base"/>
+
+
+    <TextView
+            android:id="@+id/text_connection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event:"
+            android:textStyle="bold"/>
+</LinearLayout>
