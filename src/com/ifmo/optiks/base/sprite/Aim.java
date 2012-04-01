@@ -9,7 +9,7 @@ import org.anddev.andengine.opengl.vertex.RectangleVertexBuffer;
  * Date: 27.03.12
  */
 
-public class Aim extends GameSprite{
+public class Aim extends GameSprite {
 
     public Aim(final float pX, final float pY, final TextureRegion pTextureRegion) {
         super(pX, pY, pTextureRegion);

@@ -1,8 +1,7 @@
 package com.ifmo.optiks.control;
 
+import com.badlogic.gdx.physics.box2d.Body;
 import org.anddev.andengine.engine.camera.hud.controls.BaseOnScreenControl;
-import org.anddev.andengine.entity.sprite.Sprite;
-import org.anddev.andengine.util.MathUtils;
 
 /**
  * Author: Sergey Fedorov (serezhka@xakep.ru)
@@ -11,20 +10,22 @@ import org.anddev.andengine.util.MathUtils;
 
 public class KnobRotationControlListener implements KnobRotationControl.IKnobRotationControlListener {
 
-    private Sprite sprite;
+    private Body body;
 
-    public Sprite getSprite() {
-        return sprite;
+    public Body getBody() {
+        return body;
     }
 
-    public void setSprite(Sprite sprite) {
-        this.sprite = sprite;
+    public void setBody(final Body body) {
+        this.body = body;
     }
 
     @Override
     public void onControlChange(final BaseOnScreenControl pBaseOnScreenControl, final float pValueX, final float pValueY) {
-        if (!(pValueX == 0 && pValueY == 0)) {
-            sprite.setRotation(MathUtils.radToDeg((float) Math.atan2(pValueX, -pValueY)));
+        if (body != null) {
+            if (!(pValueX == 0 && pValueY == 0)) {
+                body.setTransform(body.getPosition(), (float) Math.atan2(pValueX, -pValueY));
+            }
         }
     }
 

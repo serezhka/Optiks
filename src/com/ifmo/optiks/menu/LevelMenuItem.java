@@ -1,6 +1,5 @@
 package com.ifmo.optiks.menu;
 
-import org.anddev.andengine.entity.scene.menu.item.SpriteMenuItem;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 /**
@@ -9,9 +8,9 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
  */
 
 public class LevelMenuItem extends SimpleMenuItem implements MenuItem {
-    
+
     final int level;
-    
+
     public LevelMenuItem(final MenuItemType type, final int level, final TextureRegion region) {
         super(type, region);
         this.level = level;

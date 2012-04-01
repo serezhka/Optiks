@@ -1,21 +1,13 @@
 package com.ifmo.optiks.base;
 
-import static com.ifmo.optiks.base.BodyType.*;
+/**
+ * Author: Sergey Fedorov (serezhka@xakep.ru)
+ * Date: 21.03.12
+ */
 
 public enum ObjectType {
-    LASER(CIRCLE),
-    MIRROR(BOX),
-    BARRIER(BOX),
-    AIM(CIRCLE);
-    
-    private final BodyType type;
-    
-    ObjectType(final BodyType type) {
-        this.type = type;
-    }
-
-
-    public BodyType getBodyType() {
-        return type;
-    }
+    LASER,
+    MIRROR,
+    BARRIER,
+    AIM
 }

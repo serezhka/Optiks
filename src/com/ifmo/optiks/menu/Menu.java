@@ -1,8 +1,5 @@
 package com.ifmo.optiks.menu;
 
-import org.anddev.andengine.entity.scene.menu.MenuScene;
-import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
-
 import java.util.Collection;
 
 /**
@@ -13,11 +10,11 @@ import java.util.Collection;
 public interface Menu {
 
     public boolean hasParent();
-    
+
     public Menu getParent();
-    
+
     public void setParent(final Menu parent);
-    
+
     public int menuItemsCount();
 
     public Collection<MenuItem> getMenuItems();

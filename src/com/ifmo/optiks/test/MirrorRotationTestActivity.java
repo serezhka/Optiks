@@ -1,5 +1,6 @@
-package com.ifmo.optiks;
+package com.ifmo.optiks.test;
 
+import com.badlogic.gdx.physics.box2d.Body;
 import com.ifmo.optiks.control.KnobRotationControl;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
@@ -10,6 +11,7 @@ import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.entity.util.FPSLogger;
+import org.anddev.andengine.input.touch.TouchEvent;
 import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
@@ -23,7 +25,7 @@ import javax.microedition.khronos.opengles.GL10;
  * Date: 28.03.12
  */
 
-public class MirrorRotationTestActivity extends BaseGameActivity {
+public class MirrorRotationTestActivity extends BaseGameActivity implements Scene.IOnAreaTouchListener {
 
     private static final int CAMERA_WIDTH = 720;
     private static final int CAMERA_HEIGHT = 480;
@@ -35,6 +37,8 @@ public class MirrorRotationTestActivity extends BaseGameActivity {
     private TextureRegion rotationBaseTextureRegion;
     private TextureRegion rotationKnobTextureRegion;
 
+    private KnobRotationControl knob;
+
     @Override
     public Engine onLoadEngine() {
         this.mCamera = new Camera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
@@ -45,10 +49,10 @@ public class MirrorRotationTestActivity extends BaseGameActivity {
     public void onLoadResources() {
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
 
-        BitmapTextureAtlas mBitmapTextureAtlas = new BitmapTextureAtlas(128, 32, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        final BitmapTextureAtlas mBitmapTextureAtlas = new BitmapTextureAtlas(128, 32, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         this.mirrorTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mBitmapTextureAtlas, this, "mirror.png", 0, 0);
 
-        BitmapTextureAtlas mOnScreenControlTexture = new BitmapTextureAtlas(256, 128, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        final BitmapTextureAtlas mOnScreenControlTexture = new BitmapTextureAtlas(256, 128, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         this.rotationBaseTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mOnScreenControlTexture, this, "control/onscreen_control_base.png", 0, 0);
         this.rotationKnobTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mOnScreenControlTexture, this, "control/onscreen_control_knob.png", 128, 0);
 
@@ -66,27 +70,42 @@ public class MirrorRotationTestActivity extends BaseGameActivity {
         final int centerY = (CAMERA_HEIGHT - this.mirrorTextureRegion.getHeight()) / 2;
 
         final Sprite mirror = new Sprite(centerX, centerY, this.mirrorTextureRegion);
+        final Sprite mirror1 = new Sprite(centerX + 100, centerY + 100, this.mirrorTextureRegion);
+
         mirror.setAlpha(45);
         final PhysicsHandler physicsHandler = new PhysicsHandler(mirror);
         mirror.registerUpdateHandler(physicsHandler);
+        mirror1.registerUpdateHandler(physicsHandler);
 
         scene.attachChild(mirror);
+        scene.attachChild(mirror1);
+
+        scene.setOnAreaTouchListener(this);
+        scene.registerTouchArea(mirror);
+        scene.registerTouchArea(mirror1);
 
         /* Rotation control */
         final int x = CAMERA_WIDTH - this.rotationBaseTextureRegion.getWidth();
         final int y = CAMERA_HEIGHT - this.rotationBaseTextureRegion.getHeight();
-        final KnobRotationControl rotationControl = new KnobRotationControl(x, y, this.mCamera, this.rotationBaseTextureRegion, this.rotationKnobTextureRegion, 0.1f);
-        rotationControl.setTarget(mirror);
-        rotationControl.getControlBase().setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-        rotationControl.getControlBase().setAlpha(0.5f);
-        rotationControl.getControlKnob().setScale(0.5f);
+        knob = new KnobRotationControl(x, y, this.mCamera, this.rotationBaseTextureRegion, this.rotationKnobTextureRegion, 0.1f);
+        /*knob.setTarget(mirror);*/
+        knob.getControlBase().setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        knob.getControlBase().setAlpha(0.5f);
+        knob.getControlKnob().setScale(0.5f);
 
-        scene.setChildScene(rotationControl);
+        scene.setChildScene(knob);
 
         return scene;
     }
 
     @Override
     public void onLoadComplete() {
+    }
+
+    @Override
+    public boolean onAreaTouched(final TouchEvent touchEvent, final Scene.ITouchArea iTouchArea, final float v, final float v1) {
+        final Sprite sprite = (Sprite) iTouchArea;
+        knob.setTarget((Body) sprite.getUserData());
+        return true;
     }
 }
