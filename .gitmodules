@@ -1,0 +1,3 @@
+[submodule "plugins/AndEngine"]
+	path = plugins/AndEngine
+	url = git://github.com/nicolasgramlich/AndEngine.git
