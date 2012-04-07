@@ -28,8 +28,8 @@ public abstract class MouseJointOptiks extends MouseJointDef {
 
         super.bodyA = groundBody;
         super.bodyB = body;
-        super.dampingRatio = 1.0f;
-        super.frequencyHz = 40;
+        super.dampingRatio = 10f;
+        super.frequencyHz = 30;
         super.maxForce = (100.0f * body.getMass());
         super.collideConnected = true;
 

@@ -4,6 +4,7 @@ import android.util.FloatMath;
 import com.badlogic.gdx.physics.box2d.Body;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.camera.hud.controls.BaseOnScreenControl;
+import org.anddev.andengine.extension.physics.box2d.PhysicsConnector;
 import org.anddev.andengine.input.touch.TouchEvent;
 import org.anddev.andengine.input.touch.detector.ClickDetector;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
@@ -24,12 +25,15 @@ public class KnobRotationControl extends BaseOnScreenControl implements ClickDet
         super(pX, pY, pCamera, pControlBaseTextureRegion, pControlKnobTextureRegion, pTimeBetweenUpdates, new KnobRotationControlListener());
         this.mClickDetector.setEnabled(false);
         this.listener = (KnobRotationControlListener) super.getOnScreenControlListener();
-        onUpdateControlKnob(0, 0);
+        onUpdateControlKnob(pX, pY);
+        setVisible(false);
+        //super.unregisterTouchArea(super.getControlBase());
+        //super.registerTouchArea(super.getControlKnob());
     }
 
     public KnobRotationControl(final float pX, final float pY, final Camera pCamera, final TextureRegion pControlBaseTextureRegion, final TextureRegion pControlKnobTextureRegion, final float pTimeBetweenUpdates, final IKnobRotationControlListener pAnalogOnScreenControlListener) {
         super(pX, pY, pCamera, pControlBaseTextureRegion, pControlKnobTextureRegion, pTimeBetweenUpdates, pAnalogOnScreenControlListener);
-        this.mClickDetector.setEnabled(false);
+        this.mClickDetector.setEnabled(true);
         onUpdateControlKnob(0, 0);
     }
 
@@ -80,14 +84,37 @@ public class KnobRotationControl extends BaseOnScreenControl implements ClickDet
     }
 
     public void setTarget(final Body target) {
-        if (target != null && target != listener.getBody()) {
-            final float angleRad = target.getAngle() - (float) Math.PI / 2;
-            onUpdateControlKnob(FloatMath.cos(angleRad) * 0.35f, FloatMath.sin(angleRad) * 0.35f);
+        if (target != null) {
             listener.setBody(target);
+            final float x = target.getPosition().x * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT - getControlBase().getWidth() / 2;
+            final float y = target.getPosition().y * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT - getControlBase().getHeight() / 2;
+            setPosition(x, y);
+            final float angleRad = target.getAngle() - (float) Math.PI / 2;
+            onUpdateControlKnob(FloatMath.cos(angleRad), FloatMath.sin(angleRad));
+            listener.setBody(target);
+        } else {
+            listener.setBody(null);
         }
     }
 
     public interface IKnobRotationControlListener extends IOnScreenControlListener {
         public void onControlClick(final KnobRotationControl pKnobRotationControl);
+    }
+
+    @Override
+    public void setPosition(final float x, final float y) {
+        super.getControlBase().setPosition(x, y);
+        super.getControlKnob().setPosition(x, y);
+    }
+
+    @Override
+    public boolean isVisible() {
+        return super.getControlKnob().isVisible();
+    }
+
+    @Override
+    public void setVisible(final boolean pVisible) {
+        super.getControlBase().setVisible(false);
+        super.getControlKnob().setVisible(pVisible);
     }
 }

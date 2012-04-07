@@ -1,16 +1,13 @@
 package com.ifmo.optiks;
 
+import android.content.Context;
+import android.os.Looper;
 import android.util.Log;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.ifmo.optiks.base.LevelField;
-import com.ifmo.optiks.base.physics.Fixtures;
-import com.ifmo.optiks.base.physics.LaserBeam;
-import com.ifmo.optiks.base.physics.LaserBullet;
-import com.ifmo.optiks.base.physics.MouseJointOptiks;
-import com.ifmo.optiks.base.sprite.GameSprite;
-import com.ifmo.optiks.control.KnobRotationControl;
+import com.ifmo.optiks.base.physics.*;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.options.EngineOptions;
@@ -25,13 +22,8 @@ import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
 import org.anddev.andengine.extension.physics.box2d.util.Vector2Pool;
 import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.anddev.andengine.input.touch.TouchEvent;
-import org.anddev.andengine.opengl.texture.TextureOptions;
-import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
-import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
-import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
-
-import javax.microedition.khronos.opengles.GL10;
+import org.anddev.andengine.util.MathUtils;
 
 public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSceneTouchListener, Scene.IOnAreaTouchListener {
 
@@ -40,8 +32,8 @@ public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSce
 
     private String level = "{\"objects\":[" +
             "{\"type\":\"LASER\",\"pY\":2.0,\"rotation\":0.0,\"width\":50,\"height\":50,\"pX\":2.0}," +
-            "{\"type\":\"MIRROR\",\"pY\":4.0,\"rotation\":0.0,\"width\":50,\"height\":50,\"pX\":7.0}," +
-            "{\"type\":\"MIRROR\",\"pY\":8.0,\"rotation\":30.0,\"width\":100,\"height\":70,\"pX\":15.0}," +
+            "{\"type\":\"MIRROR\",\"pY\":4.0,\"rotation\":0.0,\"width\":200,\"height\":30,\"pX\":7.0}," +
+            "{\"type\":\"MIRROR\",\"pY\":8.0,\"rotation\":90.0,\"width\":100,\"height\":30,\"pX\":15.0}," +
             "{\"type\":\"AIM\",\"pY\":14.0,\"rotation\":0.0,\"width\":50,\"height\":50,\"pX\":21.0}," +
             "{\"type\":\"BARRIER\",\"pY\":5.0,\"rotation\":0.0,\"width\":50,\"height\":50,\"pX\":12.0}" +
             "]}";
@@ -52,22 +44,19 @@ public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSce
     private LaserBullet bullet;
 
     private LaserBeam laserBeam;
+    private LaserSight laserSight;
 
     private MouseJointOptiks mouseJointOptiks;
     private MouseJoint mouseJoint;
 
     volatile private boolean bulletIsMoving = false;
-    volatile private boolean bulletIsOnEndPosition = false;
+    volatile private boolean mirrorIsSelected = false;
+    volatile Body mirrorSelectedBody;
 
-    final private Fixtures fixtures = new Fixtures();
+    private final Fixtures fixtures = new Fixtures();
 
     private LevelField field;
     private PhysicsWorld physicsWorld;
-
-    private TextureRegion rotationBaseTextureRegion;
-    private TextureRegion rotationKnobTextureRegion;
-
-    private KnobRotationControl knob;
 
     final static private String TAG = "MainOptiksActivityTAG";
 
@@ -96,10 +85,6 @@ public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSce
     public void onLoadResources() {
         field = new LevelField(this);
         field.setFixtures(fixtures);
-        final BitmapTextureAtlas mOnScreenControlTexture = new BitmapTextureAtlas(256, 128, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        this.rotationBaseTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mOnScreenControlTexture, this, "control/onscreen_control_base.png", 0, 0);
-        this.rotationKnobTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(mOnScreenControlTexture, this, "control/onscreen_control_knob.png", 128, 0);
-        this.mEngine.getTextureManager().loadTextures(mOnScreenControlTexture);
     }
 
     @Override
@@ -108,13 +93,6 @@ public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSce
 
         final Scene scene = field.onLoadScene(level);
         field.setBackground(new ColorBackground(0.09804f, 0.6274f, 0.8784f));
-
-        knob = new KnobRotationControl(50, 50, camera, this.rotationBaseTextureRegion, this.rotationKnobTextureRegion, 0.1f);
-        knob.getControlBase().setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-        knob.getControlBase().setAlpha(0.5f);
-        knob.getControlKnob().setScale(0.5f);
-
-        scene.setChildScene(knob);
 
         physicsWorld = field.getPhysicsWorld();
 
@@ -135,7 +113,12 @@ public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSce
 
         scene.registerUpdateHandler(this.physicsWorld);
 
+        laserSight = new LaserSight(x, y, -1, -1);
+        scene.attachChild(laserSight);
+        laserSight.setVisible(false);
+
         laserBeam = new LaserBeam(scene, 0, 1, 0, 3);
+        final Context context = this;
 
         this.physicsWorld.setContactListener(new ContactListener() {
             @Override
@@ -145,22 +128,15 @@ public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSce
                     final Body bodyA = contact.getFixtureA().getBody();
                     final Vector2 vec = contact.getWorldManifold().getPoints()[0];
                     laserBeam.addLine(x, y, vec.x * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT, vec.y * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT);
-                    final GameSprite sprite = (GameSprite) bodyA.getUserData();
                     if (field.getMirrors().contains(bodyA)) {
-                        Log.d("bullet", "mirror");
                     } else {
                         if (field.getWalls().contains(bodyA) || field.getBarriers().contains(bodyA)) {
                             bullet.stop();
                             bulletIsMoving = false;
-                            bulletIsOnEndPosition = true;
-
-                            Log.d("bullet", "wall");
                         } else if (bodyA == field.getAim()) {
                             bullet.stop();
                             bulletIsMoving = false;
-                            bulletIsOnEndPosition = true;
-
-                            Log.d("bullet", "aim");
+                            makeText("Good shoot!");
                         }
                     }
                 }
@@ -193,30 +169,30 @@ public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSce
         if (this.physicsWorld != null) {
             switch (touchEvent.getAction()) {
                 case TouchEvent.ACTION_DOWN:
-                    Log.d("error!!!", "fixtureError");
-
-                    if (bulletIsMoving) {
-
+                    if (mirrorIsSelected) {
+                        final float x = mirrorSelectedBody.getPosition().x * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT - touchEvent.getX();
+                        final float y = mirrorSelectedBody.getPosition().y * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT - touchEvent.getY();
+                        final float angle = MathUtils.radToDeg(MathUtils.atan2(y, x));
+                        mirrorSelectedBody.setTransform(mirrorSelectedBody.getPosition(), MathUtils.degToRad(angle));
                     } else {
-                        if (bulletIsOnEndPosition) {
-                            bulletIsOnEndPosition = false;
-
-                            laserBeam.resetBeam();
-                            final Body body = (Body) field.getLaser();
-                            bullet.setTransform(Vector2Pool.obtain(body.getPosition()));
-                        } else {
-                            bulletIsMoving = true;
-                            final Vector2 vec = Vector2Pool.obtain(10000 * (touchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT - this.bullet.getPosition().x), 10000 *
-                                    (touchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT - this.bullet.getPosition().y));
-                            this.bullet.setLinearVelocity((new Vector2(vec)));
-                        }
+                        laserSight.setPosition(laserSight.getX1(), laserSight.getY1(), touchEvent.getX(), touchEvent.getY());
+                        laserSight.setVisible(true);
                     }
                     return true;
                 case TouchEvent.ACTION_MOVE:
-                    if (mouseJoint != null) {
-                        final Vector2 vec = Vector2Pool.obtain(touchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, touchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-                        mouseJoint.setTarget(vec);
-                        Vector2Pool.recycle(vec);
+                    if (mirrorIsSelected) {
+                        final float x = mirrorSelectedBody.getPosition().x * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT - touchEvent.getX();
+                        final float y = mirrorSelectedBody.getPosition().y * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT - touchEvent.getY();
+                        final float angle = MathUtils.radToDeg(MathUtils.atan2(y, x));
+                        mirrorSelectedBody.setTransform(mirrorSelectedBody.getPosition(), MathUtils.degToRad(angle));
+                    } else {
+                        if (mouseJoint != null) {
+                            final Vector2 vec = Vector2Pool.obtain(touchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, touchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+                            mouseJoint.setTarget(vec);
+                            Vector2Pool.recycle(vec);
+                        } else {
+                            laserSight.setPosition(laserSight.getX1(), laserSight.getY1(), touchEvent.getX(), touchEvent.getY());
+                        }
                     }
                     return true;
                 case TouchEvent.ACTION_UP:
@@ -225,6 +201,8 @@ public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSce
                         physicsWorld.destroyJoint(mouseJoint);
                         mouseJoint = null;
                         mouseJointOptiks = null;
+                    } else {
+
                     }
                     return true;
             }
@@ -238,18 +216,37 @@ public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSce
         final Body body = (Body) object.getUserData();
         switch (touchEvent.getAction()) {
             case TouchEvent.ACTION_DOWN:
-                knob.setTarget(body);
+                if (field.getAim().equals(body)) {
+                    if (!mirrorIsSelected) {
+                        if (bulletIsMoving) {
+
+                        } else {
+                            Log.d("laser", "ok");
+                            bullet.setTransform(Vector2Pool.obtain(field.getLaser().getPosition()));
+                            laserBeam.resetBeam();
+                            bulletIsMoving = true;
+                            final Vector2 vec = Vector2Pool.obtain(10000 * (laserSight.getX2() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT - this.bullet.getPosition().x), 10000 *
+                                    (laserSight.getY2() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT - this.bullet.getPosition().y));
+                            this.bullet.setLinearVelocity((new Vector2(vec)));
+                        }
+                    }
+                } else {
+
+                }
                 return true;
             case TouchEvent.ACTION_MOVE:
-                knob.setTarget(body);
-                if (mouseJointOptiks == null) {
-                    mouseJointOptiks = new MouseJointOptiks(object, groundBody, touchAreaLocalX, touchAreaLocalY) {
-                        @Override
-                        public MouseJoint getMouseJoint() {
-                            return (MouseJoint) physicsWorld.createJoint(this);
-                        }
-                    };
-                    mouseJoint = mouseJointOptiks.getMouseJoint();
+                if (mirrorIsSelected) {
+
+                } else {
+                    if (mouseJointOptiks == null) {
+                        mouseJointOptiks = new MouseJointOptiks(object, groundBody, touchAreaLocalX, touchAreaLocalY) {
+                            @Override
+                            public MouseJoint getMouseJoint() {
+                                return (MouseJoint) physicsWorld.createJoint(this);
+                            }
+                        };
+                        mouseJoint = mouseJointOptiks.getMouseJoint();
+                    }
                 }
                 return true;
             case TouchEvent.ACTION_OUTSIDE:
@@ -266,9 +263,27 @@ public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSce
                     physicsWorld.destroyJoint(mouseJoint);
                     mouseJoint = null;
                     mouseJointOptiks = null;
+                } else {
+                    if (body != field.getAim() && (mirrorSelectedBody == null || mirrorSelectedBody == body)) {
+                        if (!mirrorIsSelected) {
+                            body.setType(BodyDef.BodyType.DynamicBody);
+                            mirrorSelectedBody = body;
+                            object.setAlpha(0.5f);
+                        } else {
+                            body.setType(BodyDef.BodyType.StaticBody);
+                            mirrorSelectedBody = null;
+                            object.setAlpha(1f);
+                        }
+                        mirrorIsSelected = !mirrorIsSelected;
+                    }
                 }
                 return true;
         }
         return true;
+    }
+
+    public void makeText(final String str) {
+        Log.d("toast", str);
+        Looper.prepare();
     }
 }
