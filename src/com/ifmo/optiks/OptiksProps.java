@@ -16,6 +16,9 @@ public class OptiksProps {
 
     public static String getProperty(final String key) {
         init();
+        if (properties == null) {
+            return null;
+        }
         return properties.getProperty(key);
     }
 
