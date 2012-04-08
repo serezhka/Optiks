@@ -22,6 +22,7 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
+import org.anddev.andengine.util.MathUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -58,10 +59,10 @@ public class LevelField {
         this.activity = gameActivity;
         this.bitmapTextureAtlas = new BitmapTextureAtlas(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
+        this.barrierTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.bitmapTextureAtlas, activity, "barrier.png", 0, 0);
         this.aimTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.bitmapTextureAtlas, activity, "aim.png", 0, 200);
         this.laserTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.bitmapTextureAtlas, activity, "laser.png", 200, 200);
-        this.mirrorTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.bitmapTextureAtlas, activity, "mirror.png", 300, 200);
-        this.barrierTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.bitmapTextureAtlas, activity, "barrier.png", 0, 0);
+        this.mirrorTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.bitmapTextureAtlas, activity, "mirror.png", 0, 400);
         this.activity.getEngine().getTextureManager().loadTexture(bitmapTextureAtlas);
     }
 
@@ -225,9 +226,10 @@ public class LevelField {
     }
 
     private void addSprite(final GameSprite sprite, final Body body, final ObjectGsonContainer container) {
+        body.setUserData(sprite);
         sprite.setUserData(body);
         physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body));
-        body.setTransform(container.pX, container.pY, container.rotation);
+        body.setTransform(container.pX, container.pY, MathUtils.degToRad(container.rotation));
         switch (container.type) {
             case LASER:
                 laserBody = body;
@@ -240,6 +242,7 @@ public class LevelField {
                 barrierBodies.add(body);
                 break;
             case AIM:
+                scene.registerTouchArea(sprite);
                 aimBody = body;
                 break;
         }

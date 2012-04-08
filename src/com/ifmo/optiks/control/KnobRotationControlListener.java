@@ -1,5 +1,6 @@
 package com.ifmo.optiks.control;
 
+import android.util.Log;
 import com.badlogic.gdx.physics.box2d.Body;
 import org.anddev.andengine.engine.camera.hud.controls.BaseOnScreenControl;
 
@@ -22,9 +23,12 @@ public class KnobRotationControlListener implements KnobRotationControl.IKnobRot
 
     @Override
     public void onControlChange(final BaseOnScreenControl pBaseOnScreenControl, final float pValueX, final float pValueY) {
+        Log.d("knob", "ok");
         if (body != null) {
             if (!(pValueX == 0 && pValueY == 0)) {
+                // body.setType(BodyDef.BodyType.DynamicBody);
                 body.setTransform(body.getPosition(), (float) Math.atan2(pValueX, -pValueY));
+                // body.setType(BodyDef.BodyType.StaticBody);
             }
         }
     }
