@@ -16,15 +16,16 @@ import com.ifmo.optiks.base.gson.GsonFromServer;
 import com.ifmo.optiks.provider.OptiksProviderMetaData;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
+import org.anddev.andengine.engine.handler.timer.ITimerCallback;
+import org.anddev.andengine.engine.handler.timer.TimerHandler;
 import org.anddev.andengine.engine.options.EngineOptions;
 import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.entity.scene.menu.MenuScene;
 import org.anddev.andengine.entity.scene.menu.item.IMenuItem;
-import org.anddev.andengine.entity.scene.menu.item.TextMenuItem;
-import org.anddev.andengine.entity.scene.menu.item.decorator.ColorMenuItemDecorator;
 import org.anddev.andengine.entity.sprite.Sprite;
+import org.anddev.andengine.entity.text.ChangeableText;
 import org.anddev.andengine.entity.util.FPSLogger;
 import org.anddev.andengine.input.touch.TouchEvent;
 import org.anddev.andengine.input.touch.detector.ScrollDetector;
@@ -61,10 +62,12 @@ public class MenuActivity extends BaseGameActivity implements Scene.IOnSceneTouc
     private Sprite background;
     protected Camera camera;
     protected Scene mainScene;
+    protected Scene splashScene;
     protected MenuScene menuScene;
 
     private Font font;
     private TextureRegion backgroundTextureRegion;
+    private TextureRegion splashTextureRegion;
 
     private SurfaceScrollDetector scrollDetector;
 
@@ -78,84 +81,33 @@ public class MenuActivity extends BaseGameActivity implements Scene.IOnSceneTouc
 
     @Override
     public void onLoadResources() {
-
-        FontFactory.setAssetBasePath("gfx/font/");
-
-        final BitmapTextureAtlas fontTexture = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        this.font = FontFactory.createFromAsset(fontTexture, this, "Plok.ttf", 48, true, Color.WHITE);
-        this.mEngine.getTextureManager().loadTexture(fontTexture);
-        this.getFontManager().loadFont(this.font);
-
-        TextureRegion region;
-        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/");
-
-        final BitmapTextureAtlas backgroundAtlas = new BitmapTextureAtlas(1024, 1024, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
-        backgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(backgroundAtlas, this, "background.jpg", 0, 0);
-
-        final BitmapTextureAtlas menuAtlas = new BitmapTextureAtlas(256, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-
-        menu = new SimpleMenu();
-
-        final Menu levelChoiceMenu = new SimpleMenu();
-        levelChoiceMenu.setParent(menu);
-
-        region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuAtlas, this, "menu_level_1_rus.png", 0, 150);
-        final MenuItem level1 = new LevelMenuItem(MenuItemType.LEVEL, 1, region);
-
-        region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuAtlas, this, "menu_level_2_rus.png", 0, 200);
-        final MenuItem level2 = new LevelMenuItem(MenuItemType.LEVEL, 2, region);
-
-        region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuAtlas, this, "menu_back_rus.png", 0, 250);
-        final MenuItem back = new SimpleMenuItem(MenuItemType.BACK, region);
-
-        levelChoiceMenu.addMenuItem(level1);
-        levelChoiceMenu.addMenuItem(level2);
-        levelChoiceMenu.addMenuItem(back);
-
-        region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuAtlas, this, "menu_level_choice_rus.png", 0, 0);
-        final MenuItem levelChoice = new SimpleMenuItem(MenuItemType.LEVEL_CHOICE, region);
-        levelChoice.setContextMenu(levelChoiceMenu);
-
-        region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuAtlas, this, "menu_game_info_rus.png", 0, 50);
-        final MenuItem gameInfo = new SimpleMenuItem(MenuItemType.LOAD_LEVELS, region);
-
-        region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuAtlas, this, "menu_quit_rus.png", 0, 100);
-        final MenuItem quit = new SimpleMenuItem(MenuItemType.QUIT, region);
-
-        menu.addMenuItem(levelChoice);
-        menu.addMenuItem(gameInfo);
-        menu.addMenuItem(quit);
-
-        mEngine.getTextureManager().loadTexture(backgroundAtlas);
-        mEngine.getTextureManager().loadTexture(menuAtlas);
+        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
+        final BitmapTextureAtlas splashAtlas = new BitmapTextureAtlas(1024, 1024, TextureOptions.NEAREST);
+        splashTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(splashAtlas, this, "splash.png", 0, 0);
+        mEngine.getTextureManager().loadTextures(splashAtlas);
     }
 
     @Override
     public Scene onLoadScene() {
-
-        scrollDetector = new SurfaceScrollDetector(this);
-        mEngine.registerUpdateHandler(new FPSLogger());
-
-        mainScene = new Scene();
-
-        /* Set background */
-        mainScene.setBackground(new ColorBackground(0.09804f, 0.6274f, 0.8784f));
-        final int x = (CAMERA_WIDTH - this.backgroundTextureRegion.getWidth()) / 2;
-        final int y = (CAMERA_HEIGHT - this.backgroundTextureRegion.getHeight()) / 2;
-        background = new Sprite(x, y, this.backgroundTextureRegion);
-        background.setScale(1.25f);
-        mainScene.attachChild(background);
-
-        /* Set Menu Scene */
-        menuScene = createMenuScene(menu);
-        //mainScene.setChildScene(menuScene, false, true, true);
-        mainScene.setChildScene(menuScene);
-
-        return mainScene;
+        splashScene = new Scene();
+        splashScene.setBackgroundEnabled(false);
+        final Sprite splash = new Sprite(0, 0, splashTextureRegion);
+        splash.setSize(CAMERA_WIDTH, CAMERA_HEIGHT);
+        splashScene.attachChild(splash);
+        return this.splashScene;
     }
 
     @Override
     public void onLoadComplete() {
+        mEngine.registerUpdateHandler(new TimerHandler(3f, new ITimerCallback() {
+            @Override
+            public void onTimePassed(final TimerHandler pTimerHandler) {
+                mEngine.unregisterUpdateHandler(pTimerHandler);
+                loadResources();
+                loadScenes();
+                mEngine.setScene(mainScene);
+            }
+        }));
     }
 
     @Override
@@ -242,23 +194,91 @@ public class MenuActivity extends BaseGameActivity implements Scene.IOnSceneTouc
         return false;
     }
 
+    private void loadResources() {
+
+        FontFactory.setAssetBasePath("gfx/font/");
+
+        final BitmapTextureAtlas fontTexture = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        this.font = FontFactory.createFromAsset(fontTexture, this, "Plok.ttf", 24, true, Color.rgb(255, 140, 0));
+        this.mEngine.getTextureManager().loadTexture(fontTexture);
+        this.getFontManager().loadFont(this.font);
+
+        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/");
+
+        final BitmapTextureAtlas backgroundAtlas = new BitmapTextureAtlas(1024, 1024, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
+        backgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(backgroundAtlas, this, "background.jpg", 0, 0);
+
+        final BitmapTextureAtlas menuAtlas = new BitmapTextureAtlas(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+
+        final TextureRegion region;
+        region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuAtlas, this, "menu_empty.png", 0, 150);
+
+        menu = new SimpleMenu();
+
+        final Menu levelChoiceMenu = new SimpleMenu();
+        levelChoiceMenu.setParent(menu);
+
+        final MenuItem level1 = new LevelMenuItem(MenuItemType.LEVEL, 1, region);
+
+        final MenuItem level2 = new LevelMenuItem(MenuItemType.LEVEL, 2, region);
+
+        final MenuItem back = new SimpleMenuItem(MenuItemType.BACK, region);
+
+        levelChoiceMenu.addMenuItem(level1);
+        levelChoiceMenu.addMenuItem(level2);
+        levelChoiceMenu.addMenuItem(back);
+
+        final MenuItem levelChoice = new SimpleMenuItem(MenuItemType.LEVEL_CHOICE, region);
+        levelChoice.setContextMenu(levelChoiceMenu);
+
+        final MenuItem loadLevels = new SimpleMenuItem(MenuItemType.LOAD_LEVELS, region);
+
+        final MenuItem gameInfo = new SimpleMenuItem(MenuItemType.GAME_INFO, region);
+
+        final MenuItem quit = new SimpleMenuItem(MenuItemType.QUIT, region);
+
+        menu.addMenuItem(levelChoice);
+        menu.addMenuItem(loadLevels);
+        menu.addMenuItem(gameInfo);
+        menu.addMenuItem(quit);
+
+        mEngine.getTextureManager().loadTexture(backgroundAtlas);
+        mEngine.getTextureManager().loadTexture(menuAtlas);
+    }
+
+    private void loadScenes() {
+
+        scrollDetector = new SurfaceScrollDetector(this);
+        mEngine.registerUpdateHandler(new FPSLogger());
+
+        mainScene = new Scene();
+
+        /* Set background */
+        mainScene.setBackground(new ColorBackground(0.09804f, 0.6274f, 0.8784f));
+        final int x = (CAMERA_WIDTH - this.backgroundTextureRegion.getWidth()) / 2;
+        final int y = (CAMERA_HEIGHT - this.backgroundTextureRegion.getHeight()) / 2;
+        background = new Sprite(x, y, this.backgroundTextureRegion);
+        background.setScale(1.25f);
+        mainScene.attachChild(background);
+
+        /* Set Menu Scene */
+        menuScene = createMenuScene(menu);
+        mainScene.setChildScene(menuScene);
+    }
+
     private MenuScene createMenuScene(final Menu menu) {
         activeMenu = menu;
         final MenuScene menuScene = new MenuScene(camera);
         final Collection<MenuItem> menuItems = menu.getMenuItems();
         for (final MenuItem menuItem : menuItems) {
             menuItem.setParent(null);
+            menuItem.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
             if (menuItem instanceof LevelMenuItem) {
                 final LevelMenuItem item = (LevelMenuItem) menuItem;
-                final IMenuItem levelMenuItem = new ColorMenuItemDecorator(new TextMenuItem(item.getID(), this.font, item.getName() + item.getLevel()), 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-                levelMenuItem.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-                menuScene.addMenuItem(levelMenuItem);
-            } else if (menuItem.getType() == MenuItemType.LOAD_LEVELS) {
-                final IMenuItem levelMenuItem = new ColorMenuItemDecorator(new TextMenuItem(menuItem.getID(), this.font, menuItem.getName()), 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
-                levelMenuItem.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-                menuScene.addMenuItem(levelMenuItem);
+                item.setText(new ChangeableText(0, 0, font, item.getName() + item.getLevel()));
+                menuScene.addMenuItem(item);
             } else {
-                menuItem.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+                menuItem.setText(new ChangeableText(0, 0, font, menuItem.getName()));
                 menuScene.addMenuItem(menuItem);
             }
         }
