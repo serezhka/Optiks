@@ -328,7 +328,6 @@ public class GameSceneManager {
                         }
                     } else {
                         if (mouseJointOptiks == null) {
-                            body.getFixtureList().get(0).setDensity(10);
                             mouseJointOptiks = new MouseJointOptiks(object, groundBody, touchAreaLocalX, touchAreaLocalY) {
                                 @Override
                                 public MouseJoint getMouseJoint() {
@@ -352,10 +351,7 @@ public class GameSceneManager {
                         if (filter.notMoving(touchAreaLocalX, touchAreaLocalY)) {
                             if (System.currentTimeMillis() - currentTimer >= timer) {
                                 if (rjo != null) {
-                                    activity.getEngine().vibrate(100);
-                                    Log.d(TAG, "" + mouseJoint.getBodyB().getFixtureList().get(0).getDensity());
-                                    mouseJoint.getBodyB().getFixtureList().get(0).setDensity(0f);
-                                    Log.d(TAG, "" + mouseJoint.getBodyB().getFixtureList().get(0).getDensity());
+//                                    activity.getEngine().vibrate(100);
                                     physicsWorld.destroyJoint(mouseJoint);
                                     mouseJointOptiks = new MouseJointOptiks(object, groundBody, touchAreaLocalX, touchAreaLocalY) {
                                         @Override

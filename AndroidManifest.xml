@@ -10,12 +10,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
     <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 
-<<<<<<< HEAD
 
     <application android:label="@string/app_name">
-=======
-    <application android:label="@string/app_name" >
->>>>>>> a88750dbbd99ddf6a0cd33aa633a68e4a3bb6402
         <provider android:name="com.ifmo.optiks.provider.OptiksProvider"
                   android:authorities="com.ifmo.optiks.Provider"/>
 
@@ -27,11 +23,8 @@
             </intent-filter>
         </activity>
 
-<<<<<<< HEAD
         <activity android:name=".test.MirrorRotationTestActivity"/>
         <activity android:name=".MainActivity"/>
-=======
->>>>>>> a88750dbbd99ddf6a0cd33aa633a68e4a3bb6402
         <activity android:name=".test.LevelView"/>
     </application>
 </manifest> 

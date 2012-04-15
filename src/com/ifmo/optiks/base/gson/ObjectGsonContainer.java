@@ -1,7 +1,7 @@
 package com.ifmo.optiks.base.gson;
 
-import com.ifmo.optiks.base.ObjectType;
 import com.ifmo.optiks.base.sprite.GameSprite;
+import com.ifmo.optiks.base.sprite.ObjectType;
 
 /**
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
@@ -23,6 +23,7 @@ public class ObjectGsonContainer {
         this.height = gs.getHeight();
         rotation = gs.getRotation();
         this.type = gs.getType();
+
     }
 
     public ObjectGsonContainer(final float pX, final float pY, final float width, final float height, final float rotation, final ObjectType type) {

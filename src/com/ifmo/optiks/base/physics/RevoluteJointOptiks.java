@@ -22,15 +22,18 @@ public class RevoluteJointOptiks extends RevoluteJointDef {
 
     public void initialize(final Body body, final PhysicsWorld physicsWorld) {
         this.body = body;
+        this.body.getFixtureList().get(0).setDensity(10f);
+        this.body.resetMassData();
         final Body anchorBody = physicsWorld.createBody(new BodyDef());
         anchorBody.setType(BodyDef.BodyType.StaticBody);
         anchorBody.setTransform(body.getWorldCenter(), 0);
-
         super.initialize(anchorBody, body, anchorBody.getWorldCenter());
         joint = physicsWorld.createJoint(this);
     }
 
     public void destroyJoint(final PhysicsWorld physicsWorld) {
+        this.body.getFixtureList().get(0).setDensity(0f);
+        this.body.resetMassData();
         physicsWorld.destroyJoint(joint);
     }
 }
