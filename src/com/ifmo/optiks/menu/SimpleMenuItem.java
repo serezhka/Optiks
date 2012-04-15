@@ -1,6 +1,7 @@
 package com.ifmo.optiks.menu;
 
 import org.anddev.andengine.entity.scene.menu.item.SpriteMenuItem;
+import org.anddev.andengine.entity.text.ChangeableText;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 /**
@@ -42,5 +43,12 @@ public class SimpleMenuItem extends SpriteMenuItem implements MenuItem {
     @Override
     public void setContextMenu(final Menu menu) {
         this.contextMenu = menu;
+    }
+
+    @Override
+    public void setText(final ChangeableText text) {
+        this.detachChildren();
+        this.attachChild(text);
+        text.setPosition(this.getWidth() / 2 - text.getWidth() / 2, this.getHeight() / 2 - text.getHeight() / 2);
     }
 }

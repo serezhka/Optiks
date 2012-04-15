@@ -1,8 +1,7 @@
 package com.ifmo.optiks.base.sprite;
 
 
-import com.ifmo.optiks.base.ObjectType;
-import com.ifmo.optiks.base.gson.ObjectGsonContainer;
+import com.ifmo.optiks.base.gson.ObjectJsonContainer;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.vertex.RectangleVertexBuffer;
@@ -30,8 +29,8 @@ public abstract class GameSprite extends Sprite {
         super(pX, pY, pWidth, pHeight, pTextureRegion, pRectangleVertexBuffer);
     }
 
-    public ObjectGsonContainer getGsonContainer() {
-        return new ObjectGsonContainer(this);
+    public ObjectJsonContainer getGsonContainer() {
+        return new ObjectJsonContainer(this);
     }
 
     public abstract ObjectType getType();

@@ -186,12 +186,19 @@
   <component name="libraryTable">
     <library name="lib">
       <CLASSES>
-        <root url="file://$PROJECT_DIR$/lib" />
-        <root url="file://$PROJECT_DIR$/lib" />
+        <root url="jar://$PROJECT_DIR$/lib/andengine.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/andengineaugmentedrealityextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/andenginelivewallpaperextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/andenginemodplayerextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/andenginemultiplayerextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/andenginemultitouchextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/andenginephysicsbox2dextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/andenginesvgtextureregionextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/andenginetexturepackerextension.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/gson-2.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
-      <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
     </library>
   </component>
 </project>

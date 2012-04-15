@@ -6,13 +6,13 @@ package com.ifmo.optiks.base.gson;
 
 public class LevelGsonContainer {
 
-    private final ObjectGsonContainer[] objects;
+    private final ObjectJsonContainer[] objects;
 
     public LevelGsonContainer(final int size) {
-        this.objects = new ObjectGsonContainer[size];
+        this.objects = new ObjectJsonContainer[size];
     }
 
-    public ObjectGsonContainer[] getObjects() {
+    public ObjectJsonContainer[] getObjects() {
         return objects;
     }
 }

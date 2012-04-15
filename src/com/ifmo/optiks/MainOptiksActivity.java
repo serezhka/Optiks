@@ -3,7 +3,6 @@ package com.ifmo.optiks;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.util.Log;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
@@ -30,7 +29,6 @@ import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 import org.anddev.andengine.util.HorizontalAlign;
-import org.anddev.andengine.util.MathUtils;
 
 public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSceneTouchListener, Scene.IOnAreaTouchListener {
 
@@ -105,7 +103,7 @@ public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSce
         final BitmapTextureAtlas atlas = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR);
 
         soundDispatcher = new SoundDispatcher(this);
-        soundDispatcher.playBackGroundMusic();
+//        soundDispatcher.playBackGroundMusic();
 
         font = new Font(atlas, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32, true, Color.BLACK);
         this.mEngine.getTextureManager().loadTexture(atlas);
@@ -206,33 +204,16 @@ public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSce
                         scene.detachChild(toast);
                         toast = null;
                     }
-                    if (mirrorIsSelected) {
-                        final float x = mirrorSelectedBody.getPosition().x * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT - touchEvent.getX();
-                        final float y = mirrorSelectedBody.getPosition().y * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT - touchEvent.getY();
-                        final float angle = MathUtils.radToDeg(MathUtils.atan2(y, x));
-                        mirrorSelectedBody.setTransform(mirrorSelectedBody.getPosition(), MathUtils.degToRad(angle));
-                    } else {
-                        laserSight.setPosition(laserSight.getX1(), laserSight.getY1(), touchEvent.getX(), touchEvent.getY());
-                        laserSight.setVisible(true);
-                    }
+                    laserSight.setPosition(laserSight.getX1(), laserSight.getY1(), touchEvent.getX(), touchEvent.getY());
+                    laserSight.setVisible(true);
                     return true;
                 case TouchEvent.ACTION_MOVE:
-                    if (mirrorIsSelected) {
-                        final float x = mirrorSelectedBody.getPosition().x * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT - touchEvent.getX();
-                        final float y = mirrorSelectedBody.getPosition().y * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT - touchEvent.getY();
-                        final float angle = mirrorSelectedBody.getAngle();
-                        final float angleTemp = (MathUtils.atan2(y, x) - angle) / 100;
-                        for (int i = 0; i <= 100; i++) {
-                            mirrorSelectedBody.setTransform(mirrorSelectedBody.getPosition(), angle + angleTemp * i);
-                        }
+                    if (mouseJoint != null) {
+                        final Vector2 vec = Vector2Pool.obtain(touchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, touchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+                        mouseJoint.setTarget(vec);
+                        Vector2Pool.recycle(vec);
                     } else {
-                        if (mouseJoint != null) {
-                            final Vector2 vec = Vector2Pool.obtain(touchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, touchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-                            mouseJoint.setTarget(vec);
-                            Vector2Pool.recycle(vec);
-                        } else {
-                            laserSight.setPosition(laserSight.getX1(), laserSight.getY1(), touchEvent.getX(), touchEvent.getY());
-                        }
+                        laserSight.setPosition(laserSight.getX1(), laserSight.getY1(), touchEvent.getX(), touchEvent.getY());
                     }
                     return true;
                 case TouchEvent.ACTION_UP:
@@ -256,7 +237,7 @@ public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSce
         final Body body = (Body) object.getUserData();
         switch (touchEvent.getAction()) {
             case TouchEvent.ACTION_DOWN:
-                if (field.getAim().equals(body)) {
+                /*if (field.getAim().equals(body)) {
                     if (!mirrorIsSelected) {
                         if (bulletIsMoving) {
 
@@ -266,7 +247,7 @@ public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSce
                                 numberOfTryToast = new Text(numberOfTryToast.getX(), numberOfTryToast.getY(), font, "" + --numberOfTry, HorizontalAlign.CENTER);
                                 scene.attachChild(numberOfTryToast);
 
-                                soundDispatcher.playPlayShootLaser();
+//                                soundDispatcher.playPlayShootLaser();
                                 bullet.setTransform(Vector2Pool.obtain(field.getLaser().getPosition()));
                                 laserBeam.resetBeam();
                                 bulletIsMoving = true;
@@ -280,61 +261,22 @@ public class MainOptiksActivity extends BaseGameActivity implements Scene.IOnSce
                         }
                     }
                 } else {
+                    Log.d("ok", "ok");
 
-                }
+                }*/
+                mouseJointOptiks = new MouseJointOptiks(object, groundBody, touchAreaLocalX, touchAreaLocalY) {
+                    @Override
+                    public MouseJoint getMouseJoint() {
+                        return (MouseJoint) physicsWorld.createJoint(this);
+                    }
+                };
+                mouseJoint = mouseJointOptiks.getMouseJoint();
                 return true;
             case TouchEvent.ACTION_MOVE:
-                if (mirrorIsSelected) {
-
-                } else {
-                    if (mouseJointOptiks == null && (Body) object.getUserData() != field.getAim()) {
-                        mouseJointOptiks = new MouseJointOptiks(object, groundBody, touchAreaLocalX, touchAreaLocalY) {
-                            @Override
-                            public MouseJoint getMouseJoint() {
-                                return (MouseJoint) physicsWorld.createJoint(this);
-                            }
-                        };
-                        mouseJoint = mouseJointOptiks.getMouseJoint();
-                    }
-                }
                 return true;
             case TouchEvent.ACTION_OUTSIDE:
-                if (mouseJoint != null) {
-                    mouseJoint.getBodyB().setType(BodyDef.BodyType.StaticBody);
-                    physicsWorld.destroyJoint(mouseJoint);
-                    mouseJoint = null;
-                    mouseJointOptiks = null;
-                }
                 return true;
             case TouchEvent.ACTION_UP:
-                Log.d(TAG, "ActionUp");
-                if (mouseJoint != null) {
-                    mouseJoint.getBodyB().setType(BodyDef.BodyType.StaticBody);
-                    physicsWorld.destroyJoint(mouseJoint);
-                    mouseJoint = null;
-                    mouseJointOptiks = null;
-                } else {
-                    if (body != field.getAim() && (mirrorSelectedBody == null || mirrorSelectedBody == body)) {
-                        if (!mirrorIsSelected) {
-                            body.setType(BodyDef.BodyType.DynamicBody);
-
-                            /*RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
-                            Body anchorBody = physicsWorld.createBody(new BodyDef());
-                            anchorBody.setType(BodyDef.BodyType.StaticBody);
-                            anchorBody.setTransform(body.getWorldCenter(), body.getAngle());
-                            revoluteJointDef.initialize(anchorBody, body, anchorBody.getWorldCenter());
-                            physicsWorld.createJoint(revoluteJointDef);*/
-
-                            mirrorSelectedBody = body;
-                            object.setAlpha(0.5f);
-                        } else {
-                            body.setType(BodyDef.BodyType.StaticBody);
-                            mirrorSelectedBody = null;
-                            object.setAlpha(1f);
-                        }
-                        mirrorIsSelected = !mirrorIsSelected;
-                    }
-                }
                 return true;
         }
         return true;

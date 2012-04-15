@@ -1,7 +1,5 @@
 package com.ifmo.optiks.test;
 
-import com.badlogic.gdx.physics.box2d.Body;
-import com.ifmo.optiks.control.KnobRotationControl;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.handler.physics.PhysicsHandler;
@@ -17,8 +15,6 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
-
-import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Author: Sergey Fedorov (serezhka@xakep.ru)
@@ -37,7 +33,6 @@ public class MirrorRotationTestActivity extends BaseGameActivity implements Scen
     private TextureRegion rotationBaseTextureRegion;
     private TextureRegion rotationKnobTextureRegion;
 
-    private KnobRotationControl knob;
 
     @Override
     public Engine onLoadEngine() {
@@ -87,13 +82,12 @@ public class MirrorRotationTestActivity extends BaseGameActivity implements Scen
         /* Rotation control */
         final int x = CAMERA_WIDTH - this.rotationBaseTextureRegion.getWidth();
         final int y = CAMERA_HEIGHT - this.rotationBaseTextureRegion.getHeight();
-        knob = new KnobRotationControl(x, y, this.mCamera, this.rotationBaseTextureRegion, this.rotationKnobTextureRegion, 0.1f);
         /*knob.setTarget(mirror);*/
-        knob.getControlBase().setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        /*knob.getControlBase().setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
         knob.getControlBase().setAlpha(0.5f);
         knob.getControlKnob().setScale(0.5f);
 
-        scene.setChildScene(knob);
+        scene.setChildScene(knob);*/
 
         return scene;
     }
@@ -105,7 +99,7 @@ public class MirrorRotationTestActivity extends BaseGameActivity implements Scen
     @Override
     public boolean onAreaTouched(final TouchEvent touchEvent, final Scene.ITouchArea iTouchArea, final float v, final float v1) {
         final Sprite sprite = (Sprite) iTouchArea;
-        knob.setTarget((Body) sprite.getUserData());
+//        knob.setTarget((Body) sprite.getUserData());
         return true;
     }
 }

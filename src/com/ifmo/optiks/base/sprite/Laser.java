@@ -1,6 +1,5 @@
 package com.ifmo.optiks.base.sprite;
 
-import com.ifmo.optiks.base.ObjectType;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.vertex.RectangleVertexBuffer;
 

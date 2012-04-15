@@ -1,6 +1,7 @@
 package com.ifmo.optiks.menu;
 
 import org.anddev.andengine.entity.scene.menu.item.IMenuItem;
+import org.anddev.andengine.entity.text.ChangeableText;
 
 /**
  * Author: Sergey Fedorov (serezhka@xakep.ru)
@@ -18,4 +19,6 @@ public interface MenuItem extends IMenuItem {
     public Menu getContextMenu();
 
     public void setContextMenu(final Menu menu);
+
+    public void setText(final ChangeableText text);
 }

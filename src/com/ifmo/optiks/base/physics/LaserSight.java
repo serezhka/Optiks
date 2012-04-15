@@ -14,7 +14,7 @@ public class LaserSight extends Line {
 
     @Override
     public void setRotation(final float pRotation) {
-        super.setRotationCenter(super.getX1(), super.getY1());
-        super.setRotation(pRotation);    //To change body of overridden methods use File | Settings | File Templates.
+        super.setRotationCenter(getX1(), getY1());
+        super.setRotation(pRotation);
     }
 }
