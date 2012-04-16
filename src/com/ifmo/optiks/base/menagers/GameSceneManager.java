@@ -352,7 +352,15 @@ public class GameSceneManager {
                     return true;
                 case TouchEvent.ACTION_MOVE:
                     if (wasActionDown && aimBody != body) {
-                        if (filter.notMoving(touchAreaLocalX, touchAreaLocalY)) {
+                        if (filter != null && (filter.wasMove() || filter.wasTimer())) {
+                            if (mouseJoint != null) {
+                                final Vector2 vec = Vector2Pool.obtain(touchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, touchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+                                mouseJoint.setTarget(vec);
+                                Vector2Pool.recycle(vec);
+                            }
+                            return true;
+                        }
+                        if (filter != null && filter.notMoving(touchAreaLocalX, touchAreaLocalY)) {
                             if (System.currentTimeMillis() - currentTimer >= timer) {
                                 if (rjo != null) {
 //                                    activity.getEngine().vibrate(100);

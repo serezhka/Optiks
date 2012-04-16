@@ -5,11 +5,11 @@ package com.ifmo.optiks.base.control;
  * Date: 13.04.12
  */
 public class ActionMoveFilter {
-    public final float x;
-    public final float y;
-    public final float maxDx = 10;
-    public boolean wasMove = false;
-    public boolean wasTimer = false;
+    private final float x;
+    private final float y;
+    private final float maxDx = 10;
+    private boolean wasMove = false;
+    private boolean wasTimer = false;
 
     public ActionMoveFilter(final float x, final float y) {
         this.x = x;
@@ -32,5 +32,13 @@ public class ActionMoveFilter {
 
     public void setByTimer() {
         wasTimer = true;
+    }
+
+    public boolean wasMove() {
+        return wasMove;
+    }
+
+    public boolean wasTimer() {
+        return wasTimer;
     }
 }
