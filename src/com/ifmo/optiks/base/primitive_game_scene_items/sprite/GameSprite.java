@@ -2,7 +2,6 @@ package com.ifmo.optiks.base.primitive_game_scene_items.sprite;
 
 
 import com.ifmo.optiks.base.gson.ObjectJsonContainer;
-import com.ifmo.optiks.base.primitive_scene_items.sprite.*;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.vertex.RectangleVertexBuffer;
@@ -34,5 +33,5 @@ public abstract class GameSprite extends Sprite {
         return new ObjectJsonContainer(this);
     }
 
-    public abstract com.ifmo.optiks.base.primitive_scene_items.sprite.ObjectType getType();
+    public abstract ObjectType getType();
 }

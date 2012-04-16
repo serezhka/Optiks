@@ -8,7 +8,7 @@ import android.widget.Toast;
  * Date: 07.04.12
  */
 public class ToastText extends Toast {
-    public ToastText(final Context context) {
+    public ToastText(Context context) {
         super(context);
     }
 }

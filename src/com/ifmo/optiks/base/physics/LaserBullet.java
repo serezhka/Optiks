@@ -2,7 +2,7 @@ package com.ifmo.optiks.base.physics;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.ifmo.optiks.base.primitive_scene_items.lines.LaserBeam;
+import com.ifmo.optiks.base.primitive_game_scene_items.lines.LaserBeam;
 import org.anddev.andengine.entity.primitive.Line;
 import org.anddev.andengine.extension.physics.box2d.util.Vector2Pool;
 import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants;

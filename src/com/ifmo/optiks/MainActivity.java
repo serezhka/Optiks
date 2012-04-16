@@ -21,14 +21,13 @@ public class MainActivity extends BaseGameActivity {
     private static final int CAMERA_WIDTH = 720;
     private static final int CAMERA_HEIGHT = 480;
 
-    private String level;/*"{\"objects\":[" +
+    private String level/* = "{\"objects\":[" +
             "{\"type\":\"LASER\",\"pY\":2.0,\"rotation\":0.0,\"width\":50,\"height\":50,\"pX\":2.0}," +
             "{\"type\":\"MIRROR\",\"pY\":4.0,\"rotation\":0.0,\"width\":200,\"height\":30,\"pX\":7.0}," +
             "{\"type\":\"MIRROR\",\"pY\":8.0,\"rotation\":90.0,\"width\":100,\"height\":30,\"pX\":15.0}," +
             "{\"type\":\"AIM\",\"pY\":14.0,\"rotation\":0.0,\"width\":50,\"height\":50,\"pX\":21.0}," +
             "{\"type\":\"BARRIER\",\"pY\":5.0,\"rotation\":0.0,\"width\":50,\"height\":50,\"pX\":12.0}" +
-            "]}";
-*/
+            "]}"*/;
 
     private Camera camera;
 

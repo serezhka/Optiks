@@ -1,7 +1,7 @@
 package com.ifmo.optiks.base.gson;
 
-import com.ifmo.optiks.base.primitive_scene_items.sprite.GameSprite;
-import com.ifmo.optiks.base.primitive_scene_items.sprite.ObjectType;
+import com.ifmo.optiks.base.primitive_game_scene_items.sprite.GameSprite;
+import com.ifmo.optiks.base.primitive_game_scene_items.sprite.ObjectType;
 
 /**
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
