@@ -1,4 +1,4 @@
-package com.ifmo.optiks.base.sprite;
+package com.ifmo.optiks.base.primitive_scene_items.sprite;
 
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.vertex.RectangleVertexBuffer;

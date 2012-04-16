@@ -1,4 +1,4 @@
-package com.ifmo.optiks.base.physics;
+package com.ifmo.optiks.base.primitive_game_scene_items.lines;
 
 import org.anddev.andengine.entity.primitive.Line;
 import org.anddev.andengine.entity.scene.Scene;

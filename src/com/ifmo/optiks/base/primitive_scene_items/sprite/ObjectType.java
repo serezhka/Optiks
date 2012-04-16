@@ -1,4 +1,4 @@
-package com.ifmo.optiks.base.sprite;
+package com.ifmo.optiks.base.primitive_scene_items.sprite;
 
 /**
  * Author: Sergey Fedorov (serezhka@xakep.ru)

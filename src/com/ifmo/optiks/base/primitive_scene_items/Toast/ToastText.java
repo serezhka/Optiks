@@ -1,4 +1,4 @@
-package com.ifmo.optiks.base.Toast;
+package com.ifmo.optiks.base.primitive_scene_items.Toast;
 
 import android.content.Context;
 import android.widget.Toast;

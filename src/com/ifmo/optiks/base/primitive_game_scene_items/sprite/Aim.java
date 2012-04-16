@@ -1,5 +1,7 @@
-package com.ifmo.optiks.base.sprite;
+package com.ifmo.optiks.base.primitive_game_scene_items.sprite;
 
+import com.ifmo.optiks.base.primitive_scene_items.sprite.GameSprite;
+import com.ifmo.optiks.base.primitive_scene_items.sprite.ObjectType;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.vertex.RectangleVertexBuffer;
 

@@ -4,8 +4,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.ifmo.optiks.base.gson.Converter;
 import com.ifmo.optiks.base.gson.LevelGsonContainer;
 import com.ifmo.optiks.base.gson.ObjectJsonContainer;
-import com.ifmo.optiks.base.sprite.GameSprite;
-import com.ifmo.optiks.base.sprite.ObjectType;
+import com.ifmo.optiks.base.primitive_scene_items.sprite.GameSprite;
+import com.ifmo.optiks.base.primitive_scene_items.sprite.ObjectType;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 

@@ -1,4 +1,4 @@
-package com.ifmo.optiks.base.physics;
+package com.ifmo.optiks.base.physics.joints;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
