@@ -84,4 +84,8 @@ public class GameTextureManager {
     public Font getFont() {
         return font;
     }
+
+    public TextureRegion X3() {
+        return null;  //To change body of created methods use File | Settings | File Templates.
+    }
 }

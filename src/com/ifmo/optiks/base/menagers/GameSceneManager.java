@@ -7,14 +7,17 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.ifmo.optiks.base.control.ActionMoveFilter;
+import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
 import com.ifmo.optiks.base.gson.Constants;
-import com.ifmo.optiks.base.gson.ObjectJsonContainer;
+import com.ifmo.optiks.base.gson.MirrorJsonContainer;
+import com.ifmo.optiks.base.physics.CollisionHandler;
+import com.ifmo.optiks.base.physics.Fixtures;
+import com.ifmo.optiks.base.physics.LaserBullet;
 import com.ifmo.optiks.base.physics.joints.MouseJointOptiks;
 import com.ifmo.optiks.base.physics.joints.RevoluteJointOptiks;
-import com.ifmo.optiks.base.physics.*;
-import com.ifmo.optiks.base.primitive_game_scene_items.sprite.*;
 import com.ifmo.optiks.base.primitive_game_scene_items.lines.LaserBeam;
 import com.ifmo.optiks.base.primitive_game_scene_items.lines.LaserSight;
+import com.ifmo.optiks.base.primitive_game_scene_items.sprite.*;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.entity.primitive.Rectangle;
 import org.anddev.andengine.entity.scene.Scene;
@@ -49,7 +52,7 @@ public class GameSceneManager {
     private final GameSoundManager soundManager;
     final BaseGameActivity activity;
     protected Scene scene;
-    private PhysicsWorld physicsWorld;
+    protected PhysicsWorld physicsWorld;
     private int level;
     private Body laserBody;
     private Body aimBody;
@@ -89,24 +92,25 @@ public class GameSceneManager {
             final JSONObject jsonObject = new JSONObject(json);
             final JSONArray jsonArray = jsonObject.getJSONArray(Constants.OBJECTS);
             for (int i = 0; i < jsonArray.length(); ++i) {
-                final ObjectJsonContainer container = new ObjectJsonContainer(jsonArray.getJSONObject(i));
-                switch (container.type) {
+                final JSONObject object = jsonArray.getJSONObject(i);
+                final ObjectType objectType = ObjectType.getType(object.getString(Constants.TYPE));
+                switch (objectType) {
                     case AIM: {
-                        addAim(container);
+                        addAim(new BaseObjectJsonContainer(object));
                         break;
                     }
                     case BARRIER: {
-                        addBarrier(container);
+                        addBarrier(new BaseObjectJsonContainer(object));
                         break;
                     }
 
                     case LASER: {
-                        addLaser(container);
+                        addLaser(new BaseObjectJsonContainer(object));
                         break;
                     }
 
                     case MIRROR: {
-                        addMirror(container);
+                        addMirror(new MirrorJsonContainer(object));
                         break;
                     }
 
@@ -139,7 +143,6 @@ public class GameSceneManager {
 
 
         physicsWorld.setContactListener(bullet);
-        scene.registerUpdateHandler(this.physicsWorld);
         scene.setOnSceneTouchListener(new SceneTouchListener());
         scene.setOnAreaTouchListener(new AreaTouchListener());
 
@@ -169,42 +172,71 @@ public class GameSceneManager {
     }
 
 
-    protected void addLaser(final ObjectJsonContainer container) {
-        if (container.type != ObjectType.LASER) {
-            throw new IllegalArgumentException();
+    protected void addLaser(final BaseObjectJsonContainer ojc) {
+        final Laser laser = new Laser(ojc, textureManager.getLaserTextureRegion(), BodyForm.CIRCLE);
+        final Body body = PhysicsFactory.createCircleBody(physicsWorld, laser, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
+        addSprite(laser, body, ojc);
+    }
+
+    protected void addAim(final BaseObjectJsonContainer ojc) {
+        final Aim aim;
+        final Body body;
+        switch (ojc.bodyForm) {
+            case RECTANGLE:
+                aim = new Aim(ojc, textureManager.getAimTextureRegion(), BodyForm.RECTANGLE);
+                body = PhysicsFactory.createBoxBody(physicsWorld, aim, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
+                break;
+            case CIRCLE:
+                aim = new Aim(ojc, textureManager.getAimTextureRegion(), BodyForm.CIRCLE);
+                body = PhysicsFactory.createCircleBody(physicsWorld, aim, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
+                break;
+            default:
+                throw new RuntimeException();
         }
-        final Laser laser = new Laser(container.pX, container.pY, textureManager.getLaserTextureRegion());
-        scaleSprite(laser, container.width, container.height);
-        final Body body = PhysicsFactory.createCircleBody(physicsWorld, laser, BodyDef.BodyType.StaticBody, Fixtures.LASER);
-        addSprite(laser, body, container);
+        addSprite(aim, body, ojc);
     }
 
-    protected void addAim(final ObjectJsonContainer ogc) {
-        final Aim aim = new Aim(ogc.pX, ogc.pY, textureManager.getAimTextureRegion());
-        scaleSprite(aim, ogc.width, ogc.height);
-        final Body body = PhysicsFactory.createCircleBody(physicsWorld, aim, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
-        addSprite(aim, body, ogc);
+    protected void addMirror(final MirrorJsonContainer mjc) {
+        final Mirror mirror;
+        final Body body;
+        switch (mjc.bodyForm) {
+            case RECTANGLE:
+                mirror = new Mirror(mjc, textureManager.getMirrorTextureRegion(), BodyForm.RECTANGLE);
+                body = PhysicsFactory.createBoxBody(physicsWorld, mirror, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
+                break;
+            case CIRCLE:
+                mirror = new Mirror(mjc, textureManager.X3(), BodyForm.CIRCLE);
+                body = PhysicsFactory.createCircleBody(physicsWorld, mirror, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
+                break;
+            default:
+                throw new RuntimeException();
+        }
+        addSprite(mirror, body, mjc);
     }
 
-    protected void addMirror(final ObjectJsonContainer ogc) {
-        final Mirror mirror = new Mirror(ogc.pX, ogc.pY, textureManager.getMirrorTextureRegion());
-        scaleSprite(mirror, ogc.width, ogc.height);
-        final Body body = PhysicsFactory.createBoxBody(physicsWorld, mirror, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
-        addSprite(mirror, body, ogc);
+    protected void addBarrier(final BaseObjectJsonContainer ojc) {
+        final Barrier barrier;
+        final Body body;
+        switch (ojc.bodyForm) {
+            case RECTANGLE:
+                barrier = new Barrier(ojc, textureManager.getBarrierTextureRegion(), BodyForm.RECTANGLE);
+                body = PhysicsFactory.createBoxBody(physicsWorld, barrier, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
+                break;
+            case CIRCLE:
+                barrier = new Barrier(ojc, textureManager.X3(), BodyForm.CIRCLE);
+                body = PhysicsFactory.createCircleBody(physicsWorld, barrier, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
+                break;
+            default:
+                throw new RuntimeException();
+        }
+        addSprite(barrier, body, ojc);
     }
 
-    protected void addBarrier(final ObjectJsonContainer ogc) {
-        final Barrier barrier = new Barrier(ogc.pX, ogc.pY, textureManager.getBarrierTextureRegion());
-        scaleSprite(barrier, ogc.width, ogc.height);
-        final Body body = PhysicsFactory.createBoxBody(physicsWorld, barrier, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
-        addSprite(barrier, body, ogc);
-    }
-
-    protected void addSprite(final GameSprite sprite, final Body body, final ObjectJsonContainer container) {
+    protected void addSprite(final GameSprite sprite, final Body body, final BaseObjectJsonContainer container) {
         body.setUserData(sprite);
         sprite.setUserData(body);
         physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body));
-        body.setTransform(container.pX, container.pY, MathUtils.degToRad(container.rotation));
+        body.setTransform(container.pX / PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT, container.pY / PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT, MathUtils.degToRad(container.rotation));
         switch (container.type) {
             case LASER:
                 laserBody = body;
@@ -222,13 +254,6 @@ public class GameSceneManager {
                 break;
         }
         scene.attachChild(sprite);
-    }
-
-
-    private void scaleSprite(final Sprite sprite, final float width, final float height) {
-        final float scaleX = width / sprite.getTextureRegion().getWidth();
-        final float scaleY = height / sprite.getTextureRegion().getHeight();
-        sprite.setScale(scaleX, scaleY);
     }
 
 
@@ -298,10 +323,7 @@ public class GameSceneManager {
                     return true;
             }
             return false;
-
-
         }
-
     }
 
 
@@ -364,14 +386,6 @@ public class GameSceneManager {
                             if (System.currentTimeMillis() - currentTimer >= timer) {
                                 if (rjo != null) {
 //                                    activity.getEngine().vibrate(100);
-                                    physicsWorld.destroyJoint(mouseJoint);
-                                    mouseJointOptiks = new MouseJointOptiks(object, groundBody, touchAreaLocalX, touchAreaLocalY) {
-                                        @Override
-                                        public MouseJoint getMouseJoint() {
-                                            return (MouseJoint) physicsWorld.createJoint(this);
-                                        }
-                                    };
-                                    mouseJoint = mouseJointOptiks.getMouseJoint();
                                     rjo.destroyJoint(physicsWorld);
                                     rjo = null;
                                 }

@@ -1,7 +1,8 @@
 package com.ifmo.optiks.base.primitive_game_scene_items.sprite;
 
+import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
+import com.ifmo.optiks.base.gson.MirrorJsonContainer;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
-import org.anddev.andengine.opengl.vertex.RectangleVertexBuffer;
 
 /**
  * Author: Sergey Fedorov (serezhka@xakep.ru)
@@ -9,21 +10,20 @@ import org.anddev.andengine.opengl.vertex.RectangleVertexBuffer;
  */
 
 public class Mirror extends GameSprite {
+    final boolean canMove;
+    final boolean canRotate;
 
-    public Mirror(final float pX, final float pY, final TextureRegion pTextureRegion) {
-        super(pX, pY, pTextureRegion);
+
+    public Mirror(final MirrorJsonContainer mjc, final TextureRegion pTextureRegion, final BodyForm bodyForm
+    ) {
+        super(mjc, pTextureRegion, bodyForm);
+        canMove = mjc.canMove;
+        canRotate = mjc.canRotate;
     }
 
-    public Mirror(final float pX, final float pY, final float pWidth, final float pHeight, final TextureRegion pTextureRegion) {
-        super(pX, pY, pWidth, pHeight, pTextureRegion);
-    }
 
-    public Mirror(final float pX, final float pY, final TextureRegion pTextureRegion, final RectangleVertexBuffer pRectangleVertexBuffer) {
-        super(pX, pY, pTextureRegion, pRectangleVertexBuffer);
-    }
-
-    public Mirror(final float pX, final float pY, final float pWidth, final float pHeight, final TextureRegion pTextureRegion, final RectangleVertexBuffer pRectangleVertexBuffer) {
-        super(pX, pY, pWidth, pHeight, pTextureRegion, pRectangleVertexBuffer);
+    public BaseObjectJsonContainer getGsonContainer() {
+        return new MirrorJsonContainer(this, canMove, canRotate, bodyForm);
     }
 
     public ObjectType getType() {

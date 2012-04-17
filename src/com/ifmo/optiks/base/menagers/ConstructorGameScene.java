@@ -1,12 +1,16 @@
 package com.ifmo.optiks.base.menagers;
 
 import com.badlogic.gdx.physics.box2d.Body;
+import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
 import com.ifmo.optiks.base.gson.Converter;
 import com.ifmo.optiks.base.gson.LevelGsonContainer;
-import com.ifmo.optiks.base.gson.ObjectJsonContainer;
+import com.ifmo.optiks.base.gson.MirrorJsonContainer;
+import com.ifmo.optiks.base.primitive_game_scene_items.sprite.BodyForm;
 import com.ifmo.optiks.base.primitive_game_scene_items.sprite.GameSprite;
 import com.ifmo.optiks.base.primitive_game_scene_items.sprite.ObjectType;
+import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
+import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
 import java.util.LinkedList;
@@ -29,34 +33,42 @@ public class ConstructorGameScene extends GameSceneManager {
     }
 
     public void addLaser(final float x, final float y) {
-        addLaser(new ObjectJsonContainer(x, y, 1, 1, 0, ObjectType.LASER));
+        addLaser(new BaseObjectJsonContainer(x, y, 100, 100, 0, ObjectType.LASER, BodyForm.DEFAULT));
     }
 
     public void addBarrier(final float x, final float y) {
-        addBarrier(new ObjectJsonContainer(x, y, 0.3f, 1, 0, ObjectType.BARRIER));
+        addBarrier(new BaseObjectJsonContainer(x, y, 100, 200, 0, ObjectType.BARRIER, BodyForm.RECTANGLE));
     }
 
     public void addMirror(final float x, final float y) {
-        addMirror(new ObjectJsonContainer(x, y, 2, 2, 0, ObjectType.MIRROR));
+        addMirror(new MirrorJsonContainer(x, y, 20, 20, 0, ObjectType.MIRROR, BodyForm.RECTANGLE, true, true));
     }
 
     public void addAim(final float x, final float y) {
-        addAim(new ObjectJsonContainer(x, y, 0.3f, 0.3f, 0, ObjectType.AIM));
+        addAim(new BaseObjectJsonContainer(x, y, 50, 50, 0, ObjectType.AIM, BodyForm.CIRCLE));
     }
 
     @Override
-    protected void addSprite(final GameSprite sprite, final Body body, final ObjectJsonContainer container) {
+    protected void addSprite(final GameSprite sprite, final Body body, final BaseObjectJsonContainer container) {
         super.addSprite(sprite, body, container);
         objectsSprites.add(sprite);
     }
 
     public String getGson() {
         final LevelGsonContainer fieldContainer = new LevelGsonContainer(objectsSprites.size());
-        final ObjectJsonContainer[] containers = fieldContainer.getObjects();
+        final BaseObjectJsonContainer[] containers = fieldContainer.getObjects();
         int i = 0;
         for (final GameSprite objectsSprite : objectsSprites) {
             containers[i++] = objectsSprite.getGsonContainer();
         }
         return Converter.getInstance().toGson(containers);
+    }
+
+    public void setPhysicsWorld(final PhysicsWorld physicsWorld) {
+        this.physicsWorld = physicsWorld;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
     }
 }

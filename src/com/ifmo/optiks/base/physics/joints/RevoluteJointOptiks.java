@@ -1,5 +1,6 @@
 package com.ifmo.optiks.base.physics.joints;
 
+import android.util.Log;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Joint;
@@ -22,7 +23,7 @@ public class RevoluteJointOptiks extends RevoluteJointDef {
 
     public void initialize(final Body body, final PhysicsWorld physicsWorld) {
         this.body = body;
-        this.body.getFixtureList().get(0).setDensity(10f);
+        this.body.getFixtureList().get(0).setDensity(7);
         this.body.resetMassData();
         final Body anchorBody = physicsWorld.createBody(new BodyDef());
         anchorBody.setType(BodyDef.BodyType.StaticBody);
@@ -32,7 +33,7 @@ public class RevoluteJointOptiks extends RevoluteJointDef {
     }
 
     public void destroyJoint(final PhysicsWorld physicsWorld) {
-        this.body.getFixtureList().get(0).setDensity(0f);
+        this.body.getFixtureList().get(0).setDensity(0);
         this.body.resetMassData();
         physicsWorld.destroyJoint(joint);
     }

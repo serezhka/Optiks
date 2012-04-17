@@ -11,6 +11,10 @@ public class Constants {
     public static final String ROTATION = "rotation";
     public static final String WIDTH = "width";
     public static final String HEIGHT = "height";
+    public static final String BODY_FORM = "bodyForm"; //todo ma be invalid
+    public static final String CAN_MOVE = "canMove"; //todo ma be invalid
+    public static final String CAN_ROTATE = "canRotate"; //todo ma be invalid
+
 
 
 }

@@ -1,11 +1,9 @@
 package com.ifmo.optiks;
 
-import android.database.Cursor;
-import android.os.Bundle;
+
 import com.ifmo.optiks.base.menagers.GameSceneManager;
 import com.ifmo.optiks.base.menagers.GameSoundManager;
 import com.ifmo.optiks.base.menagers.GameTextureManager;
-import com.ifmo.optiks.provider.OptiksProviderMetaData;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.options.EngineOptions;
@@ -18,22 +16,27 @@ import org.anddev.andengine.ui.activity.BaseGameActivity;
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
 public class MainActivity extends BaseGameActivity {
+    private final static String TAG = "MainActivityTAG";
     private static final int CAMERA_WIDTH = 720;
     private static final int CAMERA_HEIGHT = 480;
 
-    private String level/* = "{\"objects\":[" +
-            "{\"type\":\"LASER\",\"pY\":2.0,\"rotation\":0.0,\"width\":50,\"height\":50,\"pX\":2.0}," +
-            "{\"type\":\"MIRROR\",\"pY\":4.0,\"rotation\":0.0,\"width\":200,\"height\":30,\"pX\":7.0}," +
-            "{\"type\":\"MIRROR\",\"pY\":8.0,\"rotation\":90.0,\"width\":100,\"height\":30,\"pX\":15.0}," +
-            "{\"type\":\"AIM\",\"pY\":14.0,\"rotation\":0.0,\"width\":50,\"height\":50,\"pX\":21.0}," +
-            "{\"type\":\"BARRIER\",\"pY\":5.0,\"rotation\":0.0,\"width\":50,\"height\":50,\"pX\":12.0}" +
-            "]}"*/;
-
+    /* private String level = "{\"objects\":["+
+            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":100.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":200.0},"+
+            "{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":30.0,\"pY\":30.0,\"rotation\":0.0,\"height\":50.0,\"width\":50.0},"+
+            "{\"bodyForm\":\"CIRCLE\",\"type\":\"AIM\",\"pX\":50.0,\"pY\":400.0,\"rotation\":0.0,\"height\":70.0,\"width\":70.0},"+
+            "{\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":500.0,\"pY\":200.0,\"rotation\":0.0,\"height\":50.0,\"width\":200.0}"+
+            "{\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":650.0,\"pY\":200.0,\"rotation\":90.0,\"height\":50.0,\"width\":150.0}"+
+            "]}";*/
+    private String level = "{\"objects\":["+
+            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":100.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":200.0},"+
+            "{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":300.0,\"pY\":100.0,\"rotation\":0.0,\"height\":50.0,\"width\":50.0},"+
+            "{\"bodyForm\":\"CIRCLE\",\"type\":\"AIM\",\"pX\":400.0,\"pY\":400.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0},"+
+            "{\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":500.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":200.0}"+
+            "]}";
     private Camera camera;
 
 
-    @Override
-    protected void onCreate(Bundle pSavedInstanceState) {
+    /*protected void onCreate(Bundle pSavedInstanceState) {
         super.onCreate(pSavedInstanceState);
         final int id = getIntent().getExtras().getInt(OptiksProviderMetaData.LevelTable._ID);
         final Cursor cursor = managedQuery(OptiksProviderMetaData.LevelTable.CONTENT_URI, null, "_id=?", new String[]{id + ""}, null);
@@ -42,7 +45,7 @@ public class MainActivity extends BaseGameActivity {
         final int idValue = cursor.getColumnIndex(OptiksProviderMetaData.LevelTable.VALUE);
         level = cursor.getString(idValue);
 
-    }
+    }*/
 
     @Override
     public Engine onLoadEngine() {
@@ -68,6 +71,22 @@ public class MainActivity extends BaseGameActivity {
         this.mEngine.registerUpdateHandler(new FPSLogger());
         final GameSceneManager sceneManager = new GameSceneManager(this, gameTextureManager, gameSoundManager);
         return sceneManager.createScene(level);
+        /*final Scene scene = new Scene();
+        final PhysicsWorld physicsWorld = new PhysicsWorld(new Vector2(0, 0), false);
+        final ConstructorGameScene constructorGameScene = new ConstructorGameScene(this, gameTextureManager, gameSoundManager);
+
+        scene.registerUpdateHandler(physicsWorld);
+        constructorGameScene.setScene(scene);
+        constructorGameScene.setPhysicsWorld(physicsWorld);
+        constructorGameScene.addBarrier(100, 200);
+        constructorGameScene.addLaser(300, 100);
+        constructorGameScene.addAim(400, 400);
+        constructorGameScene.addMirror(600, 400);
+        Log.d(TAG, constructorGameScene.getGson());
+
+
+        return scene;*/
+
     }
 
     @Override
