@@ -10,7 +10,9 @@ import java.util.Properties;
 
 public class OptiksProps {
 
-    public static final String PROPS_FILE = "Optiks.properties";
+    public static final String PROPS_FILE = "com/ifmo/optiks/Optiks.properties";
+
+    private static final OptiksProps props = new OptiksProps();
 
     private static Properties properties;
 
@@ -22,10 +24,15 @@ public class OptiksProps {
         return properties.getProperty(key);
     }
 
+    public static String getProperty(final Keys key) {
+        return getProperty(key.name);
+    }
+
     private static void init() {
         if (properties == null) {
             try {
-                final Reader reader = new BufferedReader(new FileReader(PROPS_FILE));
+                final Reader reader = new BufferedReader(
+                        new InputStreamReader(props.getClass().getClassLoader().getResourceAsStream(PROPS_FILE)));
                 properties = new Properties();
                 properties.load(reader);
             } catch (FileNotFoundException e) {
@@ -41,7 +48,7 @@ public class OptiksProps {
         SERVER_ADDRESS("server_address"),
         GET_LEVEL_BOLET("get_level_bolet");
 
-        private final String name;
+        public final String name;
 
         Keys(final String name) {
             this.name = name;
@@ -50,6 +57,15 @@ public class OptiksProps {
         @Override
         public String toString() {
             return name;
+        }
+
+        public static Keys getByName(final String name) {
+            for (final Keys key : Keys.values()) {
+                if (name.equalsIgnoreCase(key.name)) {
+                    return key;
+                }
+            }
+            return null;
         }
     }
 }
