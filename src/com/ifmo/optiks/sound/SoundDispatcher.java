@@ -11,7 +11,9 @@ import java.io.IOException;
 /**
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
+
 public class SoundDispatcher {
+
     public final Music musicBackGround;
     public final Sound shootLaser;
     private boolean playMusicBackGround = true;
@@ -29,7 +31,6 @@ public class SoundDispatcher {
         }
         musicBackGround.setLooping(true);
     }
-
 
     public boolean playBackGroundMusic() {
         if (playMusicBackGround) {

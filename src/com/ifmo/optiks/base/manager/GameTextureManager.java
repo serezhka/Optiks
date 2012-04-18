@@ -1,4 +1,4 @@
-package com.ifmo.optiks.base.menagers;
+package com.ifmo.optiks.base.manager;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -12,42 +12,43 @@ import org.anddev.andengine.ui.activity.BaseGameActivity;
 /**
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
+
 public class GameTextureManager {
+
     private static GameTextureManager ourInstance = new GameTextureManager();
+
     private final BaseGameActivity activity;
 
     private final BitmapTextureAtlas bitmapTextureAtlas;
+
     private final TextureRegion aimTextureRegion;
     private final TextureRegion laserTextureRegion;
     private final TextureRegion mirrorTextureRegion;
     private final TextureRegion barrierTextureRegion;
 
-
     private final Font font;
 
-
-    public static GameTextureManager getInstance(final BaseGameActivity act) {
-        if (act != ourInstance.activity) {
-            ourInstance = new GameTextureManager(act);      //todo
+    public static GameTextureManager getInstance(final BaseGameActivity gameActivity) {
+        if (gameActivity != ourInstance.activity) {
+            ourInstance = new GameTextureManager(gameActivity);
         }
         return ourInstance;
     }
 
-
     private GameTextureManager() {
-        this.activity = null;
-        this.bitmapTextureAtlas = null;
-        this.aimTextureRegion = null;
-        this.laserTextureRegion = null;
-        this.mirrorTextureRegion = null;
-        this.barrierTextureRegion = null;
+        activity = null;
+        bitmapTextureAtlas = null;
+        aimTextureRegion = null;
+        laserTextureRegion = null;
+        mirrorTextureRegion = null;
+        barrierTextureRegion = null;
         font = null;
     }
 
     private GameTextureManager(final BaseGameActivity gameActivity) {
         activity = gameActivity;
-        bitmapTextureAtlas = new BitmapTextureAtlas(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
+        bitmapTextureAtlas = new BitmapTextureAtlas(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         barrierTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.bitmapTextureAtlas, activity, "barrier.png", 0, 0);
         aimTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.bitmapTextureAtlas, activity, "aim.png", 0, 200);
         laserTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(this.bitmapTextureAtlas, activity, "laser.png", 200, 200);
@@ -58,7 +59,6 @@ public class GameTextureManager {
         font = new Font(atlas, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32, true, Color.BLACK);
         activity.getTextureManager().loadTexture(atlas);
         activity.getFontManager().loadFont(font);
-
     }
 
     public BitmapTextureAtlas getBitmapTextureAtlas() {
@@ -86,6 +86,6 @@ public class GameTextureManager {
     }
 
     public TextureRegion X3() {
-        return null;  //To change body of created methods use File | Settings | File Templates.
+        return null; // TODO what's the fuck ?!
     }
 }

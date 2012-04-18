@@ -1,9 +1,9 @@
 package com.ifmo.optiks;
 
 
-import com.ifmo.optiks.base.menagers.GameSceneManager;
-import com.ifmo.optiks.base.menagers.GameSoundManager;
-import com.ifmo.optiks.base.menagers.GameTextureManager;
+import com.ifmo.optiks.base.manager.GameSceneManager;
+import com.ifmo.optiks.base.manager.GameSoundManager;
+import com.ifmo.optiks.base.manager.GameTextureManager;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.options.EngineOptions;

@@ -1,4 +1,4 @@
-package com.ifmo.optiks.base.primitive_game_scene_items.sprite;
+package com.ifmo.optiks.base.item.sprite;
 
 import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
@@ -10,7 +10,7 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 public class Aim extends GameSprite {
 
-    public Aim(BaseObjectJsonContainer ojc, TextureRegion pTextureRegion, BodyForm bodyForm) {
+    public Aim(final BaseObjectJsonContainer ojc, final TextureRegion pTextureRegion, final BodyForm bodyForm) {
         super(ojc, pTextureRegion, bodyForm);
     }
 

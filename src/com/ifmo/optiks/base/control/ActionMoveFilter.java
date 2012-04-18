@@ -4,10 +4,15 @@ package com.ifmo.optiks.base.control;
  * User: dududko@gmail.com
  * Date: 13.04.12
  */
+
 public class ActionMoveFilter {
+
     private final float x;
     private final float y;
+
+    @SuppressWarnings("FieldCanBeLocal")
     private final float maxDx = 10;
+
     private boolean wasMove = false;
     private boolean wasTimer = false;
 

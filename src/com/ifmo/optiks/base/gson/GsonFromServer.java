@@ -12,7 +12,7 @@ public class GsonFromServer {
     public Object name;
     public Object level;
 
-    public GsonFromServer(Object id, Object errors, Object name, Object level) {
+    public GsonFromServer(final Object id, final Object errors, final Object name, final Object level) {
         this.id = id;
         this.errors = errors;
         this.name = name;
@@ -23,7 +23,7 @@ public class GsonFromServer {
         return id;
     }
 
-    public void setId(Object id) {
+    public void setId(final Object id) {
         this.id = id;
     }
 
@@ -31,7 +31,7 @@ public class GsonFromServer {
         return errors;
     }
 
-    public void setErrors(Object errors) {
+    public void setErrors(final Object errors) {
         this.errors = errors;
     }
 
@@ -39,7 +39,7 @@ public class GsonFromServer {
         return name;
     }
 
-    public void setName(Object name) {
+    public void setName(final Object name) {
         this.name = name;
     }
 
@@ -47,7 +47,7 @@ public class GsonFromServer {
         return level;
     }
 
-    public void setLevel(Object level) {
+    public void setLevel(final Object level) {
         this.level = level;
     }
 }

@@ -1,4 +1,4 @@
-package com.ifmo.optiks.base.primitive_game_scene_items.lines;
+package com.ifmo.optiks.base.item.line;
 
 import org.anddev.andengine.entity.primitive.Line;
 import org.anddev.andengine.entity.scene.Scene;
@@ -13,21 +13,21 @@ import java.util.List;
 
 public class LaserBeam {
 
-    private List<Line> beam = new LinkedList<Line>();
     private final Scene scene;
     private final Color color;
-    private final float WIDTH = 3;
     private final float fromX;
     private final float fromY;
 
+    @SuppressWarnings("FieldCanBeLocal")
+    private final float WIDTH = 3;
+
+    private final List<Line> beam = new LinkedList<Line>();
 
     public LaserBeam(final Scene scene, final Color color, final float fromX, final float fromY) {
         this.scene = scene;
         this.color = color;
         this.fromX = fromX;
         this.fromY = fromY;
-
-
     }
 
     public Line addLine(final float x2, final float y2) {

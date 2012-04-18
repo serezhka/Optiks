@@ -1,6 +1,5 @@
 package com.ifmo.optiks.base.physics.joints;
 
-import android.util.Log;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Joint;
@@ -12,8 +11,8 @@ import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
  * Date: 10.04.12
  */
 
-// coppy to physycs
 public class RevoluteJointOptiks extends RevoluteJointDef {
+
     private Body body;
     private Joint joint;
 

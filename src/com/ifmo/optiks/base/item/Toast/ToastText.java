@@ -1,4 +1,4 @@
-package com.ifmo.optiks.base.primitive_game_scene_items.Toast;
+package com.ifmo.optiks.base.item.toast;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -8,7 +8,7 @@ import android.widget.Toast;
  * Date: 07.04.12
  */
 public class ToastText extends Toast {
-    public ToastText(Context context) {
+    public ToastText(final Context context) {
         super(context);
     }
 }

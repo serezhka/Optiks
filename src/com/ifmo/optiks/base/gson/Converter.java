@@ -19,7 +19,7 @@ public class Converter {
         return gson.toJson(object);
     }
 
-    public <T> T fromGson(final String source, Class<T> c) {
+    public <T> T fromGson(final String source, final Class<T> c) {
         return gson.fromJson(source, c);
     }
 }

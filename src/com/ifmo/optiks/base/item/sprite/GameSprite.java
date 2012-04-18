@@ -1,6 +1,4 @@
-package com.ifmo.optiks.base.primitive_game_scene_items.sprite;
-
-
+package com.ifmo.optiks.base.item.sprite;
 
 import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
 import org.anddev.andengine.entity.sprite.Sprite;
@@ -12,17 +10,17 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
  */
 
 public abstract class GameSprite extends Sprite {
-   protected final BodyForm bodyForm;
-    public GameSprite(final BaseObjectJsonContainer ojc, final TextureRegion pTextureRegion,final BodyForm bodyForm) {
+
+    protected final BodyForm bodyForm;
+
+    public GameSprite(final BaseObjectJsonContainer ojc, final TextureRegion pTextureRegion, final BodyForm bodyForm) {
         super(ojc.pX, ojc.pY, pTextureRegion);
         this.bodyForm = bodyForm;
-        scaleSprite(ojc.width,ojc.height);
+        scaleSprite(ojc.width, ojc.height);
     }
 
-
-
     public BaseObjectJsonContainer getGsonContainer() {
-        return new BaseObjectJsonContainer(this,bodyForm);
+        return new BaseObjectJsonContainer(this, bodyForm);
     }
 
     private void scaleSprite(final float width, final float height) {
@@ -30,7 +28,6 @@ public abstract class GameSprite extends Sprite {
         final float scaleY = height / getTextureRegion().getHeight();
         setScale(scaleX, scaleY);
     }
-
 
     public abstract ObjectType getType();
 }

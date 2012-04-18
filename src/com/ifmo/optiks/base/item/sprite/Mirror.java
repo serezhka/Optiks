@@ -1,4 +1,4 @@
-package com.ifmo.optiks.base.primitive_game_scene_items.sprite;
+package com.ifmo.optiks.base.item.sprite;
 
 import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
 import com.ifmo.optiks.base.gson.MirrorJsonContainer;
@@ -10,9 +10,9 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
  */
 
 public class Mirror extends GameSprite {
+
     final boolean canMove;
     final boolean canRotate;
-
 
     public Mirror(final MirrorJsonContainer mjc, final TextureRegion pTextureRegion, final BodyForm bodyForm
     ) {
@@ -20,7 +20,6 @@ public class Mirror extends GameSprite {
         canMove = mjc.canMove;
         canRotate = mjc.canRotate;
     }
-
 
     public BaseObjectJsonContainer getGsonContainer() {
         return new MirrorJsonContainer(this, canMove, canRotate, bodyForm);

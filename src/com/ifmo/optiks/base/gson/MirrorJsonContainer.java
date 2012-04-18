@@ -1,8 +1,8 @@
 package com.ifmo.optiks.base.gson;
 
-import com.ifmo.optiks.base.primitive_game_scene_items.sprite.BodyForm;
-import com.ifmo.optiks.base.primitive_game_scene_items.sprite.GameSprite;
-import com.ifmo.optiks.base.primitive_game_scene_items.sprite.ObjectType;
+import com.ifmo.optiks.base.item.sprite.BodyForm;
+import com.ifmo.optiks.base.item.sprite.GameSprite;
+import com.ifmo.optiks.base.item.sprite.ObjectType;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,7 +10,9 @@ import org.json.JSONObject;
  * User: dududko@gmail.com
  * Date: 17.04.12
  */
+
 public class MirrorJsonContainer extends BaseObjectJsonContainer {
+
     final public boolean canMove;
     final public boolean canRotate;
 
@@ -20,7 +22,7 @@ public class MirrorJsonContainer extends BaseObjectJsonContainer {
         this.canRotate = canRotate;
     }
 
-    public MirrorJsonContainer(float pX, float pY, float width, final float height, float rotation, ObjectType type, BodyForm bodyForm, boolean canMove, boolean canRotate) {
+    public MirrorJsonContainer(final float pX, final float pY, final float width, final float height, final float rotation, final ObjectType type, final BodyForm bodyForm, final boolean canMove, final boolean canRotate) {
         super(pX, pY, width, height, rotation, type, bodyForm);
         this.canMove = canMove;
         this.canRotate = canRotate;
@@ -31,7 +33,4 @@ public class MirrorJsonContainer extends BaseObjectJsonContainer {
         this.canMove = jsonObject.getBoolean(Constants.CAN_MOVE);
         this.canRotate = jsonObject.getBoolean(Constants.CAN_ROTATE);
     }
-
-
-
 }

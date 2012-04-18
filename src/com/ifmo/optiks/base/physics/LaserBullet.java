@@ -2,7 +2,7 @@ package com.ifmo.optiks.base.physics;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.ifmo.optiks.base.primitive_game_scene_items.lines.LaserBeam;
+import com.ifmo.optiks.base.item.line.LaserBeam;
 import org.anddev.andengine.entity.primitive.Line;
 import org.anddev.andengine.extension.physics.box2d.util.Vector2Pool;
 import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
@@ -13,16 +13,18 @@ import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConsta
  */
 
 public class LaserBullet implements ContactListener {
+
     final static float INF = 1000000000;
+
     private final Body body;
     private final Body laserBody;
     private final Line laserSight;
     private final LaserBeam laserBeam;
-    private boolean isMoving = false;
     private final CollisionHandler collisionHandler;
     private final float sightXBegin;
     private final float sightYBegin;
 
+    private boolean isMoving = false;
 
     public LaserBullet(final Body bullet, final Body laser,
                        final Line laserSight, final LaserBeam laserBeam, final CollisionHandler collisionHandler) {
@@ -82,28 +84,21 @@ public class LaserBullet implements ContactListener {
             final Body bodyA = contact.getFixtureA().getBody();
             collisionHandler.handle(contact, this, bodyA);
         }
-
     }
 
     @Override
     public void endContact(final Contact contact) {
-
     }
 
     @Override
     public void preSolve(final Contact contact, final Manifold manifold) {
-
-
     }
 
     @Override
     public void postSolve(final Contact contact, final ContactImpulse contactImpulse) {
-
-
     }
 
     public LaserBeam getLaserBeam() {
-
         return laserBeam;
     }
 

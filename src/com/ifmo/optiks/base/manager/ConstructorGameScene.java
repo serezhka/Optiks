@@ -1,13 +1,13 @@
-package com.ifmo.optiks.base.menagers;
+package com.ifmo.optiks.base.manager;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
 import com.ifmo.optiks.base.gson.Converter;
 import com.ifmo.optiks.base.gson.LevelGsonContainer;
 import com.ifmo.optiks.base.gson.MirrorJsonContainer;
-import com.ifmo.optiks.base.primitive_game_scene_items.sprite.BodyForm;
-import com.ifmo.optiks.base.primitive_game_scene_items.sprite.GameSprite;
-import com.ifmo.optiks.base.primitive_game_scene_items.sprite.ObjectType;
+import com.ifmo.optiks.base.item.sprite.BodyForm;
+import com.ifmo.optiks.base.item.sprite.GameSprite;
+import com.ifmo.optiks.base.item.sprite.ObjectType;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
@@ -19,6 +19,7 @@ import java.util.List;
 /**
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
+
 public class ConstructorGameScene extends GameSceneManager {
     private final List<GameSprite> objectsSprites = new LinkedList<GameSprite>();
 
@@ -27,7 +28,6 @@ public class ConstructorGameScene extends GameSceneManager {
         super(activity, gtm, gsm);
     }
 
-    //??todo delete
     public void setBackground(final ColorBackground colorBackground) {
         scene.setBackground(colorBackground);
     }
@@ -68,7 +68,7 @@ public class ConstructorGameScene extends GameSceneManager {
         this.physicsWorld = physicsWorld;
     }
 
-    public void setScene(Scene scene) {
+    public void setScene(final Scene scene) {
         this.scene = scene;
     }
 }

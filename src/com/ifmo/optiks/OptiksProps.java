@@ -10,7 +10,7 @@ import java.util.Properties;
 
 public class OptiksProps {
 
-    public static final String PROPS_FILE = "OptiksProps.properties";
+    public static final String PROPS_FILE = "Optiks.properties";
 
     private static Properties properties;
 
@@ -37,6 +37,7 @@ public class OptiksProps {
     }
 
     public enum Keys {
+
         SERVER_ADDRESS("server_address"),
         GET_LEVEL_BOLET("get_level_bolet");
 

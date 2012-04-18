@@ -21,7 +21,7 @@ public class OptiksProvider extends ContentProvider {
 
     private final static String TAG = "OptiksProviderTAG";
 
-    //todo projection Map??
+    //TODO projection Map??
     private DatabaseHelper openHelper;
 
     private static class DatabaseHelper extends SQLiteOpenHelper {

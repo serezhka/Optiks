@@ -1,4 +1,4 @@
-package com.ifmo.optiks.base.primitive_game_scene_items.sprite;
+package com.ifmo.optiks.base.item.sprite;
 
 import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
@@ -8,13 +8,13 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
  * Date: 27.03.12
  */
 
-public class Barrier extends GameSprite {
+public class Laser extends GameSprite {
 
-    public Barrier(BaseObjectJsonContainer ojc, TextureRegion pTextureRegion, BodyForm bodyForm) {
+    public Laser(final BaseObjectJsonContainer ojc, final TextureRegion pTextureRegion, final BodyForm bodyForm) {
         super(ojc, pTextureRegion, bodyForm);
     }
 
     public ObjectType getType() {
-        return ObjectType.BARRIER;
+        return ObjectType.LASER;
     }
 }

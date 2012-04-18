@@ -1,8 +1,8 @@
 package com.ifmo.optiks.base.gson;
 
-import com.ifmo.optiks.base.primitive_game_scene_items.sprite.BodyForm;
-import com.ifmo.optiks.base.primitive_game_scene_items.sprite.GameSprite;
-import com.ifmo.optiks.base.primitive_game_scene_items.sprite.ObjectType;
+import com.ifmo.optiks.base.item.sprite.BodyForm;
+import com.ifmo.optiks.base.item.sprite.GameSprite;
+import com.ifmo.optiks.base.item.sprite.ObjectType;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,7 +29,6 @@ public class BaseObjectJsonContainer {
         this.type = gs.getType();
         this.bodyForm = bodyForm;
     }
-
 
     public BaseObjectJsonContainer(final float pX, final float pY, final float width,
                                    final float height, final float rotation,
