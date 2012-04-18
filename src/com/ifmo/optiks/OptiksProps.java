@@ -65,7 +65,7 @@ public class OptiksProps {
                     return key;
                 }
             }
-            return null;
+            throw new IllegalArgumentException("Property key not found: " + name);
         }
     }
 }

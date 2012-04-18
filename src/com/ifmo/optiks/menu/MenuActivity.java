@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 import com.ifmo.optiks.MainActivity;
+import com.ifmo.optiks.OptiksProps;
 import com.ifmo.optiks.base.gson.Converter;
 import com.ifmo.optiks.base.gson.GsonFromServer;
 import com.ifmo.optiks.provider.OptiksProviderMetaData;
@@ -70,6 +71,8 @@ public class MenuActivity extends BaseGameActivity implements Scene.IOnSceneTouc
 
     private SurfaceScrollDetector scrollDetector;
 
+    private int menuHeight;
+
     private final static String TAG = "MenuTAG";
 
     @Override
@@ -116,7 +119,19 @@ public class MenuActivity extends BaseGameActivity implements Scene.IOnSceneTouc
 
     @Override
     public void onScroll(final ScrollDetector scrollDetector, final TouchEvent touchEvent, final float pDistanceX, final float pDistanceY) {
-        menuScene.setPosition(menuScene.getX(), menuScene.getY() + pDistanceY);
+        if (pDistanceY > 0) {
+            if (menuScene.getY() + pDistanceY > menuHeight / 4) {
+                menuScene.setPosition(menuScene.getX(), menuHeight / 4);
+            } else {
+                menuScene.setPosition(menuScene.getX(), menuScene.getY() + pDistanceY);
+            }
+        } else {
+            if (menuScene.getY() + pDistanceY  < - menuHeight / 4) {
+                menuScene.setPosition(menuScene.getX(), - menuHeight / 4);
+            } else {
+                menuScene.setPosition(menuScene.getX(), menuScene.getY() + pDistanceY);
+            }
+        }
     }
 
     public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
@@ -242,11 +257,21 @@ public class MenuActivity extends BaseGameActivity implements Scene.IOnSceneTouc
         final MenuItem gameInfo = new SimpleMenuItem(MenuItemType.GAME_INFO, region);
 
         final MenuItem quit = new SimpleMenuItem(MenuItemType.QUIT, region);
+        final MenuItem quit1 = new SimpleMenuItem(MenuItemType.QUIT, region);
+        final MenuItem quit2 = new SimpleMenuItem(MenuItemType.QUIT, region);
+        final MenuItem quit3 = new SimpleMenuItem(MenuItemType.QUIT, region);
+        final MenuItem quit4 = new SimpleMenuItem(MenuItemType.QUIT, region);
+        final MenuItem quit5 = new SimpleMenuItem(MenuItemType.QUIT, region);
 
         menu.addMenuItem(levelChoice);
         menu.addMenuItem(loadLevels);
         menu.addMenuItem(gameInfo);
         menu.addMenuItem(quit);
+        menu.addMenuItem(quit1);
+        menu.addMenuItem(quit2);
+        menu.addMenuItem(quit3);
+        menu.addMenuItem(quit4);
+        menu.addMenuItem(quit5);
 
         mEngine.getTextureManager().loadTexture(backgroundAtlas);
         mEngine.getTextureManager().loadTexture(menuAtlas);
@@ -278,6 +303,7 @@ public class MenuActivity extends BaseGameActivity implements Scene.IOnSceneTouc
 
     private MenuScene createMenuScene(final Menu menu) {
         activeMenu = menu;
+        menuHeight = 0;
         final MenuScene menuScene = new MenuScene(camera);
         final Collection<MenuItem> menuItems = menu.getMenuItems();
         for (final MenuItem menuItem : menuItems) {
@@ -291,6 +317,7 @@ public class MenuActivity extends BaseGameActivity implements Scene.IOnSceneTouc
                 menuItem.setText(new ChangeableText(0, 0, font, menuItem.getName()));
                 menuScene.addMenuItem(menuItem);
             }
+            menuHeight += menuItem.getHeight();
         }
         menuScene.buildAnimations();
         menuScene.setBackgroundEnabled(false);
@@ -298,13 +325,13 @@ public class MenuActivity extends BaseGameActivity implements Scene.IOnSceneTouc
         menuScene.setOnSceneTouchListener(this);
         menuScene.setTouchAreaBindingEnabled(true);
         menuScene.setOnSceneTouchListenerBindingEnabled(true);
+        menuScene.setPosition(menuScene.getX(), menuHeight / 4);
         return menuScene;
     }
 
     private String connect(final String param) {
-        /*final String url = OptiksProps.getProperty(OptiksProps.Keys.SERVER_ADDRESS.toString())
-                + "/" + OptiksProps.getProperty(OptiksProps.Keys.GET_LEVEL_BOLET.toString());*/
-        final String url = "http://89.112.11.137:8028/Download";
+        final String url = OptiksProps.getProperty(OptiksProps.Keys.SERVER_ADDRESS.toString())
+                + "/" + OptiksProps.getProperty(OptiksProps.Keys.GET_LEVEL_BOLET.toString());
         String res = null;
         final HttpClient client = new DefaultHttpClient();
         final HttpGet httpGet = new HttpGet(url + "?" + param);
