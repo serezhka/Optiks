@@ -44,21 +44,21 @@ public class OptiksScrollDetector extends BaseDetector {
         final float touchX = this.getX(pSceneTouchEvent);
         final float touchY = this.getY(pSceneTouchEvent);
 
-        switch(pSceneTouchEvent.getAction()) {
+        switch (pSceneTouchEvent.getAction()) {
             case TouchEvent.ACTION_DOWN:
                 this.prepareScroll(pSceneTouchEvent.getPointerID(), touchX, touchY);
                 return true;
             case TouchEvent.ACTION_MOVE:
-                if(this.mPointerID == -1) {
+                if (this.mPointerID == -1) {
                     this.prepareScroll(pSceneTouchEvent.getPointerID(), touchX, touchY);
                     return true;
-                } else if(this.mPointerID == pSceneTouchEvent.getPointerID()) {
+                } else if (this.mPointerID == pSceneTouchEvent.getPointerID()) {
                     final float distanceX = touchX - this.mLastX;
                     final float distanceY = touchY - this.mLastY;
 
                     final float triggerScrollMinimumDistance = this.mTriggerScrollMinimumDistance;
-                    if(this.mTriggering || Math.abs(distanceX) > triggerScrollMinimumDistance || Math.abs(distanceY) > triggerScrollMinimumDistance) {
-                        if(!this.mTriggering) {
+                    if (this.mTriggering || Math.abs(distanceX) > triggerScrollMinimumDistance || Math.abs(distanceY) > triggerScrollMinimumDistance) {
+                        if (!this.mTriggering) {
                             this.triggerOnScrollStarted(distanceX, distanceY);
                         } else {
                             this.triggerOnScroll(distanceX, distanceY);
@@ -74,11 +74,11 @@ public class OptiksScrollDetector extends BaseDetector {
                 }
             case TouchEvent.ACTION_UP:
             case TouchEvent.ACTION_CANCEL:
-                if(this.mPointerID == pSceneTouchEvent.getPointerID()) {
+                if (this.mPointerID == pSceneTouchEvent.getPointerID()) {
                     final float distanceX = touchX - this.mLastX;
                     final float distanceY = touchY - this.mLastY;
 
-                    if(this.mTriggering) {
+                    if (this.mTriggering) {
                         this.triggerOnScrollFinished(distanceX, distanceY);
                     }
 
@@ -98,13 +98,13 @@ public class OptiksScrollDetector extends BaseDetector {
     }
 
     private void triggerOnScrollStarted(final float pDistanceX, final float pDistanceY) {
-        if(this.mPointerID != -1) {
+        if (this.mPointerID != -1) {
             this.mScrollDetectorListener.onScrollStarted(this, this.mPointerID, pDistanceX, pDistanceY);
         }
     }
 
     private void triggerOnScroll(final float pDistanceX, final float pDistanceY) {
-        if(this.mPointerID != -1) {
+        if (this.mPointerID != -1) {
             this.mScrollDetectorListener.onScroll(this, this.mPointerID, pDistanceX, pDistanceY);
         }
     }
@@ -112,7 +112,7 @@ public class OptiksScrollDetector extends BaseDetector {
     private void triggerOnScrollFinished(final float pDistanceX, final float pDistanceY) {
         this.mTriggering = false;
 
-        if(this.mPointerID != -1) {
+        if (this.mPointerID != -1) {
             this.mScrollDetectorListener.onScrollFinished(this, this.mPointerID, pDistanceX, pDistanceY);
         }
     }
@@ -127,7 +127,9 @@ public class OptiksScrollDetector extends BaseDetector {
 
     public static interface IScrollDetectorListener {
         public void onScrollStarted(final OptiksScrollDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY);
+
         public void onScroll(final OptiksScrollDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY);
+
         public void onScrollFinished(final OptiksScrollDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY);
     }
 }

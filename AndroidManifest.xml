@@ -14,7 +14,7 @@
         <provider android:name="com.ifmo.optiks.provider.OptiksProvider"
                   android:authorities="com.ifmo.optiks.Provider"/>
 
-        <activity android:name=".menu.MenuActivity"
+        <activity android:name=".OptiksActivity"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

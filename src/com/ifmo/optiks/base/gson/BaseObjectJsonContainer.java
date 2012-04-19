@@ -18,9 +18,9 @@ public class BaseObjectJsonContainer {
     public final float height;
     public final float rotation;
     public final ObjectType type;
-    public final BodyForm   bodyForm;
+    public final BodyForm bodyForm;
 
-    public BaseObjectJsonContainer(final GameSprite gs,final BodyForm bodyForm) {
+    public BaseObjectJsonContainer(final GameSprite gs, final BodyForm bodyForm) {
         this.pX = gs.getX();
         this.pY = gs.getY();
         this.width = gs.getWidth();
@@ -32,7 +32,7 @@ public class BaseObjectJsonContainer {
 
     public BaseObjectJsonContainer(final float pX, final float pY, final float width,
                                    final float height, final float rotation,
-                                   final ObjectType type,final BodyForm bodyForm) {
+                                   final ObjectType type, final BodyForm bodyForm) {
         this.pX = pX;
         this.pY = pY;
         this.width = width;

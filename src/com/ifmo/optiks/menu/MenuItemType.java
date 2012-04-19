@@ -7,12 +7,12 @@ package com.ifmo.optiks.menu;
 
 public enum MenuItemType {
 
-    LEVEL_CHOICE("Select Level", 0),
-    LOAD_LEVELS("Load Levels", 1),
+    SEASON_CHOICE("Select Season", 0),
+    LOAD_SEASONS("Load Seasons", 1),
     QUIT("Exit", 2),
     BACK("Back", 3),
-    LEVEL("Level", 4),
-    GAME_INFO("Game Info", 5);
+    GAME_INFO("Game Info", 4),
+    SETTINGS("Settings", 5);
 
     private final String name;
     private final int id;

@@ -16,8 +16,8 @@ public class MirrorJsonContainer extends BaseObjectJsonContainer {
     final public boolean canMove;
     final public boolean canRotate;
 
-    public MirrorJsonContainer(final GameSprite gs, final boolean canMove, final boolean canRotate,final BodyForm bodyForm) {
-        super(gs,bodyForm);
+    public MirrorJsonContainer(final GameSprite gs, final boolean canMove, final boolean canRotate, final BodyForm bodyForm) {
+        super(gs, bodyForm);
         this.canMove = canMove;
         this.canRotate = canRotate;
     }
