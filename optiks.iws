@@ -44,7 +44,7 @@
     <configuration default="false" name="Optiks" type="AndroidRunConfigurationType" factoryName="Android Application">
       <module name="Optiks" />
       <option name="ACTIVITY_CLASS" value="com.ifmo.optiks.menu.OptiksActivity" />
-      <option name="MODE" value="specific_activity" />
+      <option name="MODE" value="default_activity" />
       <option name="DEPLOY" value="true" />
       <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
       <option name="PREFERRED_AVD" value="" />

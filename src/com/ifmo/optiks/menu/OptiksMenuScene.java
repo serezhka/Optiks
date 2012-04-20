@@ -8,8 +8,10 @@ import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.entity.scene.menu.MenuScene;
 import org.anddev.andengine.entity.scene.menu.item.IMenuItem;
+import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.entity.text.ChangeableText;
 import org.anddev.andengine.input.touch.TouchEvent;
+import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 import javax.microedition.khronos.opengles.GL10;
 import java.util.Collection;
@@ -33,12 +35,9 @@ public class OptiksMenuScene extends Scene implements MenuScene.IOnMenuItemClick
 
     public OptiksMenuScene(final OptiksActivity optiksActivity, final Menu menu) {
         super();
-        this.setBackground(new ColorBackground(0.09804f, 0.6274f, 0.8784f));
-        this.setBackgroundEnabled(false);
-        optiksActivity.menuBackground.setParent(null);
-        this.attachChild(optiksActivity.menuBackground);
         this.optiksActivity = optiksActivity;
         activeMenu = menu;
+        setBackground();
         menuScene = createMenuScene();
         this.setChildScene(menuScene);
         // TODO activate scroll ability if menuHeight > CAMERA_HEIGHT
@@ -84,7 +83,7 @@ public class OptiksMenuScene extends Scene implements MenuScene.IOnMenuItemClick
         for (final MenuItem menuItem : menuItems) {
             menuItem.setParent(null);
             menuItem.setBlendFunction(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-            menuItem.setText(new ChangeableText(0, 0, optiksActivity.menuFont, menuItem.getName()));
+            menuItem.setText(new ChangeableText(0, 0, optiksActivity.getOptiksTextureManager().menuFont, menuItem.getName()));
             menuScene.addMenuItem(menuItem);
             menuHeight += menuItem.getHeight();
         }
@@ -99,6 +98,7 @@ public class OptiksMenuScene extends Scene implements MenuScene.IOnMenuItemClick
                 menuScene.setOnMenuItemClickListener(OptiksMenuScene.this);
                 menuScene.setTouchAreaBindingEnabled(true);
                 menuScene.setOnSceneTouchListenerBindingEnabled(true);
+
             }
         }));
 
@@ -135,5 +135,16 @@ public class OptiksMenuScene extends Scene implements MenuScene.IOnMenuItemClick
     public boolean onSceneTouchEvent(final Scene scene, final TouchEvent touchEvent) {
         //scrollDetector.onTouchEvent(touchEvent);
         return true;
+    }
+
+    private void setBackground() {
+        this.setBackground(new ColorBackground(0.09804f, 0.6274f, 0.8784f));
+        this.setBackgroundEnabled(false);
+        final TextureRegion menuBackgroundTextureRegion = optiksActivity.getOptiksTextureManager().menuBackgroundTextureRegion;
+        final int x = ((int) optiksActivity.getCamera().getWidth() - menuBackgroundTextureRegion.getWidth()) / 2;
+        final int y = ((int) optiksActivity.getCamera().getHeight() - menuBackgroundTextureRegion.getHeight()) / 2;
+        final Sprite menuBackground = new Sprite(x, y, menuBackgroundTextureRegion);
+        menuBackground.setScale(1.25f);
+        this.attachChild(menuBackground);
     }
 }

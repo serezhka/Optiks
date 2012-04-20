@@ -15,7 +15,8 @@ import org.anddev.andengine.ui.activity.BaseGameActivity;
 
 public class GameTextureManager {
 
-    private static GameTextureManager ourInstance = new GameTextureManager();
+    //private static GameTextureManager ourInstance = new GameTextureManager();
+    private static GameTextureManager ourInstance;
 
     private final BaseGameActivity activity;
 
@@ -29,20 +30,10 @@ public class GameTextureManager {
     private final Font font;
 
     public static GameTextureManager getInstance(final BaseGameActivity gameActivity) {
-        if (gameActivity != ourInstance.activity) {
+        if ((ourInstance != null && gameActivity != ourInstance.activity) || ourInstance == null) {
             ourInstance = new GameTextureManager(gameActivity);
         }
         return ourInstance;
-    }
-
-    private GameTextureManager() {
-        activity = null;
-        bitmapTextureAtlas = null;
-        aimTextureRegion = null;
-        laserTextureRegion = null;
-        mirrorTextureRegion = null;
-        barrierTextureRegion = null;
-        font = null;
     }
 
     private GameTextureManager(final BaseGameActivity gameActivity) {

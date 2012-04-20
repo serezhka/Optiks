@@ -1,6 +1,7 @@
 package com.ifmo.optiks.menu;
 
 import com.ifmo.optiks.OptiksActivity;
+import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 import java.util.Collection;
 
@@ -54,15 +55,17 @@ public class OptiksMenu implements Menu {
 
         menu = new SimpleMenu();
 
-        final MenuItem seasonChoice = new SimpleMenuItem(MenuItemType.SEASON_CHOICE, optiksActivity.menuItemTextureRegion);
+        final TextureRegion menuItemTextureRegion = optiksActivity.getOptiksTextureManager().menuItemTextureRegion;
 
-        final MenuItem loadSeasons = new SimpleMenuItem(MenuItemType.LOAD_SEASONS, optiksActivity.menuItemTextureRegion);
+        final MenuItem seasonChoice = new SimpleMenuItem(MenuItemType.SEASON_CHOICE, menuItemTextureRegion);
 
-        final MenuItem settings = new SimpleMenuItem(MenuItemType.SETTINGS, optiksActivity.menuItemTextureRegion);
+        final MenuItem loadSeasons = new SimpleMenuItem(MenuItemType.LOAD_SEASONS, menuItemTextureRegion);
 
-        final MenuItem gameInfo = new SimpleMenuItem(MenuItemType.GAME_INFO, optiksActivity.menuItemTextureRegion);
+        final MenuItem settings = new SimpleMenuItem(MenuItemType.SETTINGS, menuItemTextureRegion);
 
-        final MenuItem quit = new SimpleMenuItem(MenuItemType.QUIT, optiksActivity.menuItemTextureRegion);
+        final MenuItem gameInfo = new SimpleMenuItem(MenuItemType.GAME_INFO, menuItemTextureRegion);
+
+        final MenuItem quit = new SimpleMenuItem(MenuItemType.QUIT, menuItemTextureRegion);
 
         menu.addMenuItem(seasonChoice);
         menu.addMenuItem(loadSeasons);
