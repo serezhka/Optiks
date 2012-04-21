@@ -21,7 +21,7 @@ import java.util.List;
 public class ConstructorScene extends GameScene {
     private final List<GameSprite> objectsSprites = new LinkedList<GameSprite>();
 
-    public ConstructorScene(final BaseGameActivity activity, final GameTextureManager textureManager, final GameSoundManager soundManager, final PhysicsWorld world) {
+    public ConstructorScene(final BaseGameActivity activity, final OptiksTextureManager textureManager, final GameSoundManager soundManager, final PhysicsWorld world) {
         super(activity, textureManager, soundManager, world);
     }
 

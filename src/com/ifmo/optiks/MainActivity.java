@@ -3,7 +3,7 @@ package com.ifmo.optiks;
 
 import com.ifmo.optiks.base.manager.GameScene;
 import com.ifmo.optiks.base.manager.GameSoundManager;
-import com.ifmo.optiks.base.manager.GameTextureManager;
+import com.ifmo.optiks.base.manager.OptiksTextureManager;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.options.EngineOptions;
@@ -51,23 +51,23 @@ public class MainActivity extends BaseGameActivity {
 
     }
 
-    private GameTextureManager gameTextureManager;
+    private OptiksTextureManager textureManager;
     private GameSoundManager gameSoundManager;
 
     @Override
     public void onLoadResources() {
         gameSoundManager = GameSoundManager.getInstance(this);
-        gameTextureManager = GameTextureManager.getInstance(this);
+        textureManager = new OptiksTextureManager(this);
     }
 
     @Override
     public Scene onLoadScene() {
         this.mEngine.registerUpdateHandler(new FPSLogger());
-        return new GameScene(level, this, gameTextureManager, gameSoundManager);
+        return new GameScene(level, this, textureManager, gameSoundManager);
 
         /*final Scene scene = new Scene();
        final PhysicsWorld physicsWorld = new PhysicsWorld(new Vector2(0, 0), false);
-       final ConstructorGameScene constructorGameScene = new ConstructorGameScene(this, gameTextureManager, gameSoundManager);
+       final ConstructorGameScene constructorGameScene = new ConstructorGameScene(this, textureManager, gameSoundManager);
 
        scene.registerUpdateHandler(physicsWorld);
        constructorGameScene.setScene(scene);

@@ -52,7 +52,7 @@ public class GameScene extends Scene {
 
     protected final PhysicsWorld physicsWorld;
 
-    protected final GameTextureManager textureManager;
+    protected final OptiksTextureManager textureManager;
     protected final GameSoundManager soundManager;
 
     private RevoluteJointOptiks revoluteJointOptiks;
@@ -77,7 +77,7 @@ public class GameScene extends Scene {
     private final ColorBackground colorBackground = new ColorBackground(0.09804f, 0.6274f, 0.8784f);
 
     public GameScene(final BaseGameActivity activity,
-                     final GameTextureManager textureManager,
+                     final  OptiksTextureManager textureManager,
                      final GameSoundManager soundManager, final PhysicsWorld world) {
         this.activity = activity;
         this.textureManager = textureManager;
@@ -86,7 +86,7 @@ public class GameScene extends Scene {
     }
 
     public GameScene(final String json, final BaseGameActivity baseGameActivity,
-                     final GameTextureManager gameTextureManager, final GameSoundManager gameSoundManager) {
+                     final OptiksTextureManager gameTextureManager, final GameSoundManager gameSoundManager) {
         activity = baseGameActivity;
         textureManager = gameTextureManager;
         soundManager = gameSoundManager;
@@ -132,7 +132,7 @@ public class GameScene extends Scene {
         final float x = laserBody.getPosition().x * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT;
         final float y = laserBody.getPosition().y * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT;
 
-        numberOfTryToast = new Text(x, y, textureManager.getFont(), "" + numberOfTry);
+        numberOfTryToast = new Text(x, y, textureManager.font, "" + numberOfTry);
         attachChild(numberOfTryToast);
 
         final LaserBeam laserBeam = new LaserBeam(this, new LaserBeam.Color(0, 1, 0, 0.5f), x, y);
@@ -171,7 +171,7 @@ public class GameScene extends Scene {
     }
 
     protected void addLaser(final BaseObjectJsonContainer ojc) {
-        final Laser laser = new Laser(ojc, textureManager.getLaserTextureRegion(), BodyForm.CIRCLE);
+        final Laser laser = new Laser(ojc, textureManager.laserTextureRegion, BodyForm.CIRCLE);
         final Body body = PhysicsFactory.createCircleBody(physicsWorld, laser, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
         addSprite(laser, body, ojc);
     }
@@ -181,11 +181,11 @@ public class GameScene extends Scene {
         final Body body;
         switch (ojc.bodyForm) {
             case RECTANGLE:
-                aim = new Aim(ojc, textureManager.getAimTextureRegion(), BodyForm.RECTANGLE);
+                aim = new Aim(ojc, textureManager.aimTextureRegion, BodyForm.RECTANGLE);
                 body = PhysicsFactory.createBoxBody(physicsWorld, aim, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
                 break;
             case CIRCLE:
-                aim = new Aim(ojc, textureManager.getAimTextureRegion(), BodyForm.CIRCLE);
+                aim = new Aim(ojc, textureManager.aimTextureRegion, BodyForm.CIRCLE);
                 body = PhysicsFactory.createCircleBody(physicsWorld, aim, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
                 break;
             default:
@@ -199,11 +199,11 @@ public class GameScene extends Scene {
         final Body body;
         switch (mjc.bodyForm) {
             case RECTANGLE:
-                mirror = new Mirror(mjc, textureManager.getMirrorTextureRegion(), BodyForm.RECTANGLE);
+                mirror = new Mirror(mjc, textureManager.mirrorTextureRegion, BodyForm.RECTANGLE);
                 body = PhysicsFactory.createBoxBody(physicsWorld, mirror, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
                 break;
             case CIRCLE:
-                mirror = new Mirror(mjc, textureManager.X3(), BodyForm.CIRCLE);
+                mirror = new Mirror(mjc, null, BodyForm.CIRCLE);   //todo
                 body = PhysicsFactory.createCircleBody(physicsWorld, mirror, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
                 break;
             default:
@@ -217,11 +217,11 @@ public class GameScene extends Scene {
         final Body body;
         switch (ojc.bodyForm) {
             case RECTANGLE:
-                barrier = new Barrier(ojc, textureManager.getBarrierTextureRegion(), BodyForm.RECTANGLE);
+                barrier = new Barrier(ojc, textureManager.barrierTextureRegion, BodyForm.RECTANGLE);
                 body = PhysicsFactory.createBoxBody(physicsWorld, barrier, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
                 break;
             case CIRCLE:
-                barrier = new Barrier(ojc, textureManager.X3(), BodyForm.CIRCLE);
+                barrier = new Barrier(ojc, null, BodyForm.CIRCLE);//todo
                 body = PhysicsFactory.createCircleBody(physicsWorld, barrier, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
                 break;
             default:
@@ -333,11 +333,11 @@ public class GameScene extends Scene {
                         if (!bullet.isMoving()) {
                             if (numberOfTry > 0) {
                                 detachChild(numberOfTryToast);
-                                numberOfTryToast = new Text(numberOfTryToast.getX(), numberOfTryToast.getY(), textureManager.getFont(), "" + --numberOfTry, HorizontalAlign.CENTER);
+                                numberOfTryToast = new Text(numberOfTryToast.getX(), numberOfTryToast.getY(), textureManager.font, "" + --numberOfTry, HorizontalAlign.CENTER);
                                 attachChild(numberOfTryToast);
                                 bullet.shoot();
                             } else {
-                                toast = new Text(360, 240, textureManager.getFont(), "Try again...", HorizontalAlign.CENTER);
+                                toast = new Text(360, 240, textureManager.font, "Try again...", HorizontalAlign.CENTER);
                                 attachChild(toast);
                             }
                         }
@@ -420,11 +420,11 @@ public class GameScene extends Scene {
 
             if (wallBodies.contains(thing) || barrierBodies.contains(thing)) {
                 bullet.stop();
-                toast = new Text(360, 240, textureManager.getFont(), "Try again...", HorizontalAlign.CENTER);
+                toast = new Text(360, 240, textureManager.font, "Try again...", HorizontalAlign.CENTER);
                 attachChild(toast);
             } else if (thing == aimBody) {
                 bullet.stop();
-                toast = new Text(360, 240, textureManager.getFont(), "Good Shoot!", HorizontalAlign.CENTER);
+                toast = new Text(360, 240, textureManager.font, "Good Shoot!", HorizontalAlign.CENTER);
                 attachChild(toast);
             }
         }
