@@ -45,7 +45,7 @@ import java.util.List;
 /**
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
-
+    @Deprecated
 public class GameSceneManager {
 
     private final static String TAG = "GameSceneManagerTAG";

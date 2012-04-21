@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
-
+      @Deprecated
 public class ConstructorGameScene extends GameSceneManager {
     private final List<GameSprite> objectsSprites = new LinkedList<GameSprite>();
 
