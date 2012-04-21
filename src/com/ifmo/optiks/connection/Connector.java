@@ -1,4 +1,4 @@
-package com.ifmo.optiks.comection;
+package com.ifmo.optiks.connection;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
