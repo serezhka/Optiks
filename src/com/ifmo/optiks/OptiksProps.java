@@ -11,6 +11,7 @@ import java.util.Properties;
 public class OptiksProps {
 
     public static final String PROPS_FILE = "com/ifmo/optiks/Optiks.properties";
+    public static final String LOCAL_PROPS_FILE = "com/ifmo/optiks/Optiks.properties";
 
     private static final OptiksProps props = new OptiksProps();
 

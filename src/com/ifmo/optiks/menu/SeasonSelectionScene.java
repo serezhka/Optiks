@@ -1,9 +1,11 @@
 package com.ifmo.optiks.menu;
 
+import android.database.Cursor;
 import android.widget.Toast;
 import com.ifmo.optiks.OptiksActivity;
 import com.ifmo.optiks.base.control.OptiksScrollDetector;
 import com.ifmo.optiks.base.control.OptiksSurfaceScrollDetector;
+import com.ifmo.optiks.provider.OptiksProviderMetaData;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.entity.primitive.Rectangle;
 import org.anddev.andengine.entity.scene.Scene;
@@ -15,6 +17,9 @@ import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +133,22 @@ public class SeasonSelectionScene extends Scene implements OptiksScrollDetector.
     }
 
     private void init() {
+
+        final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, null, null, null, null);
+        final int nameNum = cursor.getColumnIndex(OptiksProviderMetaData.SeasonsTable.NAME);
+        final int descriptionNum = cursor.getColumnIndex(OptiksProviderMetaData.SeasonsTable.DESCRIPTION);
+        final int idNum = cursor.getColumnIndex(OptiksProviderMetaData.SeasonsTable._ID);
+        for (cursor.moveToFirst(); !cursor.isBeforeFirst(); cursor.moveToNext()) {
+            final String name = cursor.getString(nameNum);
+            final String description = cursor.getString(descriptionNum);
+            final int id = cursor.getInt(idNum);
+        }
+
+        final HttpClient httpClient = new DefaultHttpClient();
+        HttpGet httpGet = new HttpGet("../Download?getSeasonsCount=1");
+
+
+
 
         // TODO load existing seasons
         // TODO ask user to check for new seasons, load new seasons from server
