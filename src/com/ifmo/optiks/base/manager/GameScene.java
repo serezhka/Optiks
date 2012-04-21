@@ -1,11 +1,9 @@
 package com.ifmo.optiks.base.manager;
 
-import android.util.Log;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.ifmo.optiks.base.control.ActionMoveFilter;
 import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
 import com.ifmo.optiks.base.gson.Constants;
@@ -16,8 +14,7 @@ import com.ifmo.optiks.base.item.sprite.*;
 import com.ifmo.optiks.base.physics.CollisionHandler;
 import com.ifmo.optiks.base.physics.Fixtures;
 import com.ifmo.optiks.base.physics.LaserBullet;
-import com.ifmo.optiks.base.physics.joints.MouseJointOptiks;
-import com.ifmo.optiks.base.physics.joints.RevoluteJointOptiks;
+import com.ifmo.optiks.base.physics.joints.JointsManager;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.entity.primitive.Rectangle;
 import org.anddev.andengine.entity.scene.Scene;
@@ -29,8 +26,6 @@ import org.anddev.andengine.entity.text.Text;
 import org.anddev.andengine.extension.physics.box2d.PhysicsConnector;
 import org.anddev.andengine.extension.physics.box2d.PhysicsFactory;
 import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
-import org.anddev.andengine.extension.physics.box2d.util.Vector2Pool;
-import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 import org.anddev.andengine.input.touch.TouchEvent;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 import org.anddev.andengine.util.HorizontalAlign;
@@ -55,13 +50,8 @@ public class GameScene extends Scene {
     protected final OptiksTextureManager textureManager;
     protected final GameSoundManager soundManager;
 
-    private RevoluteJointOptiks revoluteJointOptiks;
-    private MouseJointOptiks mouseJointOptiks;
-    private MouseJoint mouseJoint;
-
     protected Body aimBody;
     protected Body laserBody;
-    protected Body groundBody;
 
     protected final List<Body> mirrorBodies = new LinkedList<Body>();
     protected final List<Body> barrierBodies = new LinkedList<Body>();
@@ -77,7 +67,7 @@ public class GameScene extends Scene {
     private final ColorBackground colorBackground = new ColorBackground(0.09804f, 0.6274f, 0.8784f);
 
     public GameScene(final BaseGameActivity activity,
-                     final  OptiksTextureManager textureManager,
+                     final OptiksTextureManager textureManager,
                      final GameSoundManager soundManager, final PhysicsWorld world) {
         this.activity = activity;
         this.textureManager = textureManager;
@@ -127,7 +117,6 @@ public class GameScene extends Scene {
 
         createBorder(2);//  todo move  in json
 
-        groundBody = physicsWorld.createBody(new BodyDef());
 
         final float x = laserBody.getPosition().x * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT;
         final float y = laserBody.getPosition().y * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT;
@@ -143,8 +132,10 @@ public class GameScene extends Scene {
                 laserBody, laserSight, laserBeam, new SampleCollisionHandler());
 
         physicsWorld.setContactListener(bullet);
-        setOnSceneTouchListener(new SceneTouchListener());
-        setOnAreaTouchListener(new AreaTouchListener());
+        final TouchListener touchListener = new TouchListener(physicsWorld);
+        setOnSceneTouchListener(touchListener);
+        setOnAreaTouchListener(touchListener);
+
 
     }
 
@@ -279,8 +270,17 @@ public class GameScene extends Scene {
         return physicsWorld;
     }
 
-    private class SceneTouchListener implements IOnSceneTouchListener {
 
+    private class TouchListener implements IOnSceneTouchListener, IOnAreaTouchListener {
+        private final ActionMoveFilter filter;
+        private final JointsManager jointsManager;
+
+        private TouchListener(final PhysicsWorld physicsWorld) {
+            filter = new ActionMoveFilter();
+            jointsManager = new JointsManager(physicsWorld);
+        }
+
+        @Override
         public boolean onSceneTouchEvent(final Scene scene, final TouchEvent touchEvent) {
             switch (touchEvent.getAction()) {
                 case TouchEvent.ACTION_DOWN:
@@ -291,39 +291,21 @@ public class GameScene extends Scene {
                     bullet.sightSetPos(touchEvent.getX(), touchEvent.getY());
                     return true;
                 case TouchEvent.ACTION_MOVE:
-                    if (mouseJoint != null) {     //move or Rotate
-                        Log.d(TAG, "SceneTouch Move set pos Mousjoin");
-                        final Vector2 vec = Vector2Pool.obtain(touchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, touchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-                        mouseJoint.setTarget(vec);
-                        Vector2Pool.recycle(vec);
-                    } else {
+                    if (!jointsManager.setTarget(touchEvent)) {
                         bullet.sightSetPos(touchEvent.getX(), touchEvent.getY());
                     }
                     return true;
                 case TouchEvent.ACTION_UP:
-                    if (mouseJoint != null) {
-                        mouseJoint.getBodyB().setType(BodyDef.BodyType.StaticBody);
-                        physicsWorld.destroyJoint(mouseJoint);
-                        mouseJoint = null;
-                        mouseJointOptiks = null;
-                    }
-                    if (revoluteJointOptiks != null) {
-                        revoluteJointOptiks.destroyJoint(physicsWorld);
-                        revoluteJointOptiks = null;
-                    }
+                    jointsManager.destroyJoints();
+                    filter.destroy();
                     return true;
+                default:
+                    return false;
             }
-            return false;
+
         }
-    }
 
-    private class AreaTouchListener implements IOnAreaTouchListener {
-
-        private final long timer = 200;
-        protected long currentTimer;
-        private boolean wasActionDown = false;
-        private ActionMoveFilter filter;
-
+        @Override
         public boolean onAreaTouched(final TouchEvent touchEvent, final ITouchArea touchArea, final float touchAreaLocalX, final float touchAreaLocalY) {
             final IShape object = (Sprite) touchArea;
             final Body body = (Body) object.getUserData();
@@ -341,75 +323,31 @@ public class GameScene extends Scene {
                                 attachChild(toast);
                             }
                         }
-                    } else {
-                        if (mouseJointOptiks == null) {
-                            Log.d(TAG, "create_new cmouseJointOptiks");
-                            mouseJointOptiks = new MouseJointOptiks(object, groundBody, touchAreaLocalX, touchAreaLocalY) {
-                                @Override
-                                public MouseJoint getMouseJoint() {
-                                    return (MouseJoint) physicsWorld.createJoint(this);
-                                }
-                            };
-                            mouseJoint = mouseJointOptiks.getMouseJoint();
-                        }
-                        if (revoluteJointOptiks == null) {
-                            Log.d(TAG, "create_new revoluteJointOptiks");
-                            revoluteJointOptiks = new RevoluteJointOptiks();
-                            revoluteJointOptiks.initialize(body, physicsWorld);
-                        }
-                        currentTimer = System.currentTimeMillis();
-                        wasActionDown = true;
-                        filter = new ActionMoveFilter(touchAreaLocalX, touchAreaLocalY);
+                    } else if (mirrorBodies.contains(body)) {
+                        jointsManager.createJoints(object, touchAreaLocalX, touchAreaLocalY);
+                        filter.init(touchAreaLocalX, touchAreaLocalY);
                     }
                     return true;
                 case TouchEvent.ACTION_MOVE:
-                    if (wasActionDown && aimBody != body) {
-                        if (filter != null && (filter.wasMove() || filter.wasTimer())) {
-                            if (mouseJoint != null) {
-                                Log.d(TAG, "AreaToched Move set pos Mousjoin");
-                                final Vector2 vec = Vector2Pool.obtain(touchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, touchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-                                mouseJoint.setTarget(vec);
-                                Vector2Pool.recycle(vec);
-                            }
-                            return true;
-                        }
-                        if (filter != null && filter.notMoving(touchAreaLocalX, touchAreaLocalY)) {
-                            if (System.currentTimeMillis() - currentTimer >= timer) {
-                                if (revoluteJointOptiks != null) {
-                                    activity.getEngine().vibrate(100);
-                                    revoluteJointOptiks.destroyJoint(physicsWorld);
-                                    revoluteJointOptiks = null;
-                                }
-                                filter.setByTimer();
-                                Log.d("timer", "long_touch");
-                            } else {
-                                Log.d("timer", "waiting");
-                            }
-                        } else {
-                            Log.d("timer", "not_long_touch");
-                        }
+                    if (filter.isMove()) {
+                        jointsManager.setTarget(touchEvent);
+                        return true;
+                    } else if (filter.isMove(touchAreaLocalX, touchAreaLocalY)) {
+                        soundManager.vibrate();
+                        jointsManager.destroyRotate();
                     }
                     return true;
                 case TouchEvent.ACTION_OUTSIDE:
                     return true;
                 case TouchEvent.ACTION_UP:
-                    wasActionDown = false;
-                    filter = null;
-                    if (revoluteJointOptiks != null) {
-                        revoluteJointOptiks.destroyJoint(physicsWorld);
-                        revoluteJointOptiks = null;
-                    }
-                    if (mouseJoint != null) {
-                        mouseJoint.getBodyB().setType(BodyDef.BodyType.StaticBody);
-                        physicsWorld.destroyJoint(mouseJoint);
-                        mouseJoint = null;
-                        mouseJointOptiks = null;
-                    }
+                    jointsManager.destroyJoints();
+                    filter.destroy();
                     return true;
             }
             return true;
         }
     }
+
 
     private class SampleCollisionHandler implements CollisionHandler {
 

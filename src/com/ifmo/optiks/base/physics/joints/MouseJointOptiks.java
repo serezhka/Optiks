@@ -13,7 +13,7 @@ import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConsta
  * User: dududko@gmail.com
  * Date: 29.03.12
  */
-
+@Deprecated
 public abstract class MouseJointOptiks extends MouseJointDef {
 
     private final Body body = super.bodyB;

@@ -10,7 +10,7 @@ import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
  * User: dududko@gmail.com
  * Date: 10.04.12
  */
-
+@Deprecated
 public class RevoluteJointOptiks extends RevoluteJointDef {
 
     private Body body;
@@ -22,7 +22,7 @@ public class RevoluteJointOptiks extends RevoluteJointDef {
 
     public void initialize(final Body body, final PhysicsWorld physicsWorld) {
         this.body = body;
-        this.body.getFixtureList().get(0).setDensity(7);
+        this.body.getFixtureList().get(0).setDensity(2);
         this.body.resetMassData();
         final Body anchorBody = physicsWorld.createBody(new BodyDef());
         anchorBody.setType(BodyDef.BodyType.StaticBody);

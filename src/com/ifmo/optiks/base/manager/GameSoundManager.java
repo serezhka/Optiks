@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 
 public class GameSoundManager {
-
+    private final static int timeVibrate = 50;
     private static GameSoundManager ourInstance = new GameSoundManager();
 
     private final BaseGameActivity activity;
@@ -23,6 +23,7 @@ public class GameSoundManager {
 
     private boolean playMusicBackGround = true;
     private boolean playShootLaser = true;
+    private boolean vibrate = true;
 
     public static GameSoundManager getInstance(final BaseGameActivity gameActivity) {
         if (gameActivity != ourInstance.activity) {
@@ -77,5 +78,15 @@ public class GameSoundManager {
             throw new RuntimeException();
         }
         musicBackGround.setLooping(true);
+    }
+
+    public void setVibrate(final boolean isVibrate) {
+        vibrate = isVibrate;
+    }
+
+    public void vibrate() {
+        if (vibrate) {
+            activity.getEngine().vibrate(timeVibrate);
+        }
     }
 }
