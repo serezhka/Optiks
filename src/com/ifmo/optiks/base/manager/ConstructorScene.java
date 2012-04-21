@@ -8,7 +8,6 @@ import com.ifmo.optiks.base.gson.MirrorJsonContainer;
 import com.ifmo.optiks.base.item.sprite.BodyForm;
 import com.ifmo.optiks.base.item.sprite.GameSprite;
 import com.ifmo.optiks.base.item.sprite.ObjectType;
-import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
@@ -19,17 +18,15 @@ import java.util.List;
 /**
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
-      @Deprecated
-public class ConstructorGameScene extends GameSceneManager {
+public class ConstructorScene extends GameScene {
     private final List<GameSprite> objectsSprites = new LinkedList<GameSprite>();
 
-
-    public ConstructorGameScene(final BaseGameActivity activity, final GameTextureManager gtm, final GameSoundManager gsm) {
-        super(activity, gtm, gsm);
+    public ConstructorScene(final BaseGameActivity activity, final GameTextureManager textureManager, final GameSoundManager soundManager, final PhysicsWorld world) {
+        super(activity, textureManager, soundManager, world);
     }
 
     public void setBackground(final ColorBackground colorBackground) {
-        scene.setBackground(colorBackground);
+        setBackground(colorBackground);
     }
 
     public void addLaser(final float x, final float y) {
@@ -64,11 +61,5 @@ public class ConstructorGameScene extends GameSceneManager {
         return Converter.getInstance().toGson(containers);
     }
 
-    public void setPhysicsWorld(final PhysicsWorld physicsWorld) {
-        this.physicsWorld = physicsWorld;
-    }
 
-    public void setScene(final Scene scene) {
-        this.scene = scene;
-    }
 }

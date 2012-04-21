@@ -45,29 +45,27 @@ import java.util.List;
 /**
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
-    @Deprecated
-public class GameSceneManager {
+public class GameScene extends Scene {
+    private final static String TAG = "GameSceneTAG";
 
-    private final static String TAG = "GameSceneManagerTAG";
+    protected final BaseGameActivity activity;
 
-    final BaseGameActivity activity;
+    protected final PhysicsWorld physicsWorld;
 
-    protected Scene scene;
-    protected PhysicsWorld physicsWorld;
-
-    private final GameTextureManager textureManager;
-    private final GameSoundManager soundManager;    // TODO why it's never used  ??
+    protected final GameTextureManager textureManager;
+    protected final GameSoundManager soundManager;
 
     private RevoluteJointOptiks revoluteJointOptiks;
     private MouseJointOptiks mouseJointOptiks;
     private MouseJoint mouseJoint;
 
-    private Body aimBody;
-    private Body laserBody;
-    private Body groundBody;
-    private final List<Body> mirrorBodies = new LinkedList<Body>();
-    private final List<Body> barrierBodies = new LinkedList<Body>();
-    private final List<Body> wallBodies = new LinkedList<Body>();
+    protected Body aimBody;
+    protected Body laserBody;
+    protected Body groundBody;
+
+    protected final List<Body> mirrorBodies = new LinkedList<Body>();
+    protected final List<Body> barrierBodies = new LinkedList<Body>();
+    protected final List<Body> wallBodies = new LinkedList<Body>();
 
     private LaserBullet bullet;
 
@@ -76,19 +74,24 @@ public class GameSceneManager {
     private Text toast;
     private Text numberOfTryToast;
 
-    volatile private boolean mirrorSelected = false;
-    volatile Body mirrorSelectedBody;
+    private final ColorBackground colorBackground = new ColorBackground(0.09804f, 0.6274f, 0.8784f);
 
-    public GameSceneManager(final BaseGameActivity gameActivity, final GameTextureManager gtm, final GameSoundManager gsm) {
-        activity = gameActivity;
-        textureManager = gtm;
-        soundManager = gsm;
+    public GameScene(final BaseGameActivity activity,
+                     final GameTextureManager textureManager,
+                     final GameSoundManager soundManager, final PhysicsWorld world) {
+        this.activity = activity;
+        this.textureManager = textureManager;
+        this.soundManager = soundManager;
+        physicsWorld = world;
     }
 
-    public Scene createScene(final String json) {
-        scene = new Scene();
+    public GameScene(final String json, final BaseGameActivity baseGameActivity,
+                     final GameTextureManager gameTextureManager, final GameSoundManager gameSoundManager) {
+        activity = baseGameActivity;
+        textureManager = gameTextureManager;
+        soundManager = gameSoundManager;
         physicsWorld = new PhysicsWorld(new Vector2(0, 0), false);
-        scene.registerUpdateHandler(physicsWorld);
+        registerUpdateHandler(physicsWorld);
         try {
             final JSONObject jsonObject = new JSONObject(json);
             final JSONArray jsonArray = jsonObject.getJSONArray(Constants.OBJECTS);
@@ -119,9 +122,10 @@ public class GameSceneManager {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        scene.setBackground(new ColorBackground(0.09804f, 0.6274f, 0.8784f));
 
-        createBorder(2);
+        setBackground(colorBackground);
+
+        createBorder(2);//  todo move  in json
 
         groundBody = physicsWorld.createBody(new BodyDef());
 
@@ -129,22 +133,21 @@ public class GameSceneManager {
         final float y = laserBody.getPosition().y * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT;
 
         numberOfTryToast = new Text(x, y, textureManager.getFont(), "" + numberOfTry);
-        scene.attachChild(numberOfTryToast);
+        attachChild(numberOfTryToast);
 
-        final LaserBeam laserBeam = new LaserBeam(scene, new LaserBeam.Color(0, 1, 0, 0.5f), x, y);
+        final LaserBeam laserBeam = new LaserBeam(this, new LaserBeam.Color(0, 1, 0, 0.5f), x, y);
 
         final LaserSight laserSight = new LaserSight(x, y, -1, -1);
-        scene.attachChild(laserSight);
+        attachChild(laserSight);
         bullet = new LaserBullet(PhysicsFactory.createCircleBody(physicsWorld, -1, -1, 1, 0, BodyDef.BodyType.DynamicBody, Fixtures.BULLET),
                 laserBody, laserSight, laserBeam, new SampleCollisionHandler());
-        //laserSight.setVisible(false);
 
         physicsWorld.setContactListener(bullet);
-        scene.setOnSceneTouchListener(new SceneTouchListener());
-        scene.setOnAreaTouchListener(new AreaTouchListener());
+        setOnSceneTouchListener(new SceneTouchListener());
+        setOnAreaTouchListener(new AreaTouchListener());
 
-        return scene;
     }
+
 
     public void createBorder(final float a) {
         final Camera camera = activity.getEngine().getCamera();
@@ -161,10 +164,10 @@ public class GameSceneManager {
         wallBodies.add(PhysicsFactory.createBoxBody(this.physicsWorld, left, BodyDef.BodyType.StaticBody, Fixtures.WALL));
         wallBodies.add(PhysicsFactory.createBoxBody(this.physicsWorld, right, BodyDef.BodyType.StaticBody, Fixtures.WALL));
 
-        scene.attachChild(ground);
-        scene.attachChild(roof);
-        scene.attachChild(left);
-        scene.attachChild(right);
+        attachChild(ground);
+        attachChild(roof);
+        attachChild(left);
+        attachChild(right);
     }
 
     protected void addLaser(final BaseObjectJsonContainer ojc) {
@@ -237,18 +240,18 @@ public class GameSceneManager {
                 laserBody = body;
                 break;
             case MIRROR:
-                scene.registerTouchArea(sprite);
+                registerTouchArea(sprite);
                 mirrorBodies.add(body);
                 break;
             case BARRIER:
                 barrierBodies.add(body);
                 break;
             case AIM:
-                scene.registerTouchArea(sprite);
+                registerTouchArea(sprite);
                 aimBody = body;
                 break;
         }
-        scene.attachChild(sprite);
+        attachChild(sprite);
     }
 
     public Body getLaser() {
@@ -271,27 +274,25 @@ public class GameSceneManager {
         return wallBodies;
     }
 
-    public Scene getScene() {
-        return scene;
-    }
 
     public PhysicsWorld getPhysicsWorld() {
         return physicsWorld;
     }
 
-    private class SceneTouchListener implements Scene.IOnSceneTouchListener {
+    private class SceneTouchListener implements IOnSceneTouchListener {
 
         public boolean onSceneTouchEvent(final Scene scene, final TouchEvent touchEvent) {
             switch (touchEvent.getAction()) {
                 case TouchEvent.ACTION_DOWN:
                     if (toast != null) {
-                        scene.detachChild(toast);
+                        detachChild(toast);
                         toast = null;
                     }
                     bullet.sightSetPos(touchEvent.getX(), touchEvent.getY());
                     return true;
                 case TouchEvent.ACTION_MOVE:
-                    if (mouseJoint != null) {
+                    if (mouseJoint != null) {     //move or Rotate
+                        Log.d(TAG, "SceneTouch Move set pos Mousjoin");
                         final Vector2 vec = Vector2Pool.obtain(touchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, touchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
                         mouseJoint.setTarget(vec);
                         Vector2Pool.recycle(vec);
@@ -316,14 +317,14 @@ public class GameSceneManager {
         }
     }
 
-    private class AreaTouchListener implements Scene.IOnAreaTouchListener {
+    private class AreaTouchListener implements IOnAreaTouchListener {
 
         private final long timer = 200;
         protected long currentTimer;
         private boolean wasActionDown = false;
         private ActionMoveFilter filter;
 
-        public boolean onAreaTouched(final TouchEvent touchEvent, final Scene.ITouchArea touchArea, final float touchAreaLocalX, final float touchAreaLocalY) {
+        public boolean onAreaTouched(final TouchEvent touchEvent, final ITouchArea touchArea, final float touchAreaLocalX, final float touchAreaLocalY) {
             final IShape object = (Sprite) touchArea;
             final Body body = (Body) object.getUserData();
             switch (touchEvent.getAction()) {
@@ -331,17 +332,18 @@ public class GameSceneManager {
                     if (aimBody == body) {
                         if (!bullet.isMoving()) {
                             if (numberOfTry > 0) {
-                                scene.detachChild(numberOfTryToast);
+                                detachChild(numberOfTryToast);
                                 numberOfTryToast = new Text(numberOfTryToast.getX(), numberOfTryToast.getY(), textureManager.getFont(), "" + --numberOfTry, HorizontalAlign.CENTER);
-                                scene.attachChild(numberOfTryToast);
+                                attachChild(numberOfTryToast);
                                 bullet.shoot();
                             } else {
                                 toast = new Text(360, 240, textureManager.getFont(), "Try again...", HorizontalAlign.CENTER);
-                                scene.attachChild(toast);
+                                attachChild(toast);
                             }
                         }
                     } else {
                         if (mouseJointOptiks == null) {
+                            Log.d(TAG, "create_new cmouseJointOptiks");
                             mouseJointOptiks = new MouseJointOptiks(object, groundBody, touchAreaLocalX, touchAreaLocalY) {
                                 @Override
                                 public MouseJoint getMouseJoint() {
@@ -351,7 +353,7 @@ public class GameSceneManager {
                             mouseJoint = mouseJointOptiks.getMouseJoint();
                         }
                         if (revoluteJointOptiks == null) {
-                            Log.d(TAG, "create_new");
+                            Log.d(TAG, "create_new revoluteJointOptiks");
                             revoluteJointOptiks = new RevoluteJointOptiks();
                             revoluteJointOptiks.initialize(body, physicsWorld);
                         }
@@ -364,6 +366,7 @@ public class GameSceneManager {
                     if (wasActionDown && aimBody != body) {
                         if (filter != null && (filter.wasMove() || filter.wasTimer())) {
                             if (mouseJoint != null) {
+                                Log.d(TAG, "AreaToched Move set pos Mousjoin");
                                 final Vector2 vec = Vector2Pool.obtain(touchEvent.getX() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, touchEvent.getY() / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
                                 mouseJoint.setTarget(vec);
                                 Vector2Pool.recycle(vec);
@@ -373,7 +376,7 @@ public class GameSceneManager {
                         if (filter != null && filter.notMoving(touchAreaLocalX, touchAreaLocalY)) {
                             if (System.currentTimeMillis() - currentTimer >= timer) {
                                 if (revoluteJointOptiks != null) {
-//                                    activity.getEngine().vibrate(100);
+                                    activity.getEngine().vibrate(100);
                                     revoluteJointOptiks.destroyJoint(physicsWorld);
                                     revoluteJointOptiks = null;
                                 }
@@ -418,11 +421,11 @@ public class GameSceneManager {
             if (wallBodies.contains(thing) || barrierBodies.contains(thing)) {
                 bullet.stop();
                 toast = new Text(360, 240, textureManager.getFont(), "Try again...", HorizontalAlign.CENTER);
-                scene.attachChild(toast);
+                attachChild(toast);
             } else if (thing == aimBody) {
                 bullet.stop();
                 toast = new Text(360, 240, textureManager.getFont(), "Good Shoot!", HorizontalAlign.CENTER);
-                scene.attachChild(toast);
+                attachChild(toast);
             }
         }
     }
