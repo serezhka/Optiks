@@ -24,7 +24,7 @@ public class OptiksSplashScene extends Scene implements Scene.IOnSceneTouchListe
     @Override
     public boolean onSceneTouchEvent(final Scene scene, final TouchEvent touchEvent) {
         if (optiksActivity.loadComplete) {
-            optiksActivity.setActiveScene(new OptiksMenuScene(optiksActivity, optiksActivity.menu));
+            optiksActivity.setActiveScene(optiksActivity.menuScene);
             return true;
         } else {
             return false;

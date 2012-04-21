@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import com.ifmo.optiks.base.manager.OptiksTextureManager;
 import com.ifmo.optiks.menu.Menu;
 import com.ifmo.optiks.menu.OptiksMenu;
+import com.ifmo.optiks.menu.OptiksMenuScene;
 import com.ifmo.optiks.menu.OptiksSplashScene;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
@@ -39,8 +40,8 @@ public class OptiksActivity extends BaseGameActivity {
     /* Splash */
     private TextureRegion splashTextureRegion;
 
-    /* Menu */
-    public Menu menu;
+    /* Menu Scene */
+    public Scene menuScene;
 
     /* Activity is loaded flag */
     public boolean loadComplete = false;
@@ -93,7 +94,11 @@ public class OptiksActivity extends BaseGameActivity {
     }
 
     public void setActiveScene(final Scene scene) {
+        activeScene.setIgnoreUpdate(true);
+        activeScene.setVisible(false);
         this.mEngine.setScene(scene);
+        scene.setIgnoreUpdate(false);
+        scene.setVisible(true);
         activeScene = scene;
     }
 
@@ -123,10 +128,9 @@ public class OptiksActivity extends BaseGameActivity {
 
     private void loadScenes() {
 
-        // TODO create menuScene one time and never destroy. Just turn off listeners on it!
-
         /* Menu */
-        menu = new OptiksMenu(this);
+        final Menu menu = new OptiksMenu(this);
+        menuScene = new OptiksMenuScene(this, menu);
     }
 
     public OptiksTextureManager getOptiksTextureManager() {
