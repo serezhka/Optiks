@@ -83,8 +83,9 @@ public class GameScene extends Scene {
         physicsWorld = new PhysicsWorld(new Vector2(0, 0), false);
         registerUpdateHandler(physicsWorld);
         try {
-            final JSONObject jsonObject = new JSONObject(json);
-            final JSONArray jsonArray = jsonObject.getJSONArray(Constants.OBJECTS);
+//            final JSONObject jsonObject = new JSONObject(json);
+//            final JSONArray jsonArray = jsonObject.getJSONArray(Constants.OBJECTS);
+            final JSONArray jsonArray = new JSONArray(json);
             for (int i = 0; i < jsonArray.length(); ++i) {
                 final JSONObject object = jsonArray.getJSONObject(i);
                 final ObjectType objectType = ObjectType.getType(object.getString(Constants.TYPE));
@@ -163,7 +164,7 @@ public class GameScene extends Scene {
 
     protected void addLaser(final BaseObjectJsonContainer ojc) {
         final Laser laser = new Laser(ojc, textureManager.laserTextureRegion, BodyForm.CIRCLE);
-        final Body body = PhysicsFactory.createCircleBody(physicsWorld, laser, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
+        final Body body = PhysicsFactory.createCircleBody(physicsWorld, laser, BodyDef.BodyType.StaticBody, Fixtures.LASER);
         addSprite(laser, body, ojc);
     }
 

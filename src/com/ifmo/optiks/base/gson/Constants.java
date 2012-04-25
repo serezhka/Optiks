@@ -5,7 +5,7 @@ package com.ifmo.optiks.base.gson;
  */
 
 public class Constants {
-    public static final String OBJECTS = "objects";
+//    public static final String OBJECTS = "objects";
     public static final String TYPE = "type";
     public static final String P_Y = "pY";
     public static final String P_X = "pX";
