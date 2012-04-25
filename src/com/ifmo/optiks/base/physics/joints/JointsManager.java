@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
+import com.ifmo.optiks.base.item.sprite.Mirror;
 import org.anddev.andengine.entity.shape.IShape;
 import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
 import org.anddev.andengine.extension.physics.box2d.util.Vector2Pool;
@@ -24,7 +25,6 @@ public class JointsManager {
     private boolean isRotates;
     private boolean isCreate;
     private Body body;
-
 
 
     public JointsManager(final PhysicsWorld physicsWorld) {
@@ -47,6 +47,7 @@ public class JointsManager {
     }
 
     public boolean destroyRotate() {
+        body.setType(BodyDef.BodyType.DynamicBody);
         if (isRotates) {
             isRotates = false;
             body.getFixtureList().get(0).setDensity(0);
@@ -73,34 +74,46 @@ public class JointsManager {
         if (!isCreate) {
             isCreate = true;
             final Body body = (Body) object.getUserData();
-            body.setType(BodyDef.BodyType.DynamicBody);
             final Vector2 localPoint = Vector2Pool.obtain((touchAreaX - object.getWidth() * 0.5f) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, (touchAreaY - object.getHeight() * 0.5f) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-            groundBody.setTransform(localPoint, 0);
-            final MouseJointDef mouseJointDef = new MouseJointDef();
-            mouseJointDef.bodyA = groundBody;
-            mouseJointDef.bodyB = body;
-            mouseJointDef.dampingRatio = 10f;
-            mouseJointDef.frequencyHz = 30;
-            mouseJointDef.maxForce = (100.0f * body.getMass());
-            mouseJointDef.collideConnected = true;
-            mouseJointDef.target.set(body.getWorldPoint(localPoint));
-            Vector2Pool.recycle(localPoint);
-            mouseJoint = (MouseJoint) physicsWorld.createJoint(mouseJointDef);
 
+            createMouseJoint(localPoint, body);
+            if (((Mirror) object).canRotate) {
+                createRotateJoint(body);
+            } else {
+                body.setType(BodyDef.BodyType.StaticBody);
+            }
 
-            //===
-            body.getFixtureList().get(0).setDensity(2);       //todo
-            body.resetMassData();
-            final RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
-            final Body anchorBody = physicsWorld.createBody(new BodyDef());
-            anchorBody.setType(BodyDef.BodyType.StaticBody);
-            anchorBody.setTransform(body.getWorldCenter(), 0);
-            revoluteJointDef.initialize(anchorBody, body, anchorBody.getWorldCenter());
-            rotateJoint = physicsWorld.createJoint(revoluteJointDef);
-            isRotates = true;
             this.body = body;
             return true;
         }
         return false;
+    }
+
+    private void createMouseJoint(final Vector2 localPoint, final Body body) {
+        body.setType(BodyDef.BodyType.DynamicBody);
+        groundBody.setTransform(localPoint, 0);
+        final MouseJointDef mouseJointDef = new MouseJointDef();
+        mouseJointDef.bodyA = groundBody;
+        mouseJointDef.bodyB = body;
+        mouseJointDef.dampingRatio = 10f;
+        mouseJointDef.frequencyHz = 30;
+        mouseJointDef.maxForce = (100.0f * body.getMass());
+        mouseJointDef.collideConnected = true;
+        mouseJointDef.target.set(body.getWorldPoint(localPoint));
+        Vector2Pool.recycle(localPoint);
+        mouseJoint = (MouseJoint) physicsWorld.createJoint(mouseJointDef);
+    }
+
+    private void createRotateJoint(final Body body) {
+        body.getFixtureList().get(0).setDensity(2);       //todo
+        body.resetMassData();
+
+        final RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
+        final Body anchorBody = physicsWorld.createBody(new BodyDef());
+        anchorBody.setType(BodyDef.BodyType.StaticBody);
+        anchorBody.setTransform(body.getWorldCenter(), 0);
+        revoluteJointDef.initialize(anchorBody, body, anchorBody.getWorldCenter());
+        rotateJoint = physicsWorld.createJoint(revoluteJointDef);
+        isRotates = true;
     }
 }

@@ -190,11 +190,11 @@ public class GameScene extends Scene {
         final Body body;
         switch (mjc.bodyForm) {
             case RECTANGLE:
-                mirror = new Mirror(mjc, textureManager.mirrorTextureRegion, BodyForm.RECTANGLE);
+                mirror = new Mirror(mjc, textureManager.mirrorRectangleTextureRegion, BodyForm.RECTANGLE);
                 body = PhysicsFactory.createBoxBody(physicsWorld, mirror, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
                 break;
             case CIRCLE:
-                mirror = new Mirror(mjc, null, BodyForm.CIRCLE);   //todo
+                mirror = new Mirror(mjc, textureManager.mirrorCircleTextureRegion, BodyForm.CIRCLE);
                 body = PhysicsFactory.createCircleBody(physicsWorld, mirror, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
                 break;
             default:
@@ -208,11 +208,11 @@ public class GameScene extends Scene {
         final Body body;
         switch (ojc.bodyForm) {
             case RECTANGLE:
-                barrier = new Barrier(ojc, textureManager.barrierTextureRegion, BodyForm.RECTANGLE);
+                barrier = new Barrier(ojc, textureManager.barrierRectangleTextureRegion, BodyForm.RECTANGLE);
                 body = PhysicsFactory.createBoxBody(physicsWorld, barrier, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
                 break;
             case CIRCLE:
-                barrier = new Barrier(ojc, null, BodyForm.CIRCLE);//todo
+                barrier = new Barrier(ojc, textureManager.barrierCircleTextureRegion, BodyForm.CIRCLE);
                 body = PhysicsFactory.createCircleBody(physicsWorld, barrier, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
                 break;
             default:
@@ -231,7 +231,9 @@ public class GameScene extends Scene {
                 laserBody = body;
                 break;
             case MIRROR:
-                registerTouchArea(sprite);
+                if (((Mirror) sprite).canMove || ((Mirror) sprite).canRotate) {
+                    registerTouchArea(sprite);
+                }
                 mirrorBodies.add(body);
                 break;
             case BARRIER:
@@ -274,6 +276,7 @@ public class GameScene extends Scene {
     private class TouchListener implements IOnSceneTouchListener, IOnAreaTouchListener {
         private final ActionMoveFilter filter;
         private final JointsManager jointsManager;
+        private boolean wasActionDown = false;
 
         private TouchListener(final PhysicsWorld physicsWorld) {
             filter = new ActionMoveFilter();
@@ -296,6 +299,7 @@ public class GameScene extends Scene {
                     }
                     return true;
                 case TouchEvent.ACTION_UP:
+                    wasActionDown = false;
                     jointsManager.destroyJoints();
                     filter.destroy();
                     return true;
@@ -305,12 +309,14 @@ public class GameScene extends Scene {
 
         }
 
+
         @Override
         public boolean onAreaTouched(final TouchEvent touchEvent, final ITouchArea touchArea, final float touchAreaLocalX, final float touchAreaLocalY) {
             final IShape object = (Sprite) touchArea;
             final Body body = (Body) object.getUserData();
             switch (touchEvent.getAction()) {
                 case TouchEvent.ACTION_DOWN:
+                    wasActionDown = true;
                     if (aimBody == body) {
                         if (!bullet.isMoving()) {
                             if (numberOfTry > 0) {
@@ -329,12 +335,16 @@ public class GameScene extends Scene {
                     }
                     return true;
                 case TouchEvent.ACTION_MOVE:
-                    if (filter.isMove()) {
-                        jointsManager.setTarget(touchEvent);
-                        return true;
-                    } else if (filter.isMove(touchAreaLocalX, touchAreaLocalY)) {
-                        soundManager.vibrate();
-                        jointsManager.destroyRotate();
+                    if (wasActionDown) {
+                        if (filter.isMove()) {
+                            jointsManager.setTarget(touchEvent);
+                            return true;
+                        } else if (filter.isMove(touchAreaLocalX, touchAreaLocalY)) {
+                            soundManager.vibrate();
+                            jointsManager.destroyRotate();
+                        }
+                    } else {
+                        bullet.sightSetPos(touchEvent.getX(), touchEvent.getY());
                     }
                     return true;
                 case TouchEvent.ACTION_OUTSIDE:
@@ -342,6 +352,7 @@ public class GameScene extends Scene {
                 case TouchEvent.ACTION_UP:
                     jointsManager.destroyJoints();
                     filter.destroy();
+                    wasActionDown = false;
                     return true;
             }
             return true;

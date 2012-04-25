@@ -11,8 +11,8 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 public class Mirror extends GameSprite {
 
-    final boolean canMove;
-    final boolean canRotate;
+    public final boolean canMove;
+    public final boolean canRotate;
 
     public Mirror(final MirrorJsonContainer mjc, final TextureRegion pTextureRegion, final BodyForm bodyForm
     ) {

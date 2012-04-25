@@ -1,4 +1,4 @@
-package com.ifmo.optiks;
+package com.ifmo.optiks.test;
 
 
 import com.ifmo.optiks.base.manager.GameScene;
@@ -22,10 +22,12 @@ public class MainActivity extends BaseGameActivity {
 
 
     private String level = "{\"objects\":[" +
-            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":100.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":200.0}," +
             "{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":300.0,\"pY\":100.0,\"rotation\":0.0,\"height\":50.0,\"width\":50.0}," +
             "{\"bodyForm\":\"CIRCLE\",\"type\":\"AIM\",\"pX\":400.0,\"pY\":400.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
-            "{\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":500.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":200.0}" +
+            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":100.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":200.0}," +
+            "{\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":100.0,\"pY\":400.0,\"rotation\":0.0,\"height\":50.0,\"width\":200.0}," +
+            "{\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":600.0,\"pY\":100.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
+            "{\"canMove\":true,\"canRotate\":false,\"bodyForm\":\"CIRCLE\",\"type\":\"MIRROR\",\"pX\":500.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}" +
             "]}";
     private Camera camera;
 
