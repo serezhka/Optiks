@@ -36,9 +36,9 @@ public class OptiksProviderMetaData {
         URI_MATCHER.addURI(AUTHORITY, CookieTable.TABLE_NAME + "/#", TypeUri.COOKIE_SINGLE_URI_ID.v);
         URI_MATCHER.addURI(AUTHORITY, SeasonsTable.TABLE_NAME, TypeUri.SEASONS_COLLECTION_URI_ID.v);
         URI_MATCHER.addURI(AUTHORITY, SeasonsTable.TABLE_NAME + "/#", TypeUri.SEASONS_SINGLE_URI_ID.v);
-        URI_MATCHER.addURI(AUTHORITY, LevelTables.TABLE_NAME + "/#/" + LevelTables.CREATE_TABLE, TypeUri.CREATE_LEVEL_TABLE.v);
+//        URI_MATCHER.addURI(AUTHORITY, LevelTables.TABLE_NAME + "/#/" + LevelTables.CREATE_TABLE, TypeUri.CREATE_LEVEL_TABLE.v);
         URI_MATCHER.addURI(AUTHORITY, LevelTables.TABLE_NAME + "/#", TypeUri.LEVEL_COLLECTION_URI_ID.v);
-        URI_MATCHER.addURI(AUTHORITY, LevelTables.TABLE_NAME + "/#/#", TypeUri.LEVEL_SINGLE_URI_ID.v);
+        URI_MATCHER.addURI(AUTHORITY, LevelTables.TABLE_NAME, TypeUri.LEVEL_SINGLE_URI_ID.v);
 
     }
 
@@ -66,12 +66,12 @@ public class OptiksProviderMetaData {
         static final String DEFAULT_VALUE = "default_value";
     }
 
-    //bad logic
+
     public final static class LevelTables implements BaseColumns {
         public final static String TABLE_NAME = "level_table";
-        public final static String CONTENT_URI = "content://" + AUTHORITY + "/" + TABLE_NAME;
-        public static final String LEVEL = "level";
-        public static final String CREATE_TABLE = "create_table";
+        public final static Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME);
+        public static final String LEVEL = "level"; //test
+        public static final String SEASON_ID = "seasons_id";   //int
 
     }
 
@@ -95,7 +95,7 @@ public class OptiksProviderMetaData {
         COOKIE_SINGLE_URI_ID(1),
         SEASONS_COLLECTION_URI_ID(2),
         SEASONS_SINGLE_URI_ID(3),
-        CREATE_LEVEL_TABLE(4),
+        // CREATE_LEVEL_TABLE(4),
         LEVEL_SINGLE_URI_ID(5),
         LEVEL_COLLECTION_URI_ID(6);
         final int v;

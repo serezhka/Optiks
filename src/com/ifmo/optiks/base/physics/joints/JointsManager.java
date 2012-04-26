@@ -1,5 +1,6 @@
 package com.ifmo.optiks.base.physics.joints;
 
+import android.util.Log;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -18,6 +19,8 @@ import org.anddev.andengine.input.touch.TouchEvent;
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
 public class JointsManager {
+    private final static String TAG ="JointsManagerTAG";
+    private final static float MASS =   10000;
     private final PhysicsWorld physicsWorld;
     private final Body groundBody;
     private MouseJoint mouseJoint;
@@ -78,7 +81,9 @@ public class JointsManager {
 
             createMouseJoint(localPoint, body);
             if (((Mirror) object).canRotate) {
-                createRotateJoint(body);
+                final float density   = MASS/(object.getHeightScaled() *object.getWidthScaled() );
+                Log.d(TAG,"density- " + density) ;
+                createRotateJoint(body,density);
             } else {
                 body.setType(BodyDef.BodyType.StaticBody);
             }
@@ -104,9 +109,10 @@ public class JointsManager {
         mouseJoint = (MouseJoint) physicsWorld.createJoint(mouseJointDef);
     }
 
-    private void createRotateJoint(final Body body) {
-        body.getFixtureList().get(0).setDensity(2);       //todo
+    private void createRotateJoint(final Body body,final float density) {
+        body.getFixtureList().get(0).setDensity(density);       //todo
         body.resetMassData();
+        Log.d(TAG,"mass = " +body.getMass());
 
         final RevoluteJointDef revoluteJointDef = new RevoluteJointDef();
         final Body anchorBody = physicsWorld.createBody(new BodyDef());

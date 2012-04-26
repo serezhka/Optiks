@@ -19,6 +19,7 @@ public class Mirror extends GameSprite {
         super(mjc, pTextureRegion, bodyForm);
         canMove = mjc.canMove;
         canRotate = mjc.canRotate;
+
     }
 
     public BaseObjectJsonContainer getGsonContainer() {

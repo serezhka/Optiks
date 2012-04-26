@@ -13,8 +13,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.util.List;
-
 /**
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
@@ -56,6 +54,11 @@ public class OptiksProvider extends ContentProvider {
                     + OptiksProviderMetaData.SeasonsTable.NAME + " TEXT, " +
                     OptiksProviderMetaData.SeasonsTable.DESCRIPTION + " TEXT);");
 
+            db.execSQL("CREATE TABLE " + OptiksProviderMetaData.LevelTables.TABLE_NAME + " (" +
+                    OptiksProviderMetaData.LevelTables._ID + " INTEGER  , "
+                    + OptiksProviderMetaData.LevelTables.LEVEL + " TEXT, " +
+                    OptiksProviderMetaData.LevelTables.SEASON_ID + " INTEGER);");
+
         }
 
         @Override
@@ -63,6 +66,7 @@ public class OptiksProvider extends ContentProvider {
             Log.w(TAG, "onUpgrade data base on " + oldVersion + "to" + newVersion);
             db.execSQL("DROP TABLE IF EXISTS " + OptiksProviderMetaData.CookieTable.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + OptiksProviderMetaData.SeasonsTable.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + OptiksProviderMetaData.LevelTables.TABLE_NAME);
             onCreate(db);
 
         }
@@ -97,12 +101,12 @@ public class OptiksProvider extends ContentProvider {
                 break;
             }
             case LEVEL_COLLECTION_URI_ID: {
-                qb.setTables(uri.getPathSegments().get(0) + uri.getPathSegments().get(1));
+                qb.setTables(OptiksProviderMetaData.LevelTables.TABLE_NAME);
                 break;
             }
             case LEVEL_SINGLE_URI_ID: {
-                qb.setTables(uri.getPathSegments().get(0) + uri.getPathSegments().get(1));
-                qb.appendWhere(OptiksProviderMetaData.LevelTables._ID + "=" + uri.getPathSegments().get(2));
+                qb.setTables(OptiksProviderMetaData.LevelTables.TABLE_NAME);
+                qb.appendWhere(OptiksProviderMetaData.LevelTables._ID + "=" + uri.getPathSegments().get(1));
                 break;
             }
             default:
@@ -123,7 +127,6 @@ public class OptiksProvider extends ContentProvider {
 
     @Override
     public Uri insert(final Uri uri, final ContentValues values) {
-        final List<String> pathSegments = uri.getPathSegments();
         final SQLiteDatabase db = openHelper.getWritableDatabase();
         final long row;
         final Uri insertUrl;
@@ -147,22 +150,10 @@ public class OptiksProvider extends ContentProvider {
                 }
                 break;
             }
-            case CREATE_LEVEL_TABLE: {
-                final String tableName = pathSegments.get(0) + pathSegments.get(1);
-                db.execSQL("DROP TABLE IF EXISTS " + tableName);
-                db.execSQL("CREATE TABLE " + tableName + " (" +
-                        OptiksProviderMetaData.LevelTables._ID + " INTEGER PRIMARY KEY , "
-                        + OptiksProviderMetaData.LevelTables.LEVEL + " TEXT);");
-                insertUrl = Uri.parse(OptiksProviderMetaData.LevelTables.CONTENT_URI + "/" + pathSegments.get(1));
-
-
-                break;
-            }
             case LEVEL_COLLECTION_URI_ID: {
-                final String tableName = pathSegments.get(0) + pathSegments.get(1);
-                row = db.insert(tableName, OptiksProviderMetaData.LevelTables._ID, values);
-                if (row >= 0) {
-                    insertUrl = Uri.parse(OptiksProviderMetaData.LevelTables.CONTENT_URI + "/" + pathSegments.get(1) + "/" + row);
+                row = db.insert(OptiksProviderMetaData.LevelTables.TABLE_NAME, OptiksProviderMetaData.LevelTables._ID, values);
+                if (row > 0) {
+                    insertUrl = ContentUris.withAppendedId(OptiksProviderMetaData.LevelTables.CONTENT_URI, row);
                 } else {
                     throw new SQLException("Failed to insert uri : " + uri);
                 }
@@ -179,7 +170,6 @@ public class OptiksProvider extends ContentProvider {
     @Override
     public int delete(final Uri uri, final String selection, final String[] selectionArgs) {
         final SQLiteDatabase db = openHelper.getWritableDatabase();
-        final List<String> pathSegments = uri.getPathSegments();
         final int col;
         switch (OptiksProviderMetaData.TypeUri.getType(uri)) {
             case COOKIE_COLLECTION_URI_ID: {
@@ -206,16 +196,7 @@ public class OptiksProvider extends ContentProvider {
                 break;
             }
             case LEVEL_COLLECTION_URI_ID: {
-                final String tableName = pathSegments.get(0) + pathSegments.get(1);
-                col = db.delete(tableName, selection, selectionArgs);
-                break;
-            }
-            case LEVEL_SINGLE_URI_ID: {
-                final String tableName = pathSegments.get(0) + pathSegments.get(1);
-                final String id = pathSegments.get(2);
-                col = db.delete(tableName,
-                        OptiksProviderMetaData.LevelTables._ID + "=" + id + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : ""),
-                        selectionArgs);
+                col = db.delete(OptiksProviderMetaData.LevelTables.TABLE_NAME, selection, selectionArgs);
                 break;
             }
 
@@ -228,7 +209,6 @@ public class OptiksProvider extends ContentProvider {
     @Override
     public int update(final Uri uri, final ContentValues values, final String selection,
                       final String[] selectionArgs) {
-        final List<String> pathSegments = uri.getPathSegments();
         final SQLiteDatabase db = openHelper.getWritableDatabase();
         final int col;
         switch (OptiksProviderMetaData.TypeUri.getType(uri)) {
@@ -256,18 +236,10 @@ public class OptiksProvider extends ContentProvider {
                 break;
             }
             case LEVEL_COLLECTION_URI_ID: {
-                final String tableName = pathSegments.get(0) + pathSegments.get(1);
-                col = db.update(tableName, values, selection, selectionArgs);
+                col = db.update(OptiksProviderMetaData.SeasonsTable.TABLE_NAME, values, selection, selectionArgs);
                 break;
             }
-            case LEVEL_SINGLE_URI_ID: {
-                final String tableName = pathSegments.get(0) + pathSegments.get(1);
-                final String id = pathSegments.get(2);
-                col = db.update(tableName, values,
-                        OptiksProviderMetaData.LevelTables._ID + "=" + id + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : ""),
-                        selectionArgs);
-                break;
-            }
+
             default:
                 throw new IllegalArgumentException("Unknown uri : " + uri);
         }
