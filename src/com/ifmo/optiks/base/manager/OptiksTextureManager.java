@@ -8,6 +8,7 @@ import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
+import org.anddev.andengine.opengl.texture.region.TiledTextureRegion;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
 import java.util.HashMap;
@@ -27,12 +28,13 @@ public class OptiksTextureManager {
     public final Font menuFont;
 
     /* Optiks Base Objects */
-    public final TextureRegion aimTextureRegion;
-    public final TextureRegion laserTextureRegion;
-    public final TextureRegion mirrorRectangleTextureRegion;
-    public final TextureRegion mirrorCircleTextureRegion;
-    public final TextureRegion barrierRectangleTextureRegion;
-    public final TextureRegion barrierCircleTextureRegion;
+    public final TiledTextureRegion aimTextureRegion;
+    public final TiledTextureRegion laserTextureRegion;
+    public final TiledTextureRegion mirrorRectangleTextureRegion;
+    public final TiledTextureRegion mirrorCircleTextureRegion;
+    public final TiledTextureRegion barrierRectangleTextureRegion;
+    public final TiledTextureRegion barrierCircleTextureRegion;
+    public final TiledTextureRegion mirrorSplash;
 
     /* Menu Background */
     public final TextureRegion menuBackgroundTextureRegion;
@@ -61,13 +63,14 @@ public class OptiksTextureManager {
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
 
         /* Optiks Base Objects */
-        final BitmapTextureAtlas bitmapTextureAtlas = new BitmapTextureAtlas(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        barrierRectangleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bitmapTextureAtlas, activity, "barrier.png", 0, 0);
-        mirrorRectangleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bitmapTextureAtlas, activity, "mirror.png", 201, 0);
-        aimTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bitmapTextureAtlas, activity, "aim.png", 0, 101);
-        laserTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bitmapTextureAtlas, activity, "laser.png", 101, 101);
-        mirrorCircleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bitmapTextureAtlas, activity, "mirror_circle.png", 201, 101);
-        barrierCircleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bitmapTextureAtlas, activity, "barrier_circle.png", 301, 101);
+        final BitmapTextureAtlas bitmapTextureAtlas = new BitmapTextureAtlas(1024, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        aimTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "aim.png", 0, 0, 3, 3);
+        laserTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "laser.png", 301, 0, 3, 3);
+        mirrorCircleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "mirror_circle.png", 602, 0, 3, 3);
+        mirrorRectangleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "mirror.png", 0, 271, 2, 6);
+        barrierRectangleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "barrier.png", 401, 271, 1, 1);
+        barrierCircleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "barrier_circle.png", 602, 271, 1, 1);
+        mirrorSplash = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "mirror_splash.png", 703, 271, 1, 1);
         activity.getEngine().getTextureManager().loadTexture(bitmapTextureAtlas);
 
         /* Font assets path */

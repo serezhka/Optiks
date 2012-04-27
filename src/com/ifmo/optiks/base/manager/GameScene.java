@@ -21,7 +21,6 @@ import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.entity.shape.IShape;
 import org.anddev.andengine.entity.shape.Shape;
-import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.entity.text.Text;
 import org.anddev.andengine.extension.physics.box2d.PhysicsConnector;
 import org.anddev.andengine.extension.physics.box2d.PhysicsFactory;
@@ -193,10 +192,12 @@ public class GameScene extends Scene {
             case RECTANGLE:
                 mirror = new Mirror(mjc, textureManager.mirrorRectangleTextureRegion, BodyForm.RECTANGLE);
                 body = PhysicsFactory.createBoxBody(physicsWorld, mirror, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
+                mirror.animate(new long[] {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, 1, 10, true);
                 break;
             case CIRCLE:
                 mirror = new Mirror(mjc, textureManager.mirrorCircleTextureRegion, BodyForm.CIRCLE);
                 body = PhysicsFactory.createCircleBody(physicsWorld, mirror, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
+                mirror.animate(new long[] {100, 100, 100, 100, 100, 100, 100, 100, 100}, 1, 9, true);
                 break;
             default:
                 throw new RuntimeException();
@@ -230,6 +231,7 @@ public class GameScene extends Scene {
         switch (container.type) {
             case LASER:
                 laserBody = body;
+                sprite.animate(100);
                 break;
             case MIRROR:
                 if (((Mirror) sprite).canMove || ((Mirror) sprite).canRotate) {
@@ -243,6 +245,7 @@ public class GameScene extends Scene {
             case AIM:
                 registerTouchArea(sprite);
                 aimBody = body;
+                sprite.animate(100);
                 break;
         }
         attachChild(sprite);
@@ -313,7 +316,7 @@ public class GameScene extends Scene {
 
         @Override
         public boolean onAreaTouched(final TouchEvent touchEvent, final ITouchArea touchArea, final float touchAreaLocalX, final float touchAreaLocalY) {
-            final IShape object = (Sprite) touchArea;
+            final IShape object = (GameSprite) touchArea;
             final Body body = (Body) object.getUserData();
             switch (touchEvent.getAction()) {
                 case TouchEvent.ACTION_DOWN:
