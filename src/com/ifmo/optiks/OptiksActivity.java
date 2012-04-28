@@ -2,11 +2,14 @@ package com.ifmo.optiks;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.view.KeyEvent;
 import com.ifmo.optiks.base.manager.OptiksTextureManager;
 import com.ifmo.optiks.menu.Menu;
 import com.ifmo.optiks.menu.OptiksMenu;
-import com.ifmo.optiks.menu.OptiksMenuScene;
-import com.ifmo.optiks.menu.OptiksSplashScene;
+import com.ifmo.optiks.scene.OptiksMenuScene;
+import com.ifmo.optiks.scene.OptiksScene;
+import com.ifmo.optiks.scene.OptiksScenes;
+import com.ifmo.optiks.scene.OptiksSplashScene;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.handler.timer.ITimerCallback;
@@ -21,6 +24,9 @@ import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextur
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Author: Sergey Fedorov (serezhka@xakep.ru)
  * Date: 19.04.12
@@ -31,7 +37,7 @@ public class OptiksActivity extends BaseGameActivity {
     private static final int CAMERA_WIDTH = 720;
     private static final int CAMERA_HEIGHT = 480;
 
-    private Scene activeScene;
+    private OptiksScene activeScene;
     private Camera camera;
 
     /* Texture Manager */
@@ -40,8 +46,8 @@ public class OptiksActivity extends BaseGameActivity {
     /* Splash */
     private TextureRegion splashTextureRegion;
 
-    /* Menu Scene */
-    public Scene menuScene;
+    /* All Scenes */
+    public Map<OptiksScenes, OptiksScene> scenes;
 
     /* Activity is loaded flag */
     public boolean loadComplete = false;
@@ -89,16 +95,22 @@ public class OptiksActivity extends BaseGameActivity {
     public void onLoadComplete() {
     }
 
-    public Scene getActiveScene() {
+    @Override
+    public boolean onKeyDown(final int pKeyCode, final KeyEvent pEvent) {
+        return activeScene != null && activeScene.onKeyDown(pKeyCode, pEvent);
+    }
+
+    public OptiksScene getActiveScene() {
         return activeScene;
     }
 
-    public void setActiveScene(final Scene scene) {
-        activeScene.setIgnoreUpdate(true);
-        activeScene.setVisible(false);
+    public void setActiveScene(final OptiksScene scene) {
+        if (activeScene != null) {
+            activeScene.setEnabled(false);
+        }
+        camera.setCenter(CAMERA_WIDTH / 2, CAMERA_HEIGHT / 2);
         this.mEngine.setScene(scene);
-        scene.setIgnoreUpdate(false);
-        scene.setVisible(true);
+        scene.setEnabled(true);
         activeScene = scene;
     }
 
@@ -128,9 +140,12 @@ public class OptiksActivity extends BaseGameActivity {
 
     private void loadScenes() {
 
-        /* Menu */
+        /* All Scenes */
+        scenes = new HashMap<OptiksScenes, OptiksScene>();
+
+        /* Menu Scene*/
         final Menu menu = new OptiksMenu(this);
-        menuScene = new OptiksMenuScene(this, menu);
+        scenes.put(OptiksScenes.MENU_SCENE, new OptiksMenuScene(this, menu));
     }
 
     public OptiksTextureManager getOptiksTextureManager() {

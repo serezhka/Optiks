@@ -20,14 +20,14 @@ public class TestConnector extends Activity {
         final Connector connector = new Connector();
         try {
             final int id = 1;
-            Log.d(TAG, "getSeasonsCount = " +connector.getSeasonsCount());
-            Log.d(TAG, "getLevelCount = " +connector.getLevelCount(id));
-            Log.d(TAG, "getNameDescription = " +connector.getNameDescription(id));
+            Log.d(TAG, "getSeasonsCount = " + connector.getSeasonsCount());
+            Log.d(TAG, "getLevelCount = " + connector.getLevelCount(id));
+            Log.d(TAG, "getNameDescription = " + connector.getNameDescription(id));
 
         } catch (IOException e) {
-            Log.e(TAG,"",e);
+            Log.e(TAG, "", e);
         } catch (JSONException e) {
-            Log.e(TAG,"",e);
+            Log.e(TAG, "", e);
         }
     }
 }

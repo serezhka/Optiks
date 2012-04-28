@@ -19,6 +19,7 @@ import java.util.List;
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
 public class ConstructorScene extends GameScene {
+
     private final List<GameSprite> objectsSprites = new LinkedList<GameSprite>();
 
     public ConstructorScene(final BaseGameActivity activity, final OptiksTextureManager textureManager, final GameSoundManager soundManager, final PhysicsWorld world) {
@@ -26,7 +27,8 @@ public class ConstructorScene extends GameScene {
     }
 
     public void setBackground(final ColorBackground colorBackground) {
-        setBackground(colorBackground);
+        // TODO I (Serezhka) fixed bug. But.. it's now correct?
+        super.setBackground(colorBackground);
     }
 
     public void addLaser(final float x, final float y) {
@@ -60,6 +62,4 @@ public class ConstructorScene extends GameScene {
         }
         return Converter.getInstance().toGson(containers);
     }
-
-
 }

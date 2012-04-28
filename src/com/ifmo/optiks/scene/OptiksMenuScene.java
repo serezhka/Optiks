@@ -1,16 +1,17 @@
-package com.ifmo.optiks.menu;
+package com.ifmo.optiks.scene;
 
+import android.view.KeyEvent;
 import com.ifmo.optiks.OptiksActivity;
-import com.ifmo.optiks.base.control.OptiksScrollDetector;
+import com.ifmo.optiks.menu.Menu;
+import com.ifmo.optiks.menu.MenuItem;
+import com.ifmo.optiks.menu.SimpleMenuItem;
 import org.anddev.andengine.engine.handler.timer.ITimerCallback;
 import org.anddev.andengine.engine.handler.timer.TimerHandler;
-import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.entity.scene.menu.MenuScene;
 import org.anddev.andengine.entity.scene.menu.item.IMenuItem;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.entity.text.ChangeableText;
-import org.anddev.andengine.input.touch.TouchEvent;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -21,7 +22,7 @@ import java.util.Collection;
  * Date: 19.04.12
  */
 
-public class OptiksMenuScene extends Scene implements MenuScene.IOnMenuItemClickListener, OptiksScrollDetector.IScrollDetectorListener, Scene.IOnSceneTouchListener {
+public class OptiksMenuScene extends OptiksScene implements MenuScene.IOnMenuItemClickListener/*, OptiksScrollDetector.IScrollDetectorListener, Scene.IOnSceneTouchListener*/ {
 
     private final OptiksActivity optiksActivity;
 
@@ -42,7 +43,16 @@ public class OptiksMenuScene extends Scene implements MenuScene.IOnMenuItemClick
         this.setChildScene(menuScene);
         // TODO activate scroll ability if menuHeight > CAMERA_HEIGHT
         //scrollDetector = new OptiksSurfaceScrollDetector(this);
-        this.setOnSceneTouchListener(this);
+        //this.setOnSceneTouchListener(this);
+    }
+
+    @Override
+    public boolean onKeyDown(final int pKeyCode, final KeyEvent pEvent) {
+        if (pKeyCode == KeyEvent.KEYCODE_BACK && pEvent.getAction() == KeyEvent.ACTION_DOWN) {
+            optiksActivity.showExitDialog();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -52,9 +62,10 @@ public class OptiksMenuScene extends Scene implements MenuScene.IOnMenuItemClick
             switch (menuItem.getType()) {
 
                 case SEASON_CHOICE:
-                    optiksActivity.setActiveScene(new SeasonSelectionScene(optiksActivity));
+                    final OptiksScene seasons = new OptiksSeasonsScene(optiksActivity);
+                    optiksActivity.scenes.put(OptiksScenes.SEASONS_SCENE, seasons);
+                    optiksActivity.setActiveScene(seasons);
                     break;
-
 
                 case SETTINGS:
 
@@ -75,6 +86,37 @@ public class OptiksMenuScene extends Scene implements MenuScene.IOnMenuItemClick
         }
         return false;
     }
+
+    /*@Override
+    public void onScrollStarted(final OptiksScrollDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY) {
+    }
+
+    @Override
+    public void onScroll(final OptiksScrollDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY) {
+        if (pDistanceY > 0) {
+            if (menuScene.getY() + pDistanceY > menuHeight / 4) {
+                menuScene.setPosition(menuScene.getX(), menuHeight / 4);
+            } else {
+                menuScene.setPosition(menuScene.getX(), menuScene.getY() + pDistanceY);
+            }
+        } else {
+            if (menuScene.getY() + pDistanceY < -menuHeight / 4) {
+                menuScene.setPosition(menuScene.getX(), -menuHeight / 4);
+            } else {
+                menuScene.setPosition(menuScene.getX(), menuScene.getY() + pDistanceY);
+            }
+        }
+    }
+
+    @Override
+    public void onScrollFinished(final OptiksScrollDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY) {
+    }*/
+
+    /*@Override
+    public boolean onSceneTouchEvent(final Scene scene, final TouchEvent touchEvent) {
+        //scrollDetector.onTouchEvent(touchEvent);
+        return true;
+    }*/
 
     private MenuScene createMenuScene() {
         menuHeight = 0;
@@ -98,43 +140,11 @@ public class OptiksMenuScene extends Scene implements MenuScene.IOnMenuItemClick
                 menuScene.setOnMenuItemClickListener(OptiksMenuScene.this);
                 menuScene.setTouchAreaBindingEnabled(true);
                 menuScene.setOnSceneTouchListenerBindingEnabled(true);
-
             }
         }));
 
         //menuScene.setPosition(menuScene.getX(), menuHeight / 4);
         return menuScene;
-    }
-
-    @Override
-    public void onScrollStarted(final OptiksScrollDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY) {
-    }
-
-    @Override
-    public void onScroll(final OptiksScrollDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY) {
-        if (pDistanceY > 0) {
-            if (menuScene.getY() + pDistanceY > menuHeight / 4) {
-                menuScene.setPosition(menuScene.getX(), menuHeight / 4);
-            } else {
-                menuScene.setPosition(menuScene.getX(), menuScene.getY() + pDistanceY);
-            }
-        } else {
-            if (menuScene.getY() + pDistanceY < -menuHeight / 4) {
-                menuScene.setPosition(menuScene.getX(), -menuHeight / 4);
-            } else {
-                menuScene.setPosition(menuScene.getX(), menuScene.getY() + pDistanceY);
-            }
-        }
-    }
-
-    @Override
-    public void onScrollFinished(final OptiksScrollDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY) {
-    }
-
-    @Override
-    public boolean onSceneTouchEvent(final Scene scene, final TouchEvent touchEvent) {
-        //scrollDetector.onTouchEvent(touchEvent);
-        return true;
     }
 
     private void setBackground() {

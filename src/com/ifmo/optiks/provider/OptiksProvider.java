@@ -21,7 +21,6 @@ public class OptiksProvider extends ContentProvider {
 
     private final static String TAG = "OptiksProviderTAG";
 
-
     private DatabaseHelper openHelper;
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
@@ -58,7 +57,6 @@ public class OptiksProvider extends ContentProvider {
                     OptiksProviderMetaData.LevelTables._ID + " INTEGER  , "
                     + OptiksProviderMetaData.LevelTables.LEVEL + " TEXT, " +
                     OptiksProviderMetaData.LevelTables.SEASON_ID + " INTEGER);");
-
         }
 
         @Override
@@ -68,7 +66,6 @@ public class OptiksProvider extends ContentProvider {
             db.execSQL("DROP TABLE IF EXISTS " + OptiksProviderMetaData.SeasonsTable.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + OptiksProviderMetaData.LevelTables.TABLE_NAME);
             onCreate(db);
-
         }
     }
 
@@ -112,7 +109,6 @@ public class OptiksProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown uri : " + uri);
         }
-
 
         final SQLiteDatabase db = openHelper.getReadableDatabase();
         final Cursor cursor = qb.query(db, projection, selection, selectionArgs, null, null, sortOrder);
@@ -245,6 +241,4 @@ public class OptiksProvider extends ContentProvider {
         }
         return col;
     }
-
-
 }
