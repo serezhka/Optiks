@@ -12,6 +12,7 @@ import com.ifmo.optiks.provider.OptiksProviderMetaData;
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
 public class TestProvider extends Activity {
+
     private final static String TAG = "TestProviderTAG";
 
     @Override     //перед запуском теста приложение    удалять!
@@ -34,7 +35,7 @@ public class TestProvider extends Activity {
             cv.clear();
         }
 
-        Cursor cursor = managedQuery(uri, null, null, null, null);
+        final Cursor cursor = managedQuery(uri, null, null, null, null);
         valid(cursor, "aaa");
 
         for (int i = 0; i < 10; i++) {
@@ -58,11 +59,11 @@ public class TestProvider extends Activity {
         final int level = cursor.getColumnIndex(OptiksProviderMetaData.LevelTables.LEVEL);
         cursor.moveToFirst();
         for (int i = 0; !cursor.isAfterLast(); cursor.moveToNext(), i++) {
-            int idData = cursor.getInt(id);
+            final int idData = cursor.getInt(id);
             if (idData != i) {
                 throw new RuntimeException();
             }
-            String levelData = cursor.getString(level);
+            final String levelData = cursor.getString(level);
             if (!levelData.equals(s + i)) {
                 throw new RuntimeException();
             }

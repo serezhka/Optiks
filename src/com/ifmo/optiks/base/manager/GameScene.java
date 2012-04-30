@@ -41,6 +41,7 @@ import java.util.List;
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
 public class GameScene extends Scene {
+
     private final static String TAG = "GameSceneTAG";
 
     protected final BaseGameActivity activity;
@@ -136,10 +137,7 @@ public class GameScene extends Scene {
         final TouchListener touchListener = new TouchListener(physicsWorld);
         setOnSceneTouchListener(touchListener);
         setOnAreaTouchListener(touchListener);
-
-
     }
-
 
     public void createBorder(final float a) {
         final Camera camera = activity.getEngine().getCamera();
@@ -297,11 +295,9 @@ public class GameScene extends Scene {
         return wallBodies;
     }
 
-
     public PhysicsWorld getPhysicsWorld() {
         return physicsWorld;
     }
-
 
     private class TouchListener implements IOnSceneTouchListener, IOnAreaTouchListener {
         private final ActionMoveFilter filter;
@@ -338,7 +334,6 @@ public class GameScene extends Scene {
             }
 
         }
-
 
         @Override
         public boolean onAreaTouched(final TouchEvent touchEvent, final ITouchArea touchArea, final float touchAreaLocalX, final float touchAreaLocalY) {
@@ -390,7 +385,6 @@ public class GameScene extends Scene {
             return true;
         }
     }
-
 
     private class SampleCollisionHandler implements CollisionHandler {
 

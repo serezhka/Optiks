@@ -1,5 +1,6 @@
-package com.ifmo.optiks.menu;
+package com.ifmo.optiks.scene;
 
+import android.view.KeyEvent;
 import com.ifmo.optiks.OptiksActivity;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
@@ -10,7 +11,7 @@ import org.anddev.andengine.input.touch.TouchEvent;
  * Date: 19.04.12
  */
 
-public class OptiksSplashScene extends Scene implements Scene.IOnSceneTouchListener {
+public class OptiksSplashScene extends OptiksScene implements Scene.IOnSceneTouchListener {
 
     private final OptiksActivity optiksActivity;
 
@@ -24,10 +25,15 @@ public class OptiksSplashScene extends Scene implements Scene.IOnSceneTouchListe
     @Override
     public boolean onSceneTouchEvent(final Scene scene, final TouchEvent touchEvent) {
         if (optiksActivity.loadComplete) {
-            optiksActivity.setActiveScene(optiksActivity.menuScene);
+            optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.MENU_SCENE));
             return true;
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(final int pKeyCode, final KeyEvent pEvent) {
+        return this.onSceneTouchEvent(this, new TouchEvent());
     }
 }

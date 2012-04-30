@@ -18,6 +18,8 @@ import java.io.IOException;
  * Date: 21.04.12
  */
 public class Connector {
+
+    // TODO  move this to Optiks Props
     private final static String TAG = "ConnectorTAG";
     private final static String URI = "http://89.112.11.137:8028/Download";
     private final static HttpClient HTTP_CLIENT = new DefaultHttpClient();
@@ -33,9 +35,7 @@ public class Connector {
         private final static String LEVEL_COUNT = "levelCount";
         private final static String DESCRIPTION = "description";
         private final static String NAME = "name";
-
     }
-
 
     public class NameDescription {
         public final String name;
@@ -64,13 +64,6 @@ public class Connector {
 
     }
 
-    /**
-     * @param id id Season
-     * @return
-     * @throws IOException
-     * @throws JSONException
-     */
-
     public int getLevelCount(final int id) throws IOException, JSONException {
         final HttpGet httpGet = new HttpGet(URI + "?" + GET_LEVEL_COUNT + "&" + SEASON_ID + id);
         final String res = HTTP_CLIENT.execute(httpGet, RESPONSE_HANDLER);
@@ -78,12 +71,6 @@ public class Connector {
         return object.getInt(Fields.LEVEL_COUNT);
     }
 
-    /**
-     * @param id id Season
-     * @return
-     * @throws IOException
-     * @throws JSONException
-     */
     public NameDescription getNameDescription(final int id) throws IOException, JSONException {
         final HttpGet httpGet = new HttpGet(URI + "?" + GET_SEASON + "&" + SEASON_ID + id);
         final String res = HTTP_CLIENT.execute(httpGet, RESPONSE_HANDLER);
@@ -98,15 +85,11 @@ public class Connector {
         final String res = HTTP_CLIENT.execute(httpGet, RESPONSE_HANDLER);
         final JSONObject jsonObject = new JSONObject(res);
 
-
         final ContentValues cv = new ContentValues();
         cv.put(OptiksProviderMetaData.SeasonsTable._ID, seasonId);
         cv.put(OptiksProviderMetaData.SeasonsTable.NAME, nameDescription.name);
         cv.put(OptiksProviderMetaData.SeasonsTable.DESCRIPTION, nameDescription.description);
         contentResolver.insert(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, cv);
-
     }
-
-
 }
 

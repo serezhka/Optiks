@@ -13,8 +13,10 @@ import java.io.IOException;
  */
 
 public class GameSoundManager {
-    private final static int timeVibrate = 50;
+
     private static GameSoundManager ourInstance = new GameSoundManager();
+
+    private final static int timeVibrate = 50;
 
     private final BaseGameActivity activity;
 

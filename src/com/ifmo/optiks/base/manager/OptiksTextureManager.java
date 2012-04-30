@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class OptiksTextureManager {
 
-    /* Toast Font */
+    /* toast Font */
     public final Font font;
 
     /* Menu Font */
@@ -44,6 +44,14 @@ public class OptiksTextureManager {
 
     /* Question */
     public final TextureRegion questionTextureRegion;
+
+    /* Season Select Menu Arrows */
+    public final TextureRegion leftArrowTextureRegion;
+    public final TextureRegion rightArrowTextureRegion;
+
+    /* Levels Menu Items */
+    public final TextureRegion levelsMenuStar;
+    public final TextureRegion levelsMenuQuestion;
 
     /* Seasons Images */
     public final Map<Integer, TextureRegion> seasons;
@@ -95,7 +103,7 @@ public class OptiksTextureManager {
         menuItemTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuAtlas, activity, "menu_empty.png", 0, 0);
         activity.getEngine().getTextureManager().loadTexture(menuAtlas);
 
-        /* Season assets path */
+        /* Season menu assets path */
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/season/");
 
         /* Question */
@@ -103,5 +111,26 @@ public class OptiksTextureManager {
         questionTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(questionAtlas, activity, "question.png", 0, 0);
         activity.getEngine().getTextureManager().loadTexture(questionAtlas);
         seasons.put(-1, questionTextureRegion);
+
+        /* Seasons Background */
+        final BitmapTextureAtlas seasonBackgroundAtlas = new BitmapTextureAtlas(1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        final TextureRegion seasonBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(seasonBackgroundAtlas, activity, "season_background.jpg", 0, 0);
+        activity.getEngine().getTextureManager().loadTexture(seasonBackgroundAtlas);
+        seasons.put(0, seasonBackgroundTextureRegion);
+
+        /* Season Select Menu Arrows */
+        final BitmapTextureAtlas arrowsTextureAtlas = new BitmapTextureAtlas(512, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        leftArrowTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(arrowsTextureAtlas, activity, "arrow_left.png", 0, 0);
+        rightArrowTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(arrowsTextureAtlas, activity, "arrow_right.png", 256, 0);
+        activity.getEngine().getTextureManager().loadTexture(arrowsTextureAtlas);
+
+        /* Levels menu assets path */
+        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/level/");
+
+        /* Levels menu items */
+        final BitmapTextureAtlas levelsMenuTextureAtlas = new BitmapTextureAtlas(512, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        levelsMenuStar = BitmapTextureAtlasTextureRegionFactory.createFromAsset(levelsMenuTextureAtlas, activity, "star.png", 0, 0);
+        levelsMenuQuestion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(levelsMenuTextureAtlas, activity, "question.png", 256, 0);
+        activity.getEngine().getTextureManager().loadTexture(levelsMenuTextureAtlas);
     }
 }
