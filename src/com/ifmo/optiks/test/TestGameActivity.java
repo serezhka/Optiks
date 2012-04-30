@@ -22,12 +22,19 @@ public class TestGameActivity extends BaseGameActivity {
 
 
     private String level = "[" +
-            "{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":300.0,\"pY\":100.0,\"rotation\":0.0,\"height\":50.0,\"width\":50.0}," +
-            "{\"bodyForm\":\"CIRCLE\",\"type\":\"AIM\",\"pX\":400.0,\"pY\":400.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
-            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":100.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":200.0}," +
-            "{\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":100.0,\"pY\":400.0,\"rotation\":0.0,\"height\":50.0,\"width\":200.0}," +
-            "{\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":600.0,\"pY\":100.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
-            "{\"canMove\":true,\"canRotate\":false,\"bodyForm\":\"CIRCLE\",\"type\":\"MIRROR\",\"pX\":500.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}" +
+            "{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":50.0,\"pY\":430.0,\"rotation\":0.0,\"height\":50.0,\"width\":50.0}," +
+            "{\"bodyForm\":\"CIRCLE\",\"type\":\"AIM\",\"pX\":300.0,\"pY\":130.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
+            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":200.0,\"pY\":100.0,\"rotation\":90.0,\"height\":40.0,\"width\":200.0}," +
+            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":320.0,\"pY\":220.0,\"rotation\":0.0,\"height\":40.0,\"width\":200.0}," +
+            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":520.0,\"pY\":220.0,\"rotation\":0.0,\"height\":40.0,\"width\":200.0}," +
+            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":75.0,\"pY\":350.0,\"rotation\":0.0,\"height\":30.0,\"width\":150.0}," +
+            "{\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":170.0,\"pY\":360.0,\"rotation\":0.0,\"height\":30.0,\"width\":30.0}," +
+            "{\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":200.0,\"pY\":375.0,\"rotation\":0.0,\"height\":25.0,\"width\":25.0}," +
+            "{\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":220.0,\"pY\":395.0,\"rotation\":0.0,\"height\":23.0,\"width\":23.0}," +
+            "{\"canMove\":false,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":640.0,\"pY\":400.0,\"rotation\":-45.0,\"height\":30.0,\"width\":150.0}," +
+            "{\"canMove\":false,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":640.0,\"pY\":80.0,\"rotation\":45.0,\"height\":30.0,\"width\":150.0}," +
+//            "{\"canMove\":true,\"canRotate\":false,\"bodyForm\":\"CIRCLE\",\"type\":\"MIRROR\",\"pX\":420.0,\"pY\":220.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}" +
+            "{\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":350.0,\"pY\":400.0,\"rotation\":0.0,\"height\":40.0,\"width\":200.0}" +
             "]";
     private Camera camera;
 

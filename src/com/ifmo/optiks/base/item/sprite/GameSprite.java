@@ -14,10 +14,9 @@ public abstract class GameSprite extends AnimatedSprite {
     protected final BodyForm bodyForm;
 
     public GameSprite(final BaseObjectJsonContainer ojc, final TiledTextureRegion tiledTextureRegion, final BodyForm bodyForm) {
-        super(ojc.pX, ojc.pY, tiledTextureRegion);
+        super(0, 0, tiledTextureRegion);
         this.bodyForm = bodyForm;
         scaleSprite(ojc.width, ojc.height, tiledTextureRegion.getTileWidth(), tiledTextureRegion.getTileHeight());
-//        animate(200);
     }
 
     public BaseObjectJsonContainer getGsonContainer() {

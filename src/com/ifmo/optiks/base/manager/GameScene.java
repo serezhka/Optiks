@@ -21,6 +21,7 @@ import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.entity.shape.IShape;
 import org.anddev.andengine.entity.shape.Shape;
+import org.anddev.andengine.entity.sprite.AnimatedSprite;
 import org.anddev.andengine.entity.text.Text;
 import org.anddev.andengine.extension.physics.box2d.PhysicsConnector;
 import org.anddev.andengine.extension.physics.box2d.PhysicsFactory;
@@ -58,12 +59,12 @@ public class GameScene extends Scene {
 
     private LaserBullet bullet;
 
-    private int numberOfTry = 5; // TODO assign it from level json data
+//    private int numberOfTry = 5; // TODO assign it from level json data
 
     private Text toast;
     private Text numberOfTryToast;
 
-    private final ColorBackground colorBackground = new ColorBackground(0.09804f, 0.6274f, 0.8784f);
+    private final ColorBackground colorBackground = new ColorBackground(0.0f, 0.0f, 0.0f);
 
     public GameScene(final BaseGameActivity activity,
                      final OptiksTextureManager textureManager,
@@ -121,8 +122,8 @@ public class GameScene extends Scene {
         final float x = laserBody.getPosition().x * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT;
         final float y = laserBody.getPosition().y * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT;
 
-        numberOfTryToast = new Text(x, y, textureManager.font, "" + numberOfTry);
-        attachChild(numberOfTryToast);
+//        numberOfTryToast = new Text(x, y, textureManager.font, "" + numberOfTry);
+//        attachChild(numberOfTryToast);
 
         final LaserBeam laserBeam = new LaserBeam(this, new LaserBeam.Color(0, 1, 0, 0.5f), x, y);
 
@@ -192,12 +193,37 @@ public class GameScene extends Scene {
             case RECTANGLE:
                 mirror = new Mirror(mjc, textureManager.mirrorRectangleTextureRegion, BodyForm.RECTANGLE);
                 body = PhysicsFactory.createBoxBody(physicsWorld, mirror, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
-                mirror.animate(new long[] {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, 1, 10, true);
+                mirror.animate(new long[]{100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, 1, 10, true);
+                final float meter = (mjc.width <= 200) ? mjc.width : 200;
+                System.out.println(meter);
+                if (mirror.canRotate) {
+                    AnimatedSprite mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
+                    mirrorSplash.setPosition(-mirrorSplash.getWidth() / 3, (mirror.getHeight() - mirrorSplash.getHeight()) / 2);
+                    mirrorSplash.setScale((meter * 4 / 10) / mirrorSplash.getHeight());
+                    mirror.attachChild(mirrorSplash);
+
+                    mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
+                    mirrorSplash.setPosition(mirror.getWidth() - mirrorSplash.getWidth() * 2 / 3, (mirror.getHeight() - mirrorSplash.getHeight()) / 2);
+                    mirrorSplash.setScale((meter * 4 / 10) / mirrorSplash.getHeight());
+                    mirror.attachChild(mirrorSplash);
+                }
+                if (mirror.canMove) {
+                    final AnimatedSprite mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
+                    mirrorSplash.setPosition((mirror.getWidth() - mirrorSplash.getWidth()) / 2, (mirror.getHeight() - mirrorSplash.getHeight()) / 2);
+                    mirrorSplash.setScale((meter * 3 / 5) / mirrorSplash.getHeight());
+                    mirror.attachChild(mirrorSplash);
+                }
                 break;
             case CIRCLE:
                 mirror = new Mirror(mjc, textureManager.mirrorCircleTextureRegion, BodyForm.CIRCLE);
                 body = PhysicsFactory.createCircleBody(physicsWorld, mirror, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
-                mirror.animate(new long[] {100, 100, 100, 100, 100, 100, 100, 100, 100}, 1, 9, true);
+                mirror.animate(new long[]{100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, 0, 9, true);
+                if (mirror.canMove) {
+                    final AnimatedSprite mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
+                    mirrorSplash.setPosition((mirror.getWidth() - mirrorSplash.getWidth()) / 2, (mirror.getHeight() - mirrorSplash.getHeight()) / 2);
+                    mirrorSplash.setScale((mjc.height * 7 / 2) / mirrorSplash.getHeight());
+                    mirror.attachChild(mirrorSplash);
+                }
                 break;
             default:
                 throw new RuntimeException();
@@ -323,19 +349,21 @@ public class GameScene extends Scene {
                     wasActionDown = true;
                     if (aimBody == body) {
                         if (!bullet.isMoving()) {
-                            if (numberOfTry > 0) {
-                                detachChild(numberOfTryToast);
-                                numberOfTryToast = new Text(numberOfTryToast.getX(), numberOfTryToast.getY(), textureManager.font, "" + --numberOfTry, HorizontalAlign.CENTER);
-                                attachChild(numberOfTryToast);
-                                bullet.shoot();
-                            } else {
-                                toast = new Text(360, 240, textureManager.font, "Try again...", HorizontalAlign.CENTER);
-                                attachChild(toast);
-                            }
+//                            if (numberOfTry > 0) {
+//                                detachChild(numberOfTryToast);
+//                                numberOfTryToast = new Text(numberOfTryToast.getX(), numberOfTryToast.getY(), textureManager.font, "" + --numberOfTry, HorizontalAlign.CENTER);
+//                                attachChild(numberOfTryToast);
+                            bullet.shoot();
+//                            } else {
+//                                toast = new Text(360, 240, textureManager.font, "Try again...", HorizontalAlign.CENTER);
+//                                attachChild(toast);
+//                            }
                         }
                     } else if (mirrorBodies.contains(body)) {
                         jointsManager.createJoints(object, touchAreaLocalX, touchAreaLocalY);
-                        filter.init(touchAreaLocalX, touchAreaLocalY);
+                        if (((Mirror) object).canMove) {
+                            filter.init(touchAreaLocalX, touchAreaLocalY);
+                        }
                     }
                     return true;
                 case TouchEvent.ACTION_MOVE:
