@@ -219,7 +219,7 @@ public class GameScene extends Scene {
                 if (mirror.canMove) {
                     final AnimatedSprite mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
                     mirrorSplash.setPosition((mirror.getWidth() - mirrorSplash.getWidth()) / 2, (mirror.getHeight() - mirrorSplash.getHeight()) / 2);
-                    mirrorSplash.setScale((mjc.height * 7 / 2) / mirrorSplash.getHeight());
+                    mirrorSplash.setScale((mjc.height * 3 / 2) / mirrorSplash.getHeight());
                     mirror.attachChild(mirrorSplash);
                 }
                 break;

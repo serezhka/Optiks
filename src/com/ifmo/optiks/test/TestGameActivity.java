@@ -33,8 +33,8 @@ public class TestGameActivity extends BaseGameActivity {
             "{\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":220.0,\"pY\":395.0,\"rotation\":0.0,\"height\":23.0,\"width\":23.0}," +
             "{\"canMove\":false,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":640.0,\"pY\":400.0,\"rotation\":-45.0,\"height\":30.0,\"width\":150.0}," +
             "{\"canMove\":false,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":640.0,\"pY\":80.0,\"rotation\":45.0,\"height\":30.0,\"width\":150.0}," +
-//            "{\"canMove\":true,\"canRotate\":false,\"bodyForm\":\"CIRCLE\",\"type\":\"MIRROR\",\"pX\":420.0,\"pY\":220.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}" +
-            "{\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":350.0,\"pY\":400.0,\"rotation\":0.0,\"height\":40.0,\"width\":200.0}" +
+            "{\"canMove\":false,\"canRotate\":false,\"bodyForm\":\"CIRCLE\",\"type\":\"MIRROR\",\"pX\":420.0,\"pY\":220.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}" +
+//            "{\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":350.0,\"pY\":400.0,\"rotation\":0.0,\"height\":40.0,\"width\":200.0}" +
             "]";
     private Camera camera;
 
