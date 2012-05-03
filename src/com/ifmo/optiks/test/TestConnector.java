@@ -26,6 +26,7 @@ public class TestConnector extends Activity {
             Log.d(TAG, "getSeasonsCount = " + connector.getSeasonsCount());
             Log.d(TAG, "getLevelCount = " + connector.getLevelCount(id));
             Log.d(TAG, "getNameDescription = " + connector.getNameDescription(id));
+
             Log.d(TAG,"call saveLevels") ;
             connector.saveLevels(id, getContentResolver());
             log();
@@ -33,10 +34,12 @@ public class TestConnector extends Activity {
             connector.updateLevels(id, getContentResolver());
             log();
 
+
         } catch (IOException e) {
             Log.e(TAG, "", e);
         } catch (JSONException e) {
             Log.e(TAG, "", e);
+
         }
 
         
@@ -62,6 +65,7 @@ public class TestConnector extends Activity {
         for (cursorLevel.moveToFirst(); !cursorLevel.isAfterLast(); cursorLevel.moveToNext()) {
             Log.d(TAG, "LEVEL_ID" + cursorLevel.getInt(levelIdNum) + " SEASON_ID " + cursorLevel.getInt(seasonIdNum));
             Log.d(TAG, "LEVEL" + cursorLevel.getString(levelData));
+
         }
     }
 }

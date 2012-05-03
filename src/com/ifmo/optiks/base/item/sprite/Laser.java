@@ -1,7 +1,7 @@
 package com.ifmo.optiks.base.item.sprite;
 
 import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
-import org.anddev.andengine.opengl.texture.region.TextureRegion;
+import org.anddev.andengine.opengl.texture.region.TiledTextureRegion;
 
 /**
  * Author: Sergey Fedorov (serezhka@xakep.ru)
@@ -10,8 +10,8 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 public class Laser extends GameSprite {
 
-    public Laser(final BaseObjectJsonContainer ojc, final TextureRegion pTextureRegion, final BodyForm bodyForm) {
-        super(ojc, pTextureRegion, bodyForm);
+    public Laser(final BaseObjectJsonContainer ojc, final TiledTextureRegion tiledTextureRegion, final BodyForm bodyForm) {
+        super(ojc, tiledTextureRegion, bodyForm);
     }
 
     public ObjectType getType() {

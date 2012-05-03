@@ -10,7 +10,8 @@ public enum ObjectType {
     LASER("LASER"),
     MIRROR("MIRROR"),
     BARRIER("BARRIER"),
-    AIM("AIM");
+    AIM("AIM"),
+    MENU_BUTTON("MENU_BUTTON");
 
     final private String name;
 

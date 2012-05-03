@@ -7,12 +7,14 @@ package com.ifmo.optiks.base.control;
 
 public class ActionMoveFilter {
 
+    private final static float MAX_DX = 10;
+    private final static int MIN_TIME = 200;
+
     private float x;
     private float y;
     private long timeInit;
-    private final static float MAX_DX = 10;
-    private final static int MIN_TIME = 200;
     private boolean wasMove;
+
     public ActionMoveFilter() {
         wasMove = true;
     }
@@ -47,10 +49,7 @@ public class ActionMoveFilter {
         return System.currentTimeMillis() - timeInit >= MIN_TIME;
     }
 
-
     private boolean isLocality(final float x, final float y) {
         return Math.sqrt(Math.pow((this.x - x), 2) + Math.pow((this.y - y), 2)) < MAX_DX;
     }
-
-
 }
