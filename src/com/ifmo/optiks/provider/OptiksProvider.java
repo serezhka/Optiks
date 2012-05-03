@@ -54,10 +54,11 @@ public class OptiksProvider extends ContentProvider {
                     + OptiksProviderMetaData.SeasonsTable.NAME + " TEXT, " +
                     OptiksProviderMetaData.SeasonsTable.DESCRIPTION + " TEXT);");
 
-            db.execSQL("CREATE TABLE " + OptiksProviderMetaData.LevelTables.TABLE_NAME + " (" +
-                    OptiksProviderMetaData.LevelTables._ID + " INTEGER  , "
-                    + OptiksProviderMetaData.LevelTables.LEVEL + " TEXT, " +
-                    OptiksProviderMetaData.LevelTables.SEASON_ID + " INTEGER);");
+            db.execSQL("CREATE TABLE " + OptiksProviderMetaData.LevelsTable.TABLE_NAME + " (" +
+                    OptiksProviderMetaData.LevelsTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + OptiksProviderMetaData.LevelsTable.LEVEL + " TEXT, "
+                    + OptiksProviderMetaData.LevelsTable.SEASON_ID + " INTEGER, "
+                    + OptiksProviderMetaData.LevelsTable.LEVEL_ID + " INTEGER);");
 
         }
 
@@ -66,7 +67,7 @@ public class OptiksProvider extends ContentProvider {
             Log.w(TAG, "onUpgrade data base on " + oldVersion + "to" + newVersion);
             db.execSQL("DROP TABLE IF EXISTS " + OptiksProviderMetaData.CookieTable.TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + OptiksProviderMetaData.SeasonsTable.TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + OptiksProviderMetaData.LevelTables.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + OptiksProviderMetaData.LevelsTable.TABLE_NAME);
             onCreate(db);
 
         }
@@ -101,12 +102,12 @@ public class OptiksProvider extends ContentProvider {
                 break;
             }
             case LEVEL_COLLECTION_URI_ID: {
-                qb.setTables(OptiksProviderMetaData.LevelTables.TABLE_NAME);
+                qb.setTables(OptiksProviderMetaData.LevelsTable.TABLE_NAME);
                 break;
             }
             case LEVEL_SINGLE_URI_ID: {
-                qb.setTables(OptiksProviderMetaData.LevelTables.TABLE_NAME);
-                qb.appendWhere(OptiksProviderMetaData.LevelTables._ID + "=" + uri.getPathSegments().get(1));
+                qb.setTables(OptiksProviderMetaData.LevelsTable.TABLE_NAME);
+                qb.appendWhere(OptiksProviderMetaData.LevelsTable._ID + "=" + uri.getPathSegments().get(1));
                 break;
             }
             default:
@@ -150,10 +151,10 @@ public class OptiksProvider extends ContentProvider {
                 }
                 break;
             }
-            case LEVEL_COLLECTION_URI_ID: {
-                row = db.insert(OptiksProviderMetaData.LevelTables.TABLE_NAME, OptiksProviderMetaData.LevelTables._ID, values);
+            case LEVEL_COLLECTION_URI_ID:{
+                row = db.insert(OptiksProviderMetaData.LevelsTable.TABLE_NAME, OptiksProviderMetaData.LevelsTable._ID, values);
                 if (row > 0) {
-                    insertUrl = ContentUris.withAppendedId(OptiksProviderMetaData.LevelTables.CONTENT_URI, row);
+                    insertUrl = ContentUris.withAppendedId(OptiksProviderMetaData.LevelsTable.CONTENT_URI, row);
                 } else {
                     throw new SQLException("Failed to insert uri : " + uri);
                 }
@@ -196,7 +197,7 @@ public class OptiksProvider extends ContentProvider {
                 break;
             }
             case LEVEL_COLLECTION_URI_ID: {
-                col = db.delete(OptiksProviderMetaData.LevelTables.TABLE_NAME, selection, selectionArgs);
+                  col = db.delete(OptiksProviderMetaData.LevelsTable.TABLE_NAME, selection, selectionArgs);
                 break;
             }
 

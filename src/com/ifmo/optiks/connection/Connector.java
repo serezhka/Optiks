@@ -2,12 +2,15 @@ package com.ifmo.optiks.connection;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.database.Cursor;
+import android.util.Log;
 import com.ifmo.optiks.provider.OptiksProviderMetaData;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,7 +36,10 @@ public class Connector {
         private final static String LEVEL_COUNT = "levelCount";
         private final static String DESCRIPTION = "description";
         private final static String NAME = "name";
+        private final static String LEVELS = "levels";
 
+
+        public final static String ID = "id";
     }
 
 
@@ -91,22 +97,114 @@ public class Connector {
         return new NameDescription(object.getString(Fields.NAME), object.getString(Fields.DESCRIPTION));
     }
 
-    public void SaveLevels(final int seasonId, final ContentResolver contentResolver) throws IOException, JSONException {
-        final NameDescription nameDescription = getNameDescription(seasonId);
+    /**
+     * save season in tellephone  from server
+     */
+    public void saveLevels(final int seasonId, final ContentResolver contentResolver) throws IOException, JSONException {
+
         final String uri = URI + "?" + GET_LEVEL + "&" + SEASON_ID + seasonId;
         final HttpGet httpGet = new HttpGet(uri);
         final String res = HTTP_CLIENT.execute(httpGet, RESPONSE_HANDLER);
         final JSONObject jsonObject = new JSONObject(res);
+        final String description = jsonObject.getString(Fields.DESCRIPTION);
+        final String name = jsonObject.getString(Fields.NAME);
+        final JSONArray levels = new JSONArray(jsonObject.getString(Fields.LEVELS));
 
-
-        final ContentValues cv = new ContentValues();
+        ContentValues cv = new ContentValues();
         cv.put(OptiksProviderMetaData.SeasonsTable._ID, seasonId);
-        cv.put(OptiksProviderMetaData.SeasonsTable.NAME, nameDescription.name);
-        cv.put(OptiksProviderMetaData.SeasonsTable.DESCRIPTION, nameDescription.description);
+        cv.put(OptiksProviderMetaData.SeasonsTable.NAME, name);
+        cv.put(OptiksProviderMetaData.SeasonsTable.DESCRIPTION, description);
         contentResolver.insert(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, cv);
+        cv.clear();
+
+
+        for (int i = 0, len = levels.length(); i < len; i++) {
+            Log.d(TAG, "i = " + i);
+            final JSONObject level = levels.getJSONObject(i);
+            cv.put(OptiksProviderMetaData.LevelsTable.SEASON_ID, seasonId);
+            cv.put(OptiksProviderMetaData.LevelsTable.LEVEL_ID, level.getInt(Fields.ID));
+            cv.put(OptiksProviderMetaData.LevelsTable.LEVEL, level + "");
+            contentResolver.insert(OptiksProviderMetaData.LevelsTable.CONTENT_URI, cv);
+            cv.clear();
+        }
+
+    }
+
+
+    public void updateLevels(final int seasonId, final ContentResolver contentResolver) throws IOException, JSONException {
+        final String uri = URI + "?" + GET_LEVEL + "&" + SEASON_ID + seasonId;
+        final HttpGet httpGet = new HttpGet(uri);
+        final String res = HTTP_CLIENT.execute(httpGet, RESPONSE_HANDLER);
+        final JSONObject jsonObject = new JSONObject(res);
+        final String description = jsonObject.getString(Fields.DESCRIPTION);
+        final String name = jsonObject.getString(Fields.NAME);
+        final JSONArray levels = new JSONArray(jsonObject.getString(Fields.LEVELS));
+
+        ContentValues cv = new ContentValues();
+        cv.put(OptiksProviderMetaData.SeasonsTable._ID, seasonId);
+        cv.put(OptiksProviderMetaData.SeasonsTable.NAME, name);
+        cv.put(OptiksProviderMetaData.SeasonsTable.DESCRIPTION, description);
+        contentResolver.update(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, cv, OptiksProviderMetaData.SeasonsTable._ID + "=" + seasonId, null);
+        cv.clear();
+
+
+        for (int i = 0, len = levels.length(); i < len; i++) {
+            Log.d(TAG, "i = " + i);
+            final JSONObject level = levels.getJSONObject(i);
+            cv.put(OptiksProviderMetaData.LevelsTable.SEASON_ID, seasonId);
+            cv.put(OptiksProviderMetaData.LevelsTable.LEVEL_ID, level.getInt(Fields.ID));
+            cv.put(OptiksProviderMetaData.LevelsTable.LEVEL, level + "");
+            contentResolver.update(OptiksProviderMetaData.LevelsTable.CONTENT_URI, cv,
+                    OptiksProviderMetaData.LevelsTable.LEVEL_ID + "=" + level.getInt(Fields.ID) + " AND "
+                            + OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId, null);
+            cv.clear();
+        }
+
+    }
+
+    public void saveOrUpdateLevels(final int seasonId, final ContentResolver contentResolver) throws IOException, JSONException {
+        final String uri = URI + "?" + GET_LEVEL + "&" + SEASON_ID + seasonId;
+        final HttpGet httpGet = new HttpGet(uri);
+        final String res = HTTP_CLIENT.execute(httpGet, RESPONSE_HANDLER);
+        final JSONObject jsonObject = new JSONObject(res);
+        final String description = jsonObject.getString(Fields.DESCRIPTION);
+        final String name = jsonObject.getString(Fields.NAME);
+        final JSONArray levels = new JSONArray(jsonObject.getString(Fields.LEVELS));
+
+
+        ContentValues cv = new ContentValues();
+        cv.put(OptiksProviderMetaData.SeasonsTable._ID, seasonId);
+        cv.put(OptiksProviderMetaData.SeasonsTable.NAME, name);
+        cv.put(OptiksProviderMetaData.SeasonsTable.DESCRIPTION, description);
+        final Cursor cursor =
+                contentResolver.query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null, OptiksProviderMetaData.LevelsTable._ID + "=" + seasonId, null, null);
+        final boolean checkInsert;
+        if (cursor.getCount() == 0) {
+            contentResolver.insert(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, cv);
+            checkInsert = true;
+        } else {
+            contentResolver.update(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, cv, OptiksProviderMetaData.SeasonsTable._ID + "=" + seasonId, null);
+            checkInsert = false;
+        }
+        cv.clear();
+
+        for (int i = 0, len = levels.length(); i < len; i++) {
+            Log.d(TAG, "i = " + i);
+            final JSONObject level = levels.getJSONObject(i);
+            cv.put(OptiksProviderMetaData.LevelsTable.SEASON_ID, seasonId);
+            cv.put(OptiksProviderMetaData.LevelsTable.LEVEL_ID, level.getInt(Fields.ID));
+            cv.put(OptiksProviderMetaData.LevelsTable.LEVEL, level + "");
+            if (!checkInsert) {
+                contentResolver.update(OptiksProviderMetaData.LevelsTable.CONTENT_URI, cv,
+                        OptiksProviderMetaData.LevelsTable.LEVEL_ID + "=" + level.getInt(Fields.ID) + " AND "
+                                + OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId, null);
+            } else {
+                contentResolver.insert(OptiksProviderMetaData.LevelsTable.CONTENT_URI, cv);
+            }
+            cv.clear();
+        }
 
     }
 
 
 }
-

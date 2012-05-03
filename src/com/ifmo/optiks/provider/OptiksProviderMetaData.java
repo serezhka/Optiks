@@ -36,9 +36,9 @@ public class OptiksProviderMetaData {
         URI_MATCHER.addURI(AUTHORITY, CookieTable.TABLE_NAME + "/#", TypeUri.COOKIE_SINGLE_URI_ID.v);
         URI_MATCHER.addURI(AUTHORITY, SeasonsTable.TABLE_NAME, TypeUri.SEASONS_COLLECTION_URI_ID.v);
         URI_MATCHER.addURI(AUTHORITY, SeasonsTable.TABLE_NAME + "/#", TypeUri.SEASONS_SINGLE_URI_ID.v);
-//        URI_MATCHER.addURI(AUTHORITY, LevelTables.TABLE_NAME + "/#/" + LevelTables.CREATE_TABLE, TypeUri.CREATE_LEVEL_TABLE.v);
-        URI_MATCHER.addURI(AUTHORITY, LevelTables.TABLE_NAME + "/#", TypeUri.LEVEL_COLLECTION_URI_ID.v);
-        URI_MATCHER.addURI(AUTHORITY, LevelTables.TABLE_NAME, TypeUri.LEVEL_SINGLE_URI_ID.v);
+        URI_MATCHER.addURI(AUTHORITY, LevelsTable.TABLE_NAME, TypeUri.LEVEL_COLLECTION_URI_ID.v);
+        URI_MATCHER.addURI(AUTHORITY, LevelsTable.TABLE_NAME + "/#", TypeUri.LEVEL_SINGLE_URI_ID.v);
+
 
     }
 
@@ -56,7 +56,6 @@ public class OptiksProviderMetaData {
         public final static Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME);
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.optiks.cookie";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.optiks.cookie";
-
         //  type string
         static final String NAME = "name";
         static final String DEFAULT_NAME = "default_name";
@@ -65,15 +64,22 @@ public class OptiksProviderMetaData {
         static final String VALUE = "value";
         static final String DEFAULT_VALUE = "default_value";
     }
-
-
-    public final static class LevelTables implements BaseColumns {
-        public final static String TABLE_NAME = "level_table";
+    public final static class LevelsTable implements BaseColumns {
+        public final static String TABLE_NAME = "levels_table";
         public final static Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + TABLE_NAME);
-        public static final String LEVEL = "level"; //test
-        public static final String SEASON_ID = "seasons_id";   //int
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.optiks.levels";
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.optiks.levels";
+
+        public static final String LEVEL = "level";
+        public static final String LEVEL_ID = "level_id";
+        public static final String SEASON_ID = "season_id";
+
+
 
     }
+
+
+
 
     public final static class SeasonsTable implements BaseColumns {
         public final static String TABLE_NAME = "seasons";
@@ -95,9 +101,8 @@ public class OptiksProviderMetaData {
         COOKIE_SINGLE_URI_ID(1),
         SEASONS_COLLECTION_URI_ID(2),
         SEASONS_SINGLE_URI_ID(3),
-        // CREATE_LEVEL_TABLE(4),
-        LEVEL_SINGLE_URI_ID(5),
-        LEVEL_COLLECTION_URI_ID(6);
+        LEVEL_SINGLE_URI_ID(4),
+        LEVEL_COLLECTION_URI_ID(5);
         final int v;
 
         private TypeUri(final int t) {
