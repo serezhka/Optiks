@@ -1,9 +1,11 @@
 package com.ifmo.optiks.base.manager;
 
+import android.view.KeyEvent;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.ifmo.optiks.OptiksActivity;
 import com.ifmo.optiks.base.control.ActionMoveFilter;
 import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
 import com.ifmo.optiks.base.gson.Constants;
@@ -15,6 +17,7 @@ import com.ifmo.optiks.base.physics.CollisionHandler;
 import com.ifmo.optiks.base.physics.Fixtures;
 import com.ifmo.optiks.base.physics.LaserBullet;
 import com.ifmo.optiks.base.physics.joints.JointsManager;
+import com.ifmo.optiks.scene.OptiksScene;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.entity.primitive.Rectangle;
 import org.anddev.andengine.entity.scene.Scene;
@@ -40,7 +43,7 @@ import java.util.List;
 /**
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
-public class GameScene extends Scene {
+public class GameScene extends OptiksScene{
 
     private final static String TAG = "GameSceneTAG";
 
@@ -76,11 +79,10 @@ public class GameScene extends Scene {
         physicsWorld = world;
     }
 
-    public GameScene(final String json, final BaseGameActivity baseGameActivity,
-                     final OptiksTextureManager gameTextureManager, final GameSoundManager gameSoundManager) {
-        activity = baseGameActivity;
-        textureManager = gameTextureManager;
-        soundManager = gameSoundManager;
+    public GameScene(final String json, final OptiksActivity optiksActivity) {
+        activity = optiksActivity;
+        textureManager = optiksActivity.getOptiksTextureManager();
+        soundManager = optiksActivity.getOptiksSoundManager();
         physicsWorld = new PhysicsWorld(new Vector2(0, 0), false);
         registerUpdateHandler(physicsWorld);
         try {
@@ -297,6 +299,11 @@ public class GameScene extends Scene {
 
     public PhysicsWorld getPhysicsWorld() {
         return physicsWorld;
+    }
+
+    @Override
+    public boolean onKeyDown(final int pKeyCode, final KeyEvent pEvent) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     private class TouchListener implements IOnSceneTouchListener, IOnAreaTouchListener {

@@ -46,6 +46,12 @@ public class OptiksMenuScene extends OptiksScene implements MenuScene.IOnMenuIte
         //this.setOnSceneTouchListener(this);
     }
 
+    /*@Override
+    public void setEnabled(final boolean enabled) {
+        super.setEnabled(enabled);
+        menuScene.setIgnoreUpdate(!enabled);
+    }*/
+
     @Override
     public boolean onKeyDown(final int pKeyCode, final KeyEvent pEvent) {
         if (pKeyCode == KeyEvent.KEYCODE_BACK && pEvent.getAction() == KeyEvent.ACTION_DOWN) {

@@ -1,10 +1,13 @@
 package com.ifmo.optiks.scene;
 
+import android.database.Cursor;
 import android.view.KeyEvent;
 import android.widget.Toast;
 import com.ifmo.optiks.OptiksActivity;
 import com.ifmo.optiks.base.control.OptiksScrollDetector;
 import com.ifmo.optiks.base.control.OptiksSurfaceScrollDetector;
+import com.ifmo.optiks.base.manager.GameScene;
+import com.ifmo.optiks.provider.OptiksProviderMetaData;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.handler.timer.ITimerCallback;
 import org.anddev.andengine.engine.handler.timer.TimerHandler;
@@ -12,7 +15,6 @@ import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.entity.text.Text;
 import org.anddev.andengine.input.touch.TouchEvent;
-import org.anddev.andengine.input.touch.detector.ClickDetector;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 /**
@@ -20,7 +22,7 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
  * Date: 22.04.12
  */
 
-public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetector.IScrollDetectorListener, ClickDetector.IClickDetectorListener, Scene.IOnSceneTouchListener {
+public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetector.IScrollDetectorListener, Scene.IOnSceneTouchListener {
 
     private final static int LEVEL_ROWS_PER_SCREEN = 3;
     private final static int LEVEL_COLUMNS_PER_SCREEN = 5;
@@ -33,13 +35,14 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
     private final Camera camera;
 
     private final OptiksSurfaceScrollDetector scrollDetector;
-    private final ClickDetector clickDetector;
 
     private final TextureRegion reachedLevel;
     private final TextureRegion unReachedLevel;
 
     private final int cameraWidth;
     private final int cameraHeight;
+
+    private final int seasonId;
 
     private final int levelsCount;
     private final int maxLevelReached;
@@ -49,8 +52,9 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
     private int page = 0;
     private int levelClicked = -1;
 
-    public OptiksLevelsScene(final OptiksActivity optiksActivity) {
+    public OptiksLevelsScene(final int seasonId, final OptiksActivity optiksActivity) {
         super();
+        this.seasonId = seasonId;
         this.optiksActivity = optiksActivity;
         this.camera = optiksActivity.getCamera();
         cameraWidth = (int) optiksActivity.getCamera().getWidth();
@@ -64,8 +68,7 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
         unReachedLevel = optiksActivity.getOptiksTextureManager().levelsMenuQuestion;
         createLevelBoxes();
 
-        /* Click and Scroll detector */
-        clickDetector = new ClickDetector(this);
+        /* Scroll detector */
         scrollDetector = new OptiksSurfaceScrollDetector(this);
 
         // TODO fix this stub
@@ -92,14 +95,8 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
 
     @Override
     public boolean onSceneTouchEvent(final Scene scene, final TouchEvent touchEvent) {
-        clickDetector.onTouchEvent(touchEvent);
         scrollDetector.onTouchEvent(touchEvent);
         return true;
-    }
-
-    @Override
-    public void onClick(final ClickDetector clickDetector, final TouchEvent touchEvent) {
-        loadLevel(levelClicked);
     }
 
     @Override
@@ -148,6 +145,7 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
                             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX,
                                                          final float pTouchAreaLocalY) {
                                 levelClicked = levelToLoad;
+                                loadLevel(levelClicked);
                                 return true;
                             }
                         };
@@ -199,8 +197,34 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
                 public void run() {
                     Toast.makeText(optiksActivity, "Loading the " + (level + 1) + " level!", Toast.LENGTH_SHORT)
                             .show();
+                    /*final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
+                            "(" + OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId + ") AND(" + OptiksProviderMetaData.LevelsTable.LEVEL_ID + "=" + level + ")"
+                            , null, null);
+                    cursor.moveToFirst();
+                    if (cursor.getCount() == 1) {
+                        final int idCol = cursor.getColumnIndex(OptiksProviderMetaData.LevelsTable.LEVEL);*/
+                    //final String json = cursor.getString(idCol);
+                    final String json = "[" +
+                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":100.0,\"pY\":400.0,\"rotation\":0.0,\"height\":50.0,\"width\":50.0}," +
+                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"AIM\",\"pX\":600.0,\"pY\":400.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
+                            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":200.0,\"pY\":100.0,\"rotation\":0.0,\"height\":50.0,\"width\":400.0}," +
+//            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":200.0,\"pY\":300.0,\"rotation\":0.0,\"height\":50.0,\"width\":250.0}," +
+                            "{\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":200.0,\"pY\":400.0,\"rotation\":0.0,\"height\":50.0,\"width\":250.0}," +
+                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":600.0,\"pY\":100.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
+                            "{\"canMove\":true,\"canRotate\":false,\"bodyForm\":\"CIRCLE\",\"type\":\"MIRROR\",\"pX\":500.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}" +
+                            "]";
+                    final OptiksScene gameScene = new GameScene(json, optiksActivity);
+                    optiksActivity.scenes.put(OptiksScenes.GAME_SCENE, gameScene);
+                    optiksActivity.setActiveScene(gameScene);
+                    //}
                 }
             });
         }
+    }
+
+    private int getLevelsCount() {
+        final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
+                OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId, null, null);
+        return cursor.getCount();
     }
 }

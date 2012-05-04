@@ -31,7 +31,7 @@ public class TestConnector extends Activity {
             connector.saveLevels(id, getContentResolver());
             log();
             Log.d(TAG,"call updateLavels") ;
-            connector.updateLevels(id, getContentResolver());
+            connector.updateSeason(id, getContentResolver());
             log();
 
 

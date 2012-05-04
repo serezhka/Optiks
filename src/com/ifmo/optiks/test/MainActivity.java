@@ -1,3 +1,4 @@
+/*
 package com.ifmo.optiks.test;
 
 
@@ -12,9 +13,11 @@ import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.util.FPSLogger;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
+*/
 /**
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
- */
+ *//*
+
 public class MainActivity extends BaseGameActivity {
     private final static String TAG = "MainActivityTAG";
     private static final int CAMERA_WIDTH = 720;
@@ -33,7 +36,8 @@ public class MainActivity extends BaseGameActivity {
     private Camera camera;
 
 
-    /*protected void onCreate(Bundle pSavedInstanceState) {
+    */
+/*protected void onCreate(Bundle pSavedInstanceState) {
         super.onCreate(pSavedInstanceState);
         final int id = getIntent().getExtras().getInt(OptiksProviderMetaData.SeasonsTable._ID);
         final Cursor cursor = managedQuery(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, null, "_id=?", new String[]{id + ""}, null);
@@ -42,7 +46,8 @@ public class MainActivity extends BaseGameActivity {
         final int idValue = cursor.getColumnIndex(OptiksProviderMetaData.SeasonsTable.DESCRIPTION);
         level = cursor.getString(idValue);
 
-    }*/
+    }*//*
+
 
     @Override
     public Engine onLoadEngine() {
@@ -68,7 +73,8 @@ public class MainActivity extends BaseGameActivity {
         this.mEngine.registerUpdateHandler(new FPSLogger());
         return new GameScene(level, this, textureManager, gameSoundManager);
 
-        /*final Scene scene = new Scene();
+        */
+/*final Scene scene = new Scene();
        final PhysicsWorld physicsWorld = new PhysicsWorld(new Vector2(0, 0), false);
        final ConstructorGameScene constructorGameScene = new ConstructorGameScene(this, textureManager, gameSoundManager);
 
@@ -82,7 +88,8 @@ public class MainActivity extends BaseGameActivity {
        Log.d(TAG, constructorGameScene.getGson());
 
 
-       return scene;*/
+       return scene;*//*
+
 
     }
 
@@ -91,3 +98,4 @@ public class MainActivity extends BaseGameActivity {
         mEngine.enableVibrator(this);
     }
 }
+*/

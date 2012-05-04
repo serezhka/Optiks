@@ -123,7 +123,7 @@ public class Connector {
     }
 
 
-    public void updateLevels(final int seasonId, final ContentResolver contentResolver) throws IOException, JSONException {
+    public void updateSeason(final int seasonId, final ContentResolver contentResolver) throws IOException, JSONException {
         final String uri = URI + "?" + GET_LEVEL + "&" + SEASON_ID + seasonId;
         final HttpGet httpGet = new HttpGet(uri);
         final String res = HTTP_CLIENT.execute(httpGet, RESPONSE_HANDLER);

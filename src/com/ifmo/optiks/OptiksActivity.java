@@ -3,6 +3,7 @@ package com.ifmo.optiks;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.KeyEvent;
+import com.ifmo.optiks.base.manager.GameSoundManager;
 import com.ifmo.optiks.base.manager.OptiksTextureManager;
 import com.ifmo.optiks.menu.Menu;
 import com.ifmo.optiks.menu.OptiksMenu;
@@ -18,6 +19,7 @@ import org.anddev.andengine.engine.options.EngineOptions;
 import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
+import org.anddev.andengine.entity.util.FPSLogger;
 import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
@@ -40,8 +42,9 @@ public class OptiksActivity extends BaseGameActivity {
     private OptiksScene activeScene;
     private Camera camera;
 
-    /* Texture Manager */
+    /* Texture and Sound Manager */
     private OptiksTextureManager textureManager;
+    private GameSoundManager soundManager;
 
     /* Splash */
     private TextureRegion splashTextureRegion;
@@ -55,7 +58,9 @@ public class OptiksActivity extends BaseGameActivity {
     @Override
     public Engine onLoadEngine() {
         camera = new Camera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
-        return new Engine(new EngineOptions(true, EngineOptions.ScreenOrientation.LANDSCAPE, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), this.camera));
+        final EngineOptions engineOptions = new EngineOptions(true, EngineOptions.ScreenOrientation.LANDSCAPE, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), camera).setNeedsMusic(true).setNeedsSound(true);
+        engineOptions.getTouchOptions().setRunOnUpdateThread(true);
+        return new Engine(engineOptions);
     }
 
     @Override
@@ -73,13 +78,17 @@ public class OptiksActivity extends BaseGameActivity {
     @Override
     public Scene onLoadScene() {
 
+        this.mEngine.registerUpdateHandler(new FPSLogger());
+        this.mEngine.enableVibrator(this);
+
         /* Load other resources while splash */
         mEngine.registerUpdateHandler(new TimerHandler(0.2f, new ITimerCallback() {
             @Override
             public void onTimePassed(final TimerHandler pTimerHandler) {
                 mEngine.unregisterUpdateHandler(pTimerHandler);
-                /* Create Texture Manager, load other resources */
+                /* Create Texture Manager, Sound Manager, load other resources */
                 textureManager = new OptiksTextureManager(OptiksActivity.this);
+                soundManager = GameSoundManager.getInstance(OptiksActivity.this);
                 loadScenes();
                 loadComplete = true;
             }
@@ -98,10 +107,6 @@ public class OptiksActivity extends BaseGameActivity {
     @Override
     public boolean onKeyDown(final int pKeyCode, final KeyEvent pEvent) {
         return activeScene != null && activeScene.onKeyDown(pKeyCode, pEvent);
-    }
-
-    public OptiksScene getActiveScene() {
-        return activeScene;
     }
 
     public void setActiveScene(final OptiksScene scene) {
@@ -145,10 +150,16 @@ public class OptiksActivity extends BaseGameActivity {
 
         /* Menu Scene*/
         final Menu menu = new OptiksMenu(this);
-        scenes.put(OptiksScenes.MENU_SCENE, new OptiksMenuScene(this, menu));
+        final OptiksScene menuScene = new OptiksMenuScene(this, menu);
+        menuScene.setEnabled(false);
+        scenes.put(OptiksScenes.MENU_SCENE, menuScene);
     }
 
     public OptiksTextureManager getOptiksTextureManager() {
         return textureManager;
+    }
+
+    public GameSoundManager getOptiksSoundManager() {
+        return soundManager;
     }
 }
