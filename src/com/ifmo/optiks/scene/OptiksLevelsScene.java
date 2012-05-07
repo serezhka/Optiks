@@ -205,7 +205,7 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
                         final int idCol = cursor.getColumnIndex(OptiksProviderMetaData.LevelsTable.LEVEL);*/
                     //final String json = cursor.getString(idCol);
                     final String json = "[" +
-                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":100.0,\"pY\":400.0,\"rotation\":0.0,\"height\":50.0,\"width\":50.0}," +
+                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":100.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
                             "{\"bodyForm\":\"CIRCLE\",\"type\":\"AIM\",\"pX\":600.0,\"pY\":400.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
                             "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":200.0,\"pY\":100.0,\"rotation\":0.0,\"height\":50.0,\"width\":400.0}," +
 //            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":200.0,\"pY\":300.0,\"rotation\":0.0,\"height\":50.0,\"width\":250.0}," +

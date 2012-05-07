@@ -1,5 +1,6 @@
 package com.ifmo.optiks.base.manager;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -11,7 +12,6 @@ import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
 import com.ifmo.optiks.base.gson.Constants;
 import com.ifmo.optiks.base.gson.MirrorJsonContainer;
 import com.ifmo.optiks.base.item.line.LaserBeam;
-import com.ifmo.optiks.base.item.line.LaserSight;
 import com.ifmo.optiks.base.item.sprite.*;
 import com.ifmo.optiks.base.physics.CollisionHandler;
 import com.ifmo.optiks.base.physics.Fixtures;
@@ -43,7 +43,7 @@ import java.util.List;
 /**
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
-public class GameScene extends OptiksScene{
+public class GameScene extends OptiksScene {
 
     private final static String TAG = "GameSceneTAG";
 
@@ -56,6 +56,9 @@ public class GameScene extends OptiksScene{
 
     protected Body aimBody;
     protected Body laserBody;
+
+    protected AnimatedSprite sight;
+    protected AnimatedSprite sight_child;
 
     protected final List<Body> mirrorBodies = new LinkedList<Body>();
     protected final List<Body> barrierBodies = new LinkedList<Body>();
@@ -85,6 +88,13 @@ public class GameScene extends OptiksScene{
         soundManager = optiksActivity.getOptiksSoundManager();
         physicsWorld = new PhysicsWorld(new Vector2(0, 0), false);
         registerUpdateHandler(physicsWorld);
+        sight = new AnimatedSprite(360, 240, textureManager.sight);
+        sight_child = new AnimatedSprite(0, 0, textureManager.emptyTexture);
+        sight_child.setScaleX(sight.getWidth() * 2 / sight_child.getWidth());
+        sight_child.setScaleY(sight.getHeight() * 2 / sight_child.getHeight());
+        sight.attachChild(sight_child);
+        sight_child.setPosition(-sight_child.getWidth() / 4, -sight_child.getHeight() / 4);
+        registerTouchArea(sight_child);
         try {
 //            final JSONObject jsonObject = new JSONObject(json);
 //            final JSONArray jsonArray = jsonObject.getJSONArray(Constants.OBJECTS);
@@ -130,10 +140,9 @@ public class GameScene extends OptiksScene{
 
         final LaserBeam laserBeam = new LaserBeam(this, new LaserBeam.Color(0, 1, 0, 0.5f), x, y);
 
-        final LaserSight laserSight = new LaserSight(x, y, -1, -1);
-        attachChild(laserSight);
+        attachChild(sight);
         bullet = new LaserBullet(PhysicsFactory.createCircleBody(physicsWorld, -1, -1, 1, 0, BodyDef.BodyType.DynamicBody, Fixtures.BULLET),
-                laserBody, laserSight, laserBeam, new SampleCollisionHandler());
+                laserBody, sight, laserBeam, new SampleCollisionHandler());
 
         physicsWorld.setContactListener(bullet);
         final TouchListener touchListener = new TouchListener(physicsWorld);
@@ -196,21 +205,25 @@ public class GameScene extends OptiksScene{
                 mirror.animate(new long[]{100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, 1, 10, true);
                 final float meter = (mjc.width <= 200) ? mjc.width : 200;
                 System.out.println(meter);
+
                 if (mirror.canRotate) {
                     AnimatedSprite mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
                     mirrorSplash.setPosition(-mirrorSplash.getWidth() / 3, (mirror.getHeight() - mirrorSplash.getHeight()) / 2);
-                    mirrorSplash.setScale((meter * 4 / 10) / mirrorSplash.getHeight());
+                    mirrorSplash.setScaleX((meter * 4 / 10) / mirrorSplash.getHeight());
+                    mirrorSplash.setScaleY((meter * 4 / 10) / mirrorSplash.getHeight() * 0.9f);
                     mirror.attachChild(mirrorSplash);
 
                     mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
                     mirrorSplash.setPosition(mirror.getWidth() - mirrorSplash.getWidth() * 2 / 3, (mirror.getHeight() - mirrorSplash.getHeight()) / 2);
-                    mirrorSplash.setScale((meter * 4 / 10) / mirrorSplash.getHeight());
+                    mirrorSplash.setScaleX((meter * 4 / 10) / mirrorSplash.getHeight());
+                    mirrorSplash.setScaleY((meter * 4 / 10) / mirrorSplash.getHeight() * 0.9f);
                     mirror.attachChild(mirrorSplash);
                 }
                 if (mirror.canMove) {
                     final AnimatedSprite mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
                     mirrorSplash.setPosition((mirror.getWidth() - mirrorSplash.getWidth()) / 2, (mirror.getHeight() - mirrorSplash.getHeight()) / 2);
-                    mirrorSplash.setScale((meter * 3 / 5) / mirrorSplash.getHeight());
+                    mirrorSplash.setScaleX((meter * 3 / 5) / mirrorSplash.getHeight());
+                    mirrorSplash.setScaleY((meter * 3 / 5) / mirrorSplash.getHeight() * 0.9f);
                     mirror.attachChild(mirrorSplash);
                 }
                 break;
@@ -221,7 +234,8 @@ public class GameScene extends OptiksScene{
                 if (mirror.canMove) {
                     final AnimatedSprite mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
                     mirrorSplash.setPosition((mirror.getWidth() - mirrorSplash.getWidth()) / 2, (mirror.getHeight() - mirrorSplash.getHeight()) / 2);
-                    mirrorSplash.setScale((mjc.height * 3 / 2) / mirrorSplash.getHeight());
+                    mirrorSplash.setScaleX((mjc.height * 3 / 2) / mirrorSplash.getHeight());
+                    mirrorSplash.setScaleY((mjc.height * 3 / 2) / mirrorSplash.getHeight() * 0.9f);
                     mirror.attachChild(mirrorSplash);
                 }
                 break;
@@ -253,7 +267,6 @@ public class GameScene extends OptiksScene{
         body.setUserData(sprite);
         sprite.setUserData(body);
         physicsWorld.registerPhysicsConnector(new PhysicsConnector(sprite, body));
-        body.setTransform(container.pX / PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT, container.pY / PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT, MathUtils.degToRad(container.rotation));
         switch (container.type) {
             case LASER:
                 laserBody = body;
@@ -261,7 +274,24 @@ public class GameScene extends OptiksScene{
                 break;
             case MIRROR:
                 if (((Mirror) sprite).canMove || ((Mirror) sprite).canRotate) {
-                    registerTouchArea(sprite);
+                    final AnimatedSprite emptySprite = new AnimatedSprite(0, 0, textureManager.emptyTexture);
+                    switch (container.bodyForm) {
+                        case CIRCLE:
+                            sprite.attachChild(emptySprite);
+                            emptySprite.setWidth(sprite.getWidth());
+                            emptySprite.setHeight(sprite.getHeight());
+                            registerTouchArea(emptySprite);
+                            break;
+                        case RECTANGLE:
+                            sprite.attachChild(emptySprite);
+                            emptySprite.setWidth(sprite.getWidth());
+                            emptySprite.setHeight((container.height >= 50) ? container.height + 10 : 50);
+                            emptySprite.setPosition(0, (sprite.getHeight() - emptySprite.getHeight()) / 2);
+                            registerTouchArea(emptySprite);
+                            break;
+                        case DEFAULT:
+                            break;
+                    }
                 }
                 mirrorBodies.add(body);
                 break;
@@ -274,6 +304,7 @@ public class GameScene extends OptiksScene{
                 sprite.animate(100);
                 break;
         }
+        body.setTransform(container.pX / PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT, container.pY / PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT, MathUtils.degToRad(container.rotation));
         attachChild(sprite);
     }
 
@@ -309,7 +340,9 @@ public class GameScene extends OptiksScene{
     private class TouchListener implements IOnSceneTouchListener, IOnAreaTouchListener {
         private final ActionMoveFilter filter;
         private final JointsManager jointsManager;
-        private boolean wasActionDown = false;
+        private int wasActionDown = 0; /*if =1, mirror. if =2, sight*/
+        private float dx;
+        private float dy;
 
         private TouchListener(final PhysicsWorld physicsWorld) {
             filter = new ActionMoveFilter();
@@ -324,15 +357,22 @@ public class GameScene extends OptiksScene{
                         detachChild(toast);
                         toast = null;
                     }
-                    bullet.sightSetPos(touchEvent.getX(), touchEvent.getY());
                     return true;
                 case TouchEvent.ACTION_MOVE:
-                    if (!jointsManager.setTarget(touchEvent)) {
-                        bullet.sightSetPos(touchEvent.getX(), touchEvent.getY());
+                    switch (wasActionDown) {
+                        case 1:
+                            if (!jointsManager.setTarget(touchEvent)) {
+                            }
+                            break;
+                        case 2:
+                            sight.setPosition(touchEvent.getX() + dx, touchEvent.getY() + dy);
+                            break;
+                        default:
+                            break;
                     }
                     return true;
                 case TouchEvent.ACTION_UP:
-                    wasActionDown = false;
+                    wasActionDown = 0;
                     jointsManager.destroyJoints();
                     filter.destroy();
                     return true;
@@ -344,12 +384,21 @@ public class GameScene extends OptiksScene{
 
         @Override
         public boolean onAreaTouched(final TouchEvent touchEvent, final ITouchArea touchArea, final float touchAreaLocalX, final float touchAreaLocalY) {
-            final IShape object = (GameSprite) touchArea;
+            final IShape object = (AnimatedSprite) touchArea;
+            IShape objectParent = null;
+            try {
+                objectParent = (AnimatedSprite) object.getParent();
+            } catch (Exception e) {
+
+            }
             final Body body = (Body) object.getUserData();
             switch (touchEvent.getAction()) {
                 case TouchEvent.ACTION_DOWN:
-                    wasActionDown = true;
-                    if (aimBody == body) {
+                    if (object.equals(sight_child)) {
+                        wasActionDown = 2;
+                        dx = sight.getX() - touchEvent.getX();
+                        dy = sight.getY() - touchEvent.getY();
+                    } else if (aimBody.equals(body)) {
                         if (!bullet.isMoving()) {
 //                            if (numberOfTry > 0) {
 //                                detachChild(numberOfTryToast);
@@ -361,24 +410,31 @@ public class GameScene extends OptiksScene{
 //                                attachChild(toast);
 //                            }
                         }
-                    } else if (mirrorBodies.contains(body)) {
-                        jointsManager.createJoints(object, touchAreaLocalX, touchAreaLocalY);
-                        if (((Mirror) object).canMove) {
+                    } else if (mirrorBodies.contains((Body) objectParent.getUserData())) {
+                        Log.d(TAG, "objectParent is ok");
+                        wasActionDown = 1;
+                        jointsManager.createJoints(objectParent, touchAreaLocalX, touchAreaLocalY);
+                        if (((Mirror) objectParent).canMove) {
                             filter.init(touchAreaLocalX, touchAreaLocalY);
                         }
                     }
                     return true;
                 case TouchEvent.ACTION_MOVE:
-                    if (wasActionDown) {
-                        if (filter.isMove()) {
-                            jointsManager.setTarget(touchEvent);
-                            return true;
-                        } else if (filter.isMove(touchAreaLocalX, touchAreaLocalY)) {
-                            soundManager.vibrate();
-                            jointsManager.destroyRotate();
-                        }
-                    } else {
-                        bullet.sightSetPos(touchEvent.getX(), touchEvent.getY());
+                    switch (wasActionDown) {
+                        case 1:
+                            if (filter.isMove()) {
+                                jointsManager.setTarget(touchEvent);
+                                return true;
+                            } else if (filter.isMove(touchAreaLocalX, touchAreaLocalY)) {
+                                soundManager.vibrate();
+                                jointsManager.destroyRotate();
+                            }
+                            break;
+                        case 2:
+                            sight.setPosition(touchEvent.getX() + dx, touchEvent.getY() + dy);
+                            break;
+                        default:
+                            break;
                     }
                     return true;
                 case TouchEvent.ACTION_OUTSIDE:
@@ -386,7 +442,7 @@ public class GameScene extends OptiksScene{
                 case TouchEvent.ACTION_UP:
                     jointsManager.destroyJoints();
                     filter.destroy();
-                    wasActionDown = false;
+                    wasActionDown = 0;
                     return true;
             }
             return true;

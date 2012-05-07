@@ -3,7 +3,7 @@ package com.ifmo.optiks.base.physics;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.ifmo.optiks.base.item.line.LaserBeam;
-import org.anddev.andengine.entity.primitive.Line;
+import org.anddev.andengine.entity.sprite.AnimatedSprite;
 import org.anddev.andengine.extension.physics.box2d.util.Vector2Pool;
 import org.anddev.andengine.extension.physics.box2d.util.constants.PhysicsConstants;
 
@@ -18,7 +18,7 @@ public class LaserBullet implements ContactListener {
 
     private final Body body;
     private final Body laserBody;
-    private final Line laserSight;
+    private final AnimatedSprite sight;
     private final LaserBeam laserBeam;
     private final CollisionHandler collisionHandler;
     private final float sightXBegin;
@@ -27,13 +27,12 @@ public class LaserBullet implements ContactListener {
     private boolean isMoving = false;
 
     public LaserBullet(final Body bullet, final Body laser,
-                       final Line laserSight, final LaserBeam laserBeam, final CollisionHandler collisionHandler) {
+                       final AnimatedSprite sight, final LaserBeam laserBeam, final CollisionHandler collisionHandler) {
         this.laserBody = laser;
         body = bullet;
-        this.laserSight = laserSight;
-        sightXBegin = this.laserSight.getX1();
-        sightYBegin = this.laserSight.getY1();
-        this.laserSight.setVisible(false);
+        this.sight = sight;
+        sightXBegin = laser.getPosition().x;
+        sightYBegin = laser.getPosition().y;
 
         this.laserBeam = laserBeam;
         this.collisionHandler = collisionHandler;
@@ -63,14 +62,13 @@ public class LaserBullet implements ContactListener {
 
     public void cleanScreen() {
         laserBeam.resetBeam();
-        laserSight.setVisible(false);
     }
 
     public void shoot() {
         laserBeam.resetBeam();
         isMoving = true;
-        final float xTo = laserSight.getX2();
-        final float yTo = laserSight.getY2();
+        final float xTo = sight.getX() + sight.getWidth() / 2;
+        final float yTo = sight.getY() + sight.getHeight() / 2;
         body.setTransform(laserBody.getPosition(), 0);
         final Vector2 pos = body.getPosition();
         final Vector2 vec = Vector2Pool.obtain(INF * (xTo / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT - pos.x), INF *
@@ -100,11 +98,6 @@ public class LaserBullet implements ContactListener {
 
     public LaserBeam getLaserBeam() {
         return laserBeam;
-    }
-
-    public void sightSetPos(final float x1, final float y1) {
-        laserSight.setPosition(sightXBegin, sightYBegin, x1, y1);
-        laserSight.setVisible(true);
     }
 
     public void AddLineToLaserBeam(final float x, final float y) {

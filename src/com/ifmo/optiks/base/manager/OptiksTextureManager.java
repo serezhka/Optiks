@@ -35,6 +35,8 @@ public class OptiksTextureManager {
     public final TiledTextureRegion barrierRectangleTextureRegion;
     public final TiledTextureRegion barrierCircleTextureRegion;
     public final TiledTextureRegion mirrorSplash;
+    public final TiledTextureRegion sight;
+    public final TiledTextureRegion emptyTexture;
 
     /* Menu Background */
     public final TextureRegion menuBackgroundTextureRegion;
@@ -79,6 +81,8 @@ public class OptiksTextureManager {
         barrierRectangleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "barrier.png", 401, 271, 1, 1);
         barrierCircleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "barrier_circle.png", 602, 271, 1, 1);
         mirrorSplash = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "mirror_splash.png", 703, 271, 1, 1);
+        sight = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "sight.png", 804, 271, 1, 1);
+        emptyTexture = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "empty_texture.png", 835, 271, 1, 1);
         activity.getEngine().getTextureManager().loadTexture(bitmapTextureAtlas);
 
         /* Font assets path */
