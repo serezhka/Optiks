@@ -14,19 +14,12 @@ public abstract class GameSprite extends AnimatedSprite {
     protected final BodyForm bodyForm;
 
     public GameSprite(final BaseObjectJsonContainer ojc, final TiledTextureRegion tiledTextureRegion, final BodyForm bodyForm) {
-        super(0, 0, tiledTextureRegion);
+        super(0, 0, ojc.width, ojc.height, tiledTextureRegion);
         this.bodyForm = bodyForm;
-        scaleSprite(ojc.width, ojc.height, tiledTextureRegion.getTileWidth(), tiledTextureRegion.getTileHeight());
     }
 
     public BaseObjectJsonContainer getGsonContainer() {
         return new BaseObjectJsonContainer(this, bodyForm);
-    }
-
-    private void scaleSprite(final float width, final float height, final float currentWidth, final float currentHeight) {
-        final float scaleX = width / currentWidth;
-        final float scaleY = height / currentHeight;
-        setScale(scaleX, scaleY);
     }
 
     public abstract ObjectType getType();

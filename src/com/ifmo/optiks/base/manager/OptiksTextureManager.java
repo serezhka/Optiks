@@ -76,8 +76,8 @@ public class OptiksTextureManager {
         final BitmapTextureAtlas bitmapTextureAtlas = new BitmapTextureAtlas(1024, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         aimTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "aim.png", 0, 0, 3, 3);
         laserTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "laser.png", 301, 0, 3, 3);
-        mirrorCircleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "mirror_circle.png", 602, 0, 3, 3);
-        mirrorRectangleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "mirror.png", 0, 271, 2, 6);
+        mirrorCircleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "mirror_circle_NA.png", 602, 0, 1, 1);
+        mirrorRectangleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "mirror_NA.png", 0, 372, 1, 1);
         barrierRectangleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "barrier.png", 401, 271, 1, 1);
         barrierCircleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "barrier_circle.png", 602, 271, 1, 1);
         mirrorSplash = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "mirror_splash.png", 703, 271, 1, 1);

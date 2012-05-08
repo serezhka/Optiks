@@ -209,9 +209,9 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
                             "{\"bodyForm\":\"CIRCLE\",\"type\":\"AIM\",\"pX\":600.0,\"pY\":400.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
                             "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":200.0,\"pY\":100.0,\"rotation\":0.0,\"height\":50.0,\"width\":400.0}," +
 //            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":200.0,\"pY\":300.0,\"rotation\":0.0,\"height\":50.0,\"width\":250.0}," +
-                            "{\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":200.0,\"pY\":400.0,\"rotation\":0.0,\"height\":50.0,\"width\":250.0}," +
+                            "{\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":400.0,\"pY\":400.0,\"rotation\":0.0,\"height\":50.0,\"width\":250.0}," +
                             "{\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":600.0,\"pY\":100.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
-                            "{\"canMove\":true,\"canRotate\":false,\"bodyForm\":\"CIRCLE\",\"type\":\"MIRROR\",\"pX\":500.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}" +
+                            "{\"canMove\":true,\"canRotate\":false,\"bodyForm\":\"CIRCLE\",\"type\":\"MIRROR\",\"pX\":500.0,\"pY\":200.0,\"rotation\":0.0,\"height\":150.0,\"width\":150.0}" +
                             "]";
                     final OptiksScene gameScene = new GameScene(json, optiksActivity);
                     optiksActivity.scenes.put(OptiksScenes.GAME_SCENE, gameScene);

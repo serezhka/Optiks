@@ -14,6 +14,8 @@ public class ActionMoveFilter {
     private float y;
     private long timeInit;
     private boolean wasMove;
+    private boolean isCrossBorder;
+
 
     public ActionMoveFilter() {
         wasMove = true;
@@ -24,6 +26,7 @@ public class ActionMoveFilter {
         this.y = beginY;
         timeInit = System.currentTimeMillis();
         wasMove = false;
+        isCrossBorder = false;
     }
 
     public void destroy() {
@@ -34,7 +37,12 @@ public class ActionMoveFilter {
         return wasMove;   // было ли перемещение
     }
 
-    public boolean isMove(final float x, final float y) {
+    public boolean isWaiting(final float x, final float y) {
+        return isLocality(x, y) && !isTimer();
+    }
+
+
+    public boolean isDestroyRotate(final float x, final float y) {
         if (!wasMove) {
             if (isLocality(x, y) && isTimer()) {
                 wasMove = true;
@@ -50,6 +58,9 @@ public class ActionMoveFilter {
     }
 
     private boolean isLocality(final float x, final float y) {
-        return Math.sqrt(Math.pow((this.x - x), 2) + Math.pow((this.y - y), 2)) < MAX_DX;
+        if (!isCrossBorder) {
+            isCrossBorder = Math.sqrt(Math.pow((this.x - x), 2) + Math.pow((this.y - y), 2)) > MAX_DX;
+        }
+        return !isCrossBorder;
     }
 }

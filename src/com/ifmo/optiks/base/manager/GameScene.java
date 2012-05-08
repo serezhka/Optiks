@@ -58,7 +58,7 @@ public class GameScene extends OptiksScene {
     protected Body laserBody;
 
     protected AnimatedSprite sight;
-    protected AnimatedSprite sight_child;
+    protected AnimatedSprite sightChild;
 
     protected final List<Body> mirrorBodies = new LinkedList<Body>();
     protected final List<Body> barrierBodies = new LinkedList<Body>();
@@ -89,12 +89,12 @@ public class GameScene extends OptiksScene {
         physicsWorld = new PhysicsWorld(new Vector2(0, 0), false);
         registerUpdateHandler(physicsWorld);
         sight = new AnimatedSprite(360, 240, textureManager.sight);
-        sight_child = new AnimatedSprite(0, 0, textureManager.emptyTexture);
-        sight_child.setScaleX(sight.getWidth() * 2 / sight_child.getWidth());
-        sight_child.setScaleY(sight.getHeight() * 2 / sight_child.getHeight());
-        sight.attachChild(sight_child);
-        sight_child.setPosition(-sight_child.getWidth() / 4, -sight_child.getHeight() / 4);
-        registerTouchArea(sight_child);
+        sightChild = new AnimatedSprite(0, 0, textureManager.emptyTexture);
+        sightChild.setScaleX(sight.getWidth() * 2 / sightChild.getWidth());
+        sightChild.setScaleY(sight.getHeight() * 2 / sightChild.getHeight());
+        sight.attachChild(sightChild);
+        sightChild.setPosition(-sightChild.getWidth() / 4, -sightChild.getHeight() / 4);
+        registerTouchArea(sightChild);
         try {
 //            final JSONObject jsonObject = new JSONObject(json);
 //            final JSONArray jsonArray = jsonObject.getJSONArray(Constants.OBJECTS);
@@ -202,40 +202,38 @@ public class GameScene extends OptiksScene {
             case RECTANGLE:
                 mirror = new Mirror(mjc, textureManager.mirrorRectangleTextureRegion, BodyForm.RECTANGLE);
                 body = PhysicsFactory.createBoxBody(physicsWorld, mirror, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
-                mirror.animate(new long[]{100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, 1, 10, true);
+//                mirror.animate(new long[]{100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, 1, 10, true);
                 final float meter = (mjc.width <= 200) ? mjc.width : 200;
-                System.out.println(meter);
-
                 if (mirror.canRotate) {
                     AnimatedSprite mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
                     mirrorSplash.setPosition(-mirrorSplash.getWidth() / 3, (mirror.getHeight() - mirrorSplash.getHeight()) / 2);
                     mirrorSplash.setScaleX((meter * 4 / 10) / mirrorSplash.getHeight());
-                    mirrorSplash.setScaleY((meter * 4 / 10) / mirrorSplash.getHeight() * 0.9f);
+                    mirrorSplash.setScaleY((meter * 4 / 10) / mirrorSplash.getHeight());
                     mirror.attachChild(mirrorSplash);
 
                     mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
                     mirrorSplash.setPosition(mirror.getWidth() - mirrorSplash.getWidth() * 2 / 3, (mirror.getHeight() - mirrorSplash.getHeight()) / 2);
                     mirrorSplash.setScaleX((meter * 4 / 10) / mirrorSplash.getHeight());
-                    mirrorSplash.setScaleY((meter * 4 / 10) / mirrorSplash.getHeight() * 0.9f);
+                    mirrorSplash.setScaleY((meter * 4 / 10) / mirrorSplash.getHeight());
                     mirror.attachChild(mirrorSplash);
                 }
                 if (mirror.canMove) {
                     final AnimatedSprite mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
                     mirrorSplash.setPosition((mirror.getWidth() - mirrorSplash.getWidth()) / 2, (mirror.getHeight() - mirrorSplash.getHeight()) / 2);
                     mirrorSplash.setScaleX((meter * 3 / 5) / mirrorSplash.getHeight());
-                    mirrorSplash.setScaleY((meter * 3 / 5) / mirrorSplash.getHeight() * 0.9f);
+                    mirrorSplash.setScaleY((meter * 3 / 5) / mirrorSplash.getHeight());
                     mirror.attachChild(mirrorSplash);
                 }
                 break;
             case CIRCLE:
                 mirror = new Mirror(mjc, textureManager.mirrorCircleTextureRegion, BodyForm.CIRCLE);
                 body = PhysicsFactory.createCircleBody(physicsWorld, mirror, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
-                mirror.animate(new long[]{100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, 0, 9, true);
+//                mirror.animate(new long[]{100, 100, 100, 100, 100, 100, 100, 100, 100, 100}, 0, 9, true);
                 if (mirror.canMove) {
                     final AnimatedSprite mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
                     mirrorSplash.setPosition((mirror.getWidth() - mirrorSplash.getWidth()) / 2, (mirror.getHeight() - mirrorSplash.getHeight()) / 2);
                     mirrorSplash.setScaleX((mjc.height * 3 / 2) / mirrorSplash.getHeight());
-                    mirrorSplash.setScaleY((mjc.height * 3 / 2) / mirrorSplash.getHeight() * 0.9f);
+                    mirrorSplash.setScaleY((mjc.height * 3 / 2) / mirrorSplash.getHeight());
                     mirror.attachChild(mirrorSplash);
                 }
                 break;
@@ -278,14 +276,15 @@ public class GameScene extends OptiksScene {
                     switch (container.bodyForm) {
                         case CIRCLE:
                             sprite.attachChild(emptySprite);
-                            emptySprite.setWidth(sprite.getWidth());
-                            emptySprite.setHeight(sprite.getHeight());
+                            emptySprite.setWidth(sprite.getWidth() + 20);
+                            emptySprite.setHeight(sprite.getHeight() + 20);
+                            emptySprite.setPosition(-10, -10);
                             registerTouchArea(emptySprite);
                             break;
                         case RECTANGLE:
                             sprite.attachChild(emptySprite);
                             emptySprite.setWidth(sprite.getWidth());
-                            emptySprite.setHeight((container.height >= 50) ? container.height + 10 : 50);
+                            emptySprite.setHeight((container.height >= 50) ? container.height + 50 : 50);
                             emptySprite.setPosition(0, (sprite.getHeight() - emptySprite.getHeight()) / 2);
                             registerTouchArea(emptySprite);
                             break;
@@ -382,23 +381,24 @@ public class GameScene extends OptiksScene {
 
         }
 
+        //TODO fix bag rotation + drag
         @Override
         public boolean onAreaTouched(final TouchEvent touchEvent, final ITouchArea touchArea, final float touchAreaLocalX, final float touchAreaLocalY) {
             final IShape object = (AnimatedSprite) touchArea;
+            Log.d(TAG, "touchAreaLocalX = " + touchAreaLocalX + "touchAreaLocaly = " + touchAreaLocalY);
             IShape objectParent = null;
             try {
                 objectParent = (AnimatedSprite) object.getParent();
-            } catch (Exception e) {
-
+            } catch (ClassCastException e) {
+                //todo!!
             }
-            final Body body = (Body) object.getUserData();
             switch (touchEvent.getAction()) {
                 case TouchEvent.ACTION_DOWN:
-                    if (object.equals(sight_child)) {
+                    if (object.equals(sightChild)) {
                         wasActionDown = 2;
                         dx = sight.getX() - touchEvent.getX();
                         dy = sight.getY() - touchEvent.getY();
-                    } else if (aimBody.equals(body)) {
+                    } else if (aimBody.equals(object.getUserData())) {
                         if (!bullet.isMoving()) {
 //                            if (numberOfTry > 0) {
 //                                detachChild(numberOfTryToast);
@@ -410,10 +410,11 @@ public class GameScene extends OptiksScene {
 //                                attachChild(toast);
 //                            }
                         }
-                    } else if (mirrorBodies.contains((Body) objectParent.getUserData())) {
+                    } else if (mirrorBodies.contains(objectParent.getUserData())) {
                         Log.d(TAG, "objectParent is ok");
                         wasActionDown = 1;
-                        jointsManager.createJoints(objectParent, touchAreaLocalX, touchAreaLocalY);
+
+                        jointsManager.createJoints(objectParent, object, touchAreaLocalX, touchAreaLocalY);
                         if (((Mirror) objectParent).canMove) {
                             filter.init(touchAreaLocalX, touchAreaLocalY);
                         }
@@ -422,12 +423,12 @@ public class GameScene extends OptiksScene {
                 case TouchEvent.ACTION_MOVE:
                     switch (wasActionDown) {
                         case 1:
-                            if (filter.isMove()) {
+                            if (!filter.isWaiting(touchAreaLocalX, touchAreaLocalY)) {
                                 jointsManager.setTarget(touchEvent);
-                                return true;
-                            } else if (filter.isMove(touchAreaLocalX, touchAreaLocalY)) {
-                                soundManager.vibrate();
-                                jointsManager.destroyRotate();
+                                if (!filter.isMove() && filter.isDestroyRotate(touchAreaLocalX, touchAreaLocalY)) {
+                                    soundManager.vibrate();
+                                    jointsManager.destroyRotate();
+                                }
                             }
                             break;
                         case 2:
@@ -455,7 +456,6 @@ public class GameScene extends OptiksScene {
         public void handle(final Contact contact, final LaserBullet bullet, final Body thing) {
             final Vector2 vec = contact.getWorldManifold().getPoints()[0];
             bullet.AddLineToLaserBeam(vec.x * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT, vec.y * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT);
-
             if (wallBodies.contains(thing) || barrierBodies.contains(thing)) {
                 bullet.stop();
                 toast = new Text(360, 240, textureManager.font, "Try again...", HorizontalAlign.CENTER);

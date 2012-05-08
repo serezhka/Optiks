@@ -30,6 +30,8 @@ public class JointsManager {
     private boolean isRotates;
     private boolean isCreate;
     private Body body;
+    public float dx;
+    public float dy;
 
     public JointsManager(final PhysicsWorld physicsWorld) {
         this.physicsWorld = physicsWorld;
@@ -45,6 +47,7 @@ public class JointsManager {
         }
         return false;
     }
+
 
     public boolean isRotates() {
         return isRotates;
@@ -74,12 +77,13 @@ public class JointsManager {
         return false;
     }
 
-    public boolean createJoints(final IShape object, final float touchAreaX, final float touchAreaY) {
+    public boolean createJoints(final IShape object,final IShape child, final float touchAreaX, final float touchAreaY) {
         if (!isCreate) {
             isCreate = true;
             final Body body = (Body) object.getUserData();
-            final Vector2 localPoint = Vector2Pool.obtain((touchAreaX - object.getWidth() * 0.5f) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, (touchAreaY - object.getHeight() * 0.5f) / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
-
+            final Vector2 localPoint = Vector2Pool.obtain((touchAreaX - child.getWidth() * 0.5f) /
+                    PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, (touchAreaY - child.getHeight() * 0.5f)
+                    / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
             createMouseJoint(localPoint, body);
             if (((Mirror) object).canRotate) {
                 final float density = MASS / (object.getHeightScaled() * object.getWidthScaled());
