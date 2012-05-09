@@ -71,7 +71,9 @@ public class OptiksProviderMetaData {
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.optiks.levels";
 
         public static final String LEVEL = "level";
+        @Deprecated
         public static final String LEVEL_ID = "level_id";
+
         public static final String SEASON_ID = "season_id";
 
 
@@ -90,6 +92,8 @@ public class OptiksProviderMetaData {
         //  type string
         public static final String NAME = "name";
         public static final String DEFAULT_NAME = "default_name";
+        //type int
+        public static final String MAX_LEVEL_REACHED = "max_level_reached";
 
         //type string        in json
         public static final String DESCRIPTION = "description";

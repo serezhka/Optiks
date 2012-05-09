@@ -65,7 +65,6 @@ public class OptiksActivity extends BaseGameActivity {
 
     @Override
     public void onLoadResources() {
-
         /* Splash assets path */
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/splash/");
 

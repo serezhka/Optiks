@@ -39,8 +39,6 @@ public class Connector {
         private final static String DESCRIPTION = "description";
         private final static String NAME = "name";
         private final static String LEVELS = "levels";
-
-
         public final static String ID = "id";
 
     }

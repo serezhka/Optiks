@@ -336,12 +336,18 @@ public class GameScene extends OptiksScene {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+
+
+
+
     private class TouchListener implements IOnSceneTouchListener, IOnAreaTouchListener {
         private final ActionMoveFilter filter;
         private final JointsManager jointsManager;
         private int wasActionDown = 0; /*if =1, mirror. if =2, sight*/
         private float dx;
         private float dy;
+        private SelectedObject selectedObject = null;
+
 
         private TouchListener(final PhysicsWorld physicsWorld) {
             filter = new ActionMoveFilter();
@@ -381,11 +387,9 @@ public class GameScene extends OptiksScene {
 
         }
 
-        //TODO fix bag rotation + drag
         @Override
         public boolean onAreaTouched(final TouchEvent touchEvent, final ITouchArea touchArea, final float touchAreaLocalX, final float touchAreaLocalY) {
             final IShape object = (AnimatedSprite) touchArea;
-            Log.d(TAG, "touchAreaLocalX = " + touchAreaLocalX + "touchAreaLocaly = " + touchAreaLocalY);
             IShape objectParent = null;
             try {
                 objectParent = (AnimatedSprite) object.getParent();
