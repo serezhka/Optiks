@@ -67,8 +67,6 @@ public class OptiksProvider extends ContentProvider {
                     + OptiksProviderMetaData.LevelsTable.LEVEL + " TEXT , " +
                     OptiksProviderMetaData.LevelsTable.SEASON_ID + " INTEGER );");
 
-
-
             final InputStream is = getContext().getResources().openRawResource(R.raw.levels);
             final Scanner sc = new Scanner(is);
             sc.useDelimiter("\n");
@@ -109,12 +107,6 @@ public class OptiksProvider extends ContentProvider {
 
                 throw new RuntimeException(e);
             }
-
-
-
-
-
-
         }
 
         @Override

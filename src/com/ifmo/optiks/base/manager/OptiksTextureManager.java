@@ -7,10 +7,12 @@ import org.anddev.andengine.opengl.font.FontFactory;
 import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
+import org.anddev.andengine.opengl.texture.atlas.bitmap.source.FileBitmapTextureAtlasSource;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.texture.region.TiledTextureRegion;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,9 +46,6 @@ public class OptiksTextureManager {
     /* Menu Item */
     public final TextureRegion menuItemTextureRegion;
 
-    /* Question */
-    public final TextureRegion questionTextureRegion;
-
     /* Season Select Menu Arrows */
     public final TextureRegion leftArrowTextureRegion;
     public final TextureRegion rightArrowTextureRegion;
@@ -58,7 +57,16 @@ public class OptiksTextureManager {
     /* Seasons Images */
     public final Map<Integer, TextureRegion> seasons;
 
+    /* Settings Menu Items */
+    public final TiledTextureRegion musicTextureRegion;
+    public final TiledTextureRegion soundTextureRegion;
+    public final TiledTextureRegion vibrationTextureRegion;
+    /* Activity */
+    final BaseGameActivity activity;
+
     public OptiksTextureManager(final BaseGameActivity activity) {
+
+        this.activity = activity;
 
         /* Seasons Images */
         seasons = new HashMap<Integer, TextureRegion>();
@@ -76,8 +84,8 @@ public class OptiksTextureManager {
         final BitmapTextureAtlas bitmapTextureAtlas = new BitmapTextureAtlas(1024, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         aimTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "aim.png", 0, 0, 3, 3);
         laserTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "laser.png", 301, 0, 3, 3);
-        mirrorCircleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "mirror_circle_NA.png", 602, 0, 1, 1);
-        mirrorRectangleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "mirror_NA.png", 0, 372, 1, 1);
+        mirrorCircleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "mirror_circle.png", 602, 0, 3, 3);
+        mirrorRectangleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "mirror.png", 0, 271, 2, 6);
         barrierRectangleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "barrier.png", 401, 271, 1, 1);
         barrierCircleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "barrier_circle.png", 602, 271, 1, 1);
         mirrorSplash = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "mirror_splash.png", 703, 271, 1, 1);
@@ -99,7 +107,7 @@ public class OptiksTextureManager {
 
         /* Menu Background */
         final BitmapTextureAtlas menuBackgroundAtlas = new BitmapTextureAtlas(1024, 1024, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
-        menuBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuBackgroundAtlas, activity, "background.jpg", 0, 0);
+        menuBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuBackgroundAtlas, activity, "background.png", 0, 0);
         activity.getEngine().getTextureManager().loadTexture(menuBackgroundAtlas);
 
         /* Menu Item */
@@ -110,17 +118,14 @@ public class OptiksTextureManager {
         /* Season menu assets path */
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/season/");
 
-        /* Question */
-        final BitmapTextureAtlas questionAtlas = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        questionTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(questionAtlas, activity, "question.png", 0, 0);
-        activity.getEngine().getTextureManager().loadTexture(questionAtlas);
-        seasons.put(-1, questionTextureRegion);
-
         /* Seasons Background */
         final BitmapTextureAtlas seasonBackgroundAtlas = new BitmapTextureAtlas(1024, 1024, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         final TextureRegion seasonBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(seasonBackgroundAtlas, activity, "season_background.jpg", 0, 0);
         activity.getEngine().getTextureManager().loadTexture(seasonBackgroundAtlas);
         seasons.put(0, seasonBackgroundTextureRegion);
+
+        /* Season -1 test */
+        //addSeasonImageFromFile(-1, new File("/mnt/sdcard/test.png"));
 
         /* Season Select Menu Arrows */
         final BitmapTextureAtlas arrowsTextureAtlas = new BitmapTextureAtlas(512, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
@@ -136,5 +141,33 @@ public class OptiksTextureManager {
         levelsMenuStar = BitmapTextureAtlasTextureRegionFactory.createFromAsset(levelsMenuTextureAtlas, activity, "star.png", 0, 0);
         levelsMenuQuestion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(levelsMenuTextureAtlas, activity, "question.png", 256, 0);
         activity.getEngine().getTextureManager().loadTexture(levelsMenuTextureAtlas);
+
+        /* Settings menu assets path */
+        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/settings/");
+
+        /* Sound & vibrate setting */
+        final BitmapTextureAtlas settingsMenuTextureAtlas = new BitmapTextureAtlas(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        soundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(settingsMenuTextureAtlas, activity, "sound.png", 0, 0, 2, 1);
+        vibrationTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(settingsMenuTextureAtlas, activity, "vibration.png", 256, 0, 2, 1);
+        musicTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(settingsMenuTextureAtlas, activity, "music.png", 0, 256, 2, 1);
+        activity.getEngine().getTextureManager().loadTexture(settingsMenuTextureAtlas);
+    }
+
+    public void addSeasonImageFromFile(final int seasonId, final File image) {
+        final FileBitmapTextureAtlasSource source = new FileBitmapTextureAtlasSource(image);
+        final int width = calculateMinSize(source.getWidth());
+        final int height = calculateMinSize(source.getHeight());
+        final BitmapTextureAtlas textureAtlas = new BitmapTextureAtlas(width, height, TextureOptions.BILINEAR);
+        final TextureRegion textureRegion = BitmapTextureAtlasTextureRegionFactory.createFromSource(textureAtlas, source, 0, 0);
+        activity.getEngine().getTextureManager().loadTexture(textureAtlas);
+        seasons.put(seasonId, textureRegion);
+    }
+
+    private int calculateMinSize(final int dimension) {
+        int result = 2;
+        while (dimension > result) {
+            result *= 2;
+        }
+        return result;
     }
 }

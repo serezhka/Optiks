@@ -8,11 +8,10 @@ package com.ifmo.optiks.menu;
 public enum MenuItemType {
 
     SEASON_CHOICE("Select Season", 0),
-    LOAD_SEASONS("Load Seasons", 1),
-    QUIT("Exit", 2),
-    BACK("Back", 3),
-    GAME_INFO("Game Info", 4),
-    SETTINGS("Settings", 5);
+    QUIT("Exit", 1),
+    BACK("Back", 2),
+    GAME_INFO("Game Info", 3),
+    SETTINGS("Settings", 4);
 
     private final String name;
     private final int id;

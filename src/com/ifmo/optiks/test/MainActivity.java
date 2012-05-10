@@ -3,7 +3,7 @@ package com.ifmo.optiks.test;
 
 
 import com.ifmo.optiks.base.manager.GameScene;
-import com.ifmo.optiks.base.manager.GameSoundManager;
+import com.ifmo.optiks.base.manager.OptiksSoundManager;
 import com.ifmo.optiks.base.manager.OptiksTextureManager;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
@@ -60,11 +60,11 @@ public class MainActivity extends BaseGameActivity {
     }
 
     private OptiksTextureManager textureManager;
-    private GameSoundManager gameSoundManager;
+    private OptiksSoundManager gameSoundManager;
 
     @Override
     public void onLoadResources() {
-        gameSoundManager = GameSoundManager.getInstance(this);
+        gameSoundManager = new OptiksSoundManager(this);
         textureManager = new OptiksTextureManager(this);
     }
 

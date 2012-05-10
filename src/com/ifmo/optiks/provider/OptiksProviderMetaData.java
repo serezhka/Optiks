@@ -38,8 +38,6 @@ public class OptiksProviderMetaData {
         URI_MATCHER.addURI(AUTHORITY, SeasonsTable.TABLE_NAME + "/#", TypeUri.SEASONS_SINGLE_URI_ID.v);
         URI_MATCHER.addURI(AUTHORITY, LevelsTable.TABLE_NAME, TypeUri.LEVEL_COLLECTION_URI_ID.v);
         URI_MATCHER.addURI(AUTHORITY, LevelsTable.TABLE_NAME + "/#", TypeUri.LEVEL_SINGLE_URI_ID.v);
-
-
     }
 
     TypeUri getType(final Uri uri) {
@@ -75,13 +73,7 @@ public class OptiksProviderMetaData {
         public static final String LEVEL_ID = "level_id";
 
         public static final String SEASON_ID = "season_id";
-
-
-
     }
-
-
-
 
     public final static class SeasonsTable implements BaseColumns {
         public final static String TABLE_NAME = "seasons";
@@ -116,7 +108,6 @@ public class OptiksProviderMetaData {
         static TypeUri getType(final Uri uri) {
             return TypeUri.getType(URI_MATCHER.match(uri));
         }
-
 
         static TypeUri getType(final int match) {
             return TypeUri.values()[match];

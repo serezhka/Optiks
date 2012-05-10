@@ -20,6 +20,7 @@ import java.io.IOException;
  * Author: Dudko Alex (dududko@gmail.com)
  * Date: 21.04.12
  */
+
 public class Connector {
 
     // TODO  move this to Optiks Props
@@ -33,6 +34,7 @@ public class Connector {
     private final static String GET_SEASON = "getSeason=true";
     private final static String GET_LEVEL = "getLevel=true";
 
+    // TODO this class alredy exists in package com.ifmo.optiks.base.gson;
     private final class Fields {
         private final static String SEASON_COUNT = "seasonCount";
         private final static String LEVEL_COUNT = "levelCount";
@@ -40,10 +42,10 @@ public class Connector {
         private final static String NAME = "name";
         private final static String LEVELS = "levels";
         public final static String ID = "id";
-
     }
 
     public class NameDescription {
+
         public final String name;
         public final String description;
 
@@ -67,7 +69,6 @@ public class Connector {
         res = HTTP_CLIENT.execute(httpGet, RESPONSE_HANDLER);
         final JSONObject object = new JSONObject(res);
         return object.getInt(Fields.SEASON_COUNT);
-
     }
 
     public int getLevelCount(final int id) throws IOException, JSONException {
@@ -84,10 +85,7 @@ public class Connector {
         return new NameDescription(object.getString(Fields.NAME), object.getString(Fields.DESCRIPTION));
     }
 
-    /**
-     * save season in tellephone  from server
-     */
-    public void saveLevels(final int seasonId, final ContentResolver contentResolver) throws IOException, JSONException {
+    public void saveSeason(final int seasonId, final ContentResolver contentResolver) throws IOException, JSONException {
 
         final String uri = URI + "?" + GET_LEVEL + "&" + SEASON_ID + seasonId;
         final HttpGet httpGet = new HttpGet(uri);
@@ -97,16 +95,13 @@ public class Connector {
         final String name = jsonObject.getString(Fields.NAME);
         final JSONArray levels = new JSONArray(jsonObject.getString(Fields.LEVELS));
 
-
-        ContentValues cv = new ContentValues();
+        final ContentValues cv = new ContentValues();
 
         cv.put(OptiksProviderMetaData.SeasonsTable._ID, seasonId);
         cv.put(OptiksProviderMetaData.SeasonsTable.NAME, name);
         cv.put(OptiksProviderMetaData.SeasonsTable.DESCRIPTION, description);
         contentResolver.insert(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, cv);
-
         cv.clear();
-
 
         for (int i = 0, len = levels.length(); i < len; i++) {
             Log.d(TAG, "i = " + i);
@@ -117,9 +112,7 @@ public class Connector {
             contentResolver.insert(OptiksProviderMetaData.LevelsTable.CONTENT_URI, cv);
             cv.clear();
         }
-
     }
-
 
     public void updateSeason(final int seasonId, final ContentResolver contentResolver) throws IOException, JSONException {
         final String uri = URI + "?" + GET_LEVEL + "&" + SEASON_ID + seasonId;
@@ -130,13 +123,12 @@ public class Connector {
         final String name = jsonObject.getString(Fields.NAME);
         final JSONArray levels = new JSONArray(jsonObject.getString(Fields.LEVELS));
 
-        ContentValues cv = new ContentValues();
+        final ContentValues cv = new ContentValues();
         cv.put(OptiksProviderMetaData.SeasonsTable._ID, seasonId);
         cv.put(OptiksProviderMetaData.SeasonsTable.NAME, name);
         cv.put(OptiksProviderMetaData.SeasonsTable.DESCRIPTION, description);
         contentResolver.update(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, cv, OptiksProviderMetaData.SeasonsTable._ID + "=" + seasonId, null);
         cv.clear();
-
 
         for (int i = 0, len = levels.length(); i < len; i++) {
             Log.d(TAG, "i = " + i);
@@ -149,7 +141,6 @@ public class Connector {
                             + OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId, null);
             cv.clear();
         }
-
     }
 
     public void saveOrUpdateLevels(final int seasonId, final ContentResolver contentResolver) throws IOException, JSONException {
@@ -161,8 +152,7 @@ public class Connector {
         final String name = jsonObject.getString(Fields.NAME);
         final JSONArray levels = new JSONArray(jsonObject.getString(Fields.LEVELS));
 
-
-        ContentValues cv = new ContentValues();
+        final ContentValues cv = new ContentValues();
         cv.put(OptiksProviderMetaData.SeasonsTable._ID, seasonId);
         cv.put(OptiksProviderMetaData.SeasonsTable.NAME, name);
         cv.put(OptiksProviderMetaData.SeasonsTable.DESCRIPTION, description);
@@ -193,10 +183,7 @@ public class Connector {
             }
             cv.clear();
         }
-
     }
-
-
 }
 
 

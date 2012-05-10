@@ -1,13 +1,10 @@
 package com.ifmo.optiks.scene;
 
-import android.database.Cursor;
 import android.view.KeyEvent;
 import android.widget.Toast;
 import com.ifmo.optiks.OptiksActivity;
 import com.ifmo.optiks.base.control.OptiksScrollDetector;
 import com.ifmo.optiks.base.control.OptiksSurfaceScrollDetector;
-import com.ifmo.optiks.base.manager.GameScene;
-import com.ifmo.optiks.provider.OptiksProviderMetaData;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.handler.timer.ITimerCallback;
 import org.anddev.andengine.engine.handler.timer.TimerHandler;
@@ -15,6 +12,7 @@ import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.entity.text.Text;
 import org.anddev.andengine.input.touch.TouchEvent;
+import org.anddev.andengine.input.touch.detector.ClickDetector;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 /**
@@ -22,7 +20,7 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
  * Date: 22.04.12
  */
 
-public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetector.IScrollDetectorListener, Scene.IOnSceneTouchListener {
+public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetector.IScrollDetectorListener, Scene.IOnSceneTouchListener, ClickDetector.IClickDetectorListener {
 
     private final static int LEVEL_ROWS_PER_SCREEN = 3;
     private final static int LEVEL_COLUMNS_PER_SCREEN = 5;
@@ -35,41 +33,32 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
     private final Camera camera;
 
     private final OptiksSurfaceScrollDetector scrollDetector;
-
-    private final TextureRegion reachedLevel;
-    private final TextureRegion unReachedLevel;
+    private final ClickDetector clickDetector;
 
     private final int cameraWidth;
     private final int cameraHeight;
 
     private final int seasonId;
 
-    private final int levelsCount;
-    private final int maxLevelReached;
-    private final int levelPages;
-
     private float distanceX;
     private int page = 0;
+    private int levelPages;
+    private int maxLevelReached;
     private int levelClicked = -1;
 
     public OptiksLevelsScene(final int seasonId, final OptiksActivity optiksActivity) {
         super();
         this.seasonId = seasonId;
         this.optiksActivity = optiksActivity;
-        this.camera = optiksActivity.getCamera();
+        camera = optiksActivity.getCamera();
         cameraWidth = (int) optiksActivity.getCamera().getWidth();
         cameraHeight = (int) optiksActivity.getCamera().getHeight();
-        // TODO assign levels count and max level reached
-        levelsCount = 10;
-        maxLevelReached = 5;
-        levelPages = (levelsCount % (LEVEL_COLUMNS_PER_SCREEN * LEVEL_ROWS_PER_SCREEN)) == 0 ?
-                (levelsCount / (LEVEL_COLUMNS_PER_SCREEN * LEVEL_ROWS_PER_SCREEN)) : (levelsCount / (LEVEL_COLUMNS_PER_SCREEN * LEVEL_ROWS_PER_SCREEN)) + 1;
-        reachedLevel = optiksActivity.getOptiksTextureManager().levelsMenuStar;
-        unReachedLevel = optiksActivity.getOptiksTextureManager().levelsMenuQuestion;
+
         createLevelBoxes();
 
-        /* Scroll detector */
+        /* Scroll and Click detector */
         scrollDetector = new OptiksSurfaceScrollDetector(this);
+        clickDetector = new ClickDetector(this);
 
         // TODO fix this stub
         optiksActivity.getEngine().registerUpdateHandler(new TimerHandler(0.5f, new ITimerCallback() {
@@ -95,8 +84,14 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
 
     @Override
     public boolean onSceneTouchEvent(final Scene scene, final TouchEvent touchEvent) {
-        scrollDetector.onTouchEvent(touchEvent);
-        return true;
+        return scrollDetector.onTouchEvent(touchEvent) || clickDetector.onTouchEvent(touchEvent);
+    }
+
+    @Override
+    public void onClick(final ClickDetector clickDetector, final TouchEvent touchEvent) {
+        if (levelClicked > 0 && levelClicked <= maxLevelReached) {
+            loadLevel(levelClicked);
+        }
     }
 
     @Override
@@ -114,20 +109,64 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
     public void onScrollFinished(final OptiksScrollDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY) {
         if ((distanceX > TURN_PAGE_DISTANCE) && (page > 0)) {
             page--;
-            camera.offsetCenter(distanceX - cameraWidth, 0);
+            slideCamera(distanceX - cameraWidth, 0);
         } else if ((distanceX < -TURN_PAGE_DISTANCE) && (page < levelPages - 1)) {
             page++;
-            camera.offsetCenter(distanceX + cameraWidth, 0);
+            slideCamera(distanceX + cameraWidth, 0);
         } else {
-            camera.offsetCenter(distanceX, 0);
+            slideCamera(distanceX, 0);
         }
-        // TODO if last level page is turned -> show new season's levels
+    }
+
+    private void slideCamera(final float ofsetX, final float ofsetY) {
+        slideCamera((int) ofsetX, (int) ofsetY);
+    }
+
+    private void slideCamera(final int ofsetX, final int ofsetY) {
+        optiksActivity.runOnUiThread(new Runnable() {
+
+            int x = 0;
+            int y = 0;
+            int flag = 0;
+
+            @Override
+            public void run() {
+                while (x != ofsetX || y != ofsetY) {
+                    /* Slide oX */
+                    if (x != ofsetX) {
+                        camera.offsetCenter(Math.signum(ofsetX), 0);
+                        x += Math.signum(ofsetX);
+                    }
+                    /* Slide oY */
+                    if (y != ofsetY) {
+                        camera.offsetCenter(0, Math.signum(ofsetY));
+                        y += Math.signum(ofsetY);
+                    }
+                    try {
+                        if (flag++ > 3) {
+                            Thread.sleep(1);
+                            flag = 0;
+                        }
+                    } catch (InterruptedException e) {
+                        // do nothing
+                    }
+                }
+            }
+        });
     }
 
     private void createLevelBoxes() {
 
+        final int levelsCount = getLevelsCount();
+        maxLevelReached = getMaxLevelReached();
+        levelPages = (levelsCount % (LEVEL_COLUMNS_PER_SCREEN * LEVEL_ROWS_PER_SCREEN)) == 0 ?
+                (levelsCount / (LEVEL_COLUMNS_PER_SCREEN * LEVEL_ROWS_PER_SCREEN)) : (levelsCount / (LEVEL_COLUMNS_PER_SCREEN * LEVEL_ROWS_PER_SCREEN)) + 1;
+
         final int spaceBetweenRaws = (cameraHeight / LEVEL_ROWS_PER_SCREEN) - LEVEL_PADDING;
         final int spaceBetweenColumns = (cameraWidth / LEVEL_COLUMNS_PER_SCREEN) - LEVEL_PADDING;
+
+        final TextureRegion reachedLevel = optiksActivity.getOptiksTextureManager().levelsMenuStar;
+        final TextureRegion unReachedLevel = optiksActivity.getOptiksTextureManager().levelsMenuQuestion;
 
         int boxX = LEVEL_PADDING;
         int boxY = LEVEL_PADDING;
@@ -137,34 +176,16 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
             final int startX = i * cameraWidth;
             for (int j = 0; j < LEVEL_ROWS_PER_SCREEN; j++) {
                 for (int k = 0; k < LEVEL_COLUMNS_PER_SCREEN; k++) {
-                    final int levelToLoad = level;
-                    final Sprite box;
-                    if (level <= maxLevelReached) {
-                        box = new Sprite(startX + boxX, boxY, 100, 100, reachedLevel) {
-                            @Override
-                            public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX,
-                                                         final float pTouchAreaLocalY) {
-                                levelClicked = levelToLoad;
-                                loadLevel(levelClicked);
-                                return true;
-                            }
-                        };
-                    } else {
-                        box = new Sprite(startX + boxX, boxY, 100, 100, unReachedLevel) {
-                            @Override
-                            public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX,
-                                                         final float pTouchAreaLocalY) {
-                                optiksActivity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(optiksActivity, "It's not available! :)", Toast.LENGTH_SHORT)
-                                                .show();
-                                    }
-                                });
-                                return true;
-                            }
-                        };
-                    }
+                    final int levelToLoad = ++level;
+                    final TextureRegion textureRegion = (level <= maxLevelReached) ? reachedLevel : unReachedLevel;
+                    final Sprite box = new Sprite(startX + boxX, boxY, 100, 100, textureRegion) {
+                        @Override
+                        public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX,
+                                                     final float pTouchAreaLocalY) {
+                            levelClicked = levelToLoad;
+                            return false;
+                        }
+                    };
 
                     this.attachChild(box);
                     this.registerTouchArea(box);
@@ -172,9 +193,8 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
                     if (level < 10) {
                         textOffX = 28;
                     }
-                    box.attachChild(new Text(textOffX, 30, optiksActivity.getOptiksTextureManager().menuFont, String.valueOf(level + 1)));
+                    box.attachChild(new Text(textOffX, 30, optiksActivity.getOptiksTextureManager().menuFont, String.valueOf(level)));
 
-                    level++;
                     boxX += spaceBetweenColumns + LEVEL_PADDING;
                     if (level > levelsCount) {
                         break;
@@ -190,41 +210,38 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
         }
     }
 
+    private int getLevelsCount() {
+        // TODO check this commented code
+        /*final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
+                OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId, null, null);
+        return cursor.getCount();*/
+        return 5;
+    }
+
+    private int getMaxLevelReached() {
+        // TODO implement this
+        return 3;
+    }
+
     private void loadLevel(final int level) {
-        if (level != -1) {
-            optiksActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(optiksActivity, "Loading the " + (level + 1) + " level!", Toast.LENGTH_SHORT)
-                            .show();
-                    /*final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
-                            "(" + OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId + ") AND(" + OptiksProviderMetaData.LevelsTable.LEVEL_ID + "=" + level + ")"
-                            , null, null);
-                    cursor.moveToFirst();
-                    if (cursor.getCount() == 1) {
-                        final int idCol = cursor.getColumnIndex(OptiksProviderMetaData.LevelsTable.LEVEL);*/
-                    //final String json = cursor.getString(idCol);
-                    final String json = "[" +
-                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":100.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
-                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"AIM\",\"pX\":600.0,\"pY\":400.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
-                            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":200.0,\"pY\":100.0,\"rotation\":0.0,\"height\":50.0,\"width\":400.0}," +
-//            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":200.0,\"pY\":300.0,\"rotation\":0.0,\"height\":50.0,\"width\":250.0}," +
-                            "{\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":400.0,\"pY\":400.0,\"rotation\":0.0,\"height\":50.0,\"width\":250.0}," +
-                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":600.0,\"pY\":100.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
-                            "{\"canMove\":true,\"canRotate\":false,\"bodyForm\":\"CIRCLE\",\"type\":\"MIRROR\",\"pX\":500.0,\"pY\":200.0,\"rotation\":0.0,\"height\":150.0,\"width\":150.0}" +
-                            "]";
+        optiksActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(optiksActivity, "Loading the " + (level) + " level!", Toast.LENGTH_SHORT)
+                        .show();
+                // TODO load game scene
+                /*final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
+                        "(" + OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId + ") AND(" + OptiksProviderMetaData.LevelsTable.LEVEL_ID + "=" + level + ")"
+                        , null, null);
+                cursor.moveToFirst();
+                if (cursor.getCount() == 1) {
+                    final int idCol = cursor.getColumnIndex(OptiksProviderMetaData.LevelsTable.LEVEL);
+                    final String json = cursor.getString(idCol);
                     final OptiksScene gameScene = new GameScene(json, optiksActivity);
                     optiksActivity.scenes.put(OptiksScenes.GAME_SCENE, gameScene);
                     optiksActivity.setActiveScene(gameScene);
-                    //}
-                }
-            });
-        }
-    }
-
-    private int getLevelsCount() {
-        final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
-                OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId, null, null);
-        return cursor.getCount();
+                }*/
+            }
+        });
     }
 }

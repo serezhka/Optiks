@@ -44,7 +44,6 @@ public class LaserBeam {
         return line;
     }
 
-
     private void removeFromScene() {
         for (final Line line : beam) {
             scene.detachChild(line);

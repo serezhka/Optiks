@@ -52,7 +52,7 @@ public class GameScene extends OptiksScene {
     protected final PhysicsWorld physicsWorld;
 
     protected final OptiksTextureManager textureManager;
-    protected final GameSoundManager soundManager;
+    protected final OptiksSoundManager soundManager;
 
     protected Body aimBody;
     protected Body laserBody;
@@ -73,12 +73,10 @@ public class GameScene extends OptiksScene {
 
     private final ColorBackground colorBackground = new ColorBackground(0.0f, 0.0f, 0.0f);
 
-    public GameScene(final BaseGameActivity activity,
-                     final OptiksTextureManager textureManager,
-                     final GameSoundManager soundManager, final PhysicsWorld world) {
-        this.activity = activity;
-        this.textureManager = textureManager;
-        this.soundManager = soundManager;
+    public GameScene(final OptiksActivity optiksActivity, final PhysicsWorld world) {
+        activity = optiksActivity;
+        textureManager = optiksActivity.getOptiksTextureManager();
+        soundManager = optiksActivity.getOptiksSoundManager();
         physicsWorld = world;
     }
 
@@ -336,10 +334,6 @@ public class GameScene extends OptiksScene {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-
-
-
     private class TouchListener implements IOnSceneTouchListener, IOnAreaTouchListener {
         private final ActionMoveFilter filter;
         private final JointsManager jointsManager;
@@ -347,7 +341,6 @@ public class GameScene extends OptiksScene {
         private float dx;
         private float dy;
         private SelectedObject selectedObject = null;
-
 
         private TouchListener(final PhysicsWorld physicsWorld) {
             filter = new ActionMoveFilter();
@@ -417,7 +410,6 @@ public class GameScene extends OptiksScene {
                     } else if (mirrorBodies.contains(objectParent.getUserData())) {
                         Log.d(TAG, "objectParent is ok");
                         wasActionDown = 1;
-
                         jointsManager.createJoints(objectParent, object, touchAreaLocalX, touchAreaLocalY);
                         if (((Mirror) objectParent).canMove) {
                             filter.init(touchAreaLocalX, touchAreaLocalY);
