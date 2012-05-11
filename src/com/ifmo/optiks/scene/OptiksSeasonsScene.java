@@ -274,23 +274,12 @@ public class OptiksSeasonsScene extends OptiksScene implements OptiksScrollDetec
 
     private void loadSeason(final int seasonNumber) {
         final int seasonId = seasons.get(seasonNumber).getId();
-        if (seasonId >= 0) {
-            optiksActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(optiksActivity, "Load Season with id " + seasonId, Toast.LENGTH_SHORT).show();
-                    optiksActivity.setActiveScene(new OptiksLevelsScene(seasonId, optiksActivity));
-                }
-            });
+        if (seasonId > 0) {
+            optiksActivity.showToast("Load Season with id " + seasonId, Toast.LENGTH_SHORT);
+            optiksActivity.scenes.put(OptiksScenes.LEVELS_SCENE, new OptiksLevelsScene(seasonId, optiksActivity));
+            optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.LEVELS_SCENE));
         } else {
             // TODO just for tests
-            optiksActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(optiksActivity, "Loading levels menu for test! " + seasonId, Toast.LENGTH_SHORT).show();
-                    optiksActivity.setActiveScene(new OptiksLevelsScene(seasonId, optiksActivity));
-                }
-            });
         }
     }
 }

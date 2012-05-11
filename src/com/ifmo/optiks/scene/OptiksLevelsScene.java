@@ -1,10 +1,14 @@
 package com.ifmo.optiks.scene;
 
+import android.database.Cursor;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 import com.ifmo.optiks.OptiksActivity;
 import com.ifmo.optiks.base.control.OptiksScrollDetector;
 import com.ifmo.optiks.base.control.OptiksSurfaceScrollDetector;
+import com.ifmo.optiks.base.manager.GameScene;
+import com.ifmo.optiks.provider.OptiksProviderMetaData;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.handler.timer.ITimerCallback;
 import org.anddev.andengine.engine.handler.timer.TimerHandler;
@@ -45,6 +49,7 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
     private int levelPages;
     private int maxLevelReached;
     private int levelClicked = -1;
+    private final static String TAG = "OptiksLevelsSceneTAG";
 
     public OptiksLevelsScene(final int seasonId, final OptiksActivity optiksActivity) {
         super();
@@ -68,6 +73,11 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
                 OptiksLevelsScene.this.setOnSceneTouchListener(OptiksLevelsScene.this);
             }
         }));
+    }
+
+    public void setMaxLevelReached(final int maxLevelReached) {
+
+        this.maxLevelReached = maxLevelReached;
     }
 
     @Override
@@ -200,7 +210,7 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
                         break;
                     }
                 }
-                if (level > levelsCount) {
+                if (level >= levelsCount) {
                     break;
                 }
                 boxY += spaceBetweenRaws + LEVEL_PADDING;
@@ -211,37 +221,32 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
     }
 
     private int getLevelsCount() {
-        // TODO check this commented code
-        /*final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
+        final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
                 OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId, null, null);
-        return cursor.getCount();*/
-        return 5;
+        Log.d(TAG, " getLevelsCount retuns " + cursor.getCount());
+        return cursor.getCount();
     }
 
     private int getMaxLevelReached() {
-        // TODO implement this
-        return 3;
+        final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, null,
+                OptiksProviderMetaData.SeasonsTable._ID + "=" + seasonId, null, null);
+        final int numReached = cursor.getColumnIndex(OptiksProviderMetaData.SeasonsTable.MAX_LEVEL_REACHED);
+        cursor.moveToFirst();
+        Log.d(TAG, "getMaxLevelReached() returns " + cursor.getInt(numReached));
+        return cursor.getInt(numReached);
     }
 
     private void loadLevel(final int level) {
-        optiksActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(optiksActivity, "Loading the " + (level) + " level!", Toast.LENGTH_SHORT)
-                        .show();
-                // TODO load game scene
-                /*final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
-                        "(" + OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId + ") AND(" + OptiksProviderMetaData.LevelsTable.LEVEL_ID + "=" + level + ")"
-                        , null, null);
-                cursor.moveToFirst();
-                if (cursor.getCount() == 1) {
-                    final int idCol = cursor.getColumnIndex(OptiksProviderMetaData.LevelsTable.LEVEL);
-                    final String json = cursor.getString(idCol);
-                    final OptiksScene gameScene = new GameScene(json, optiksActivity);
-                    optiksActivity.scenes.put(OptiksScenes.GAME_SCENE, gameScene);
-                    optiksActivity.setActiveScene(gameScene);
-                }*/
-            }
-        });
+        optiksActivity.showToast("loading " + level + " level!", Toast.LENGTH_SHORT);
+
+        // TODO load game scene
+        final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
+                OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId, null, null);
+        cursor.moveToPosition(level);
+        final int idCol = cursor.getColumnIndex(OptiksProviderMetaData.LevelsTable.LEVEL);
+        final String json = cursor.getString(idCol);
+        final OptiksScene gameScene = new GameScene(json, optiksActivity);
+        optiksActivity.scenes.put(OptiksScenes.GAME_SCENE, gameScene);
+        optiksActivity.setActiveScene(gameScene);
     }
 }
