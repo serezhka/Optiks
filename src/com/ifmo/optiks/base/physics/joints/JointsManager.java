@@ -77,13 +77,13 @@ public class JointsManager {
         return false;
     }
 
-    public boolean createJoints(final IShape object,final IShape child, final float touchAreaX, final float touchAreaY) {
+    public boolean createJoints(final IShape object, final float touchAreaX, final float touchAreaY) {
         if (!isCreate) {
             isCreate = true;
             final Body body = (Body) object.getUserData();
-            final Vector2 localPoint = Vector2Pool.obtain((touchAreaX - child.getWidth() * 0.5f) /
-                    PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, (touchAreaY - child.getHeight() * 0.5f)
-                    / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+            final Vector2 localPoint = Vector2Pool.obtain(touchAreaX /
+                    PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT, touchAreaY / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT);
+
             createMouseJoint(localPoint, body);
             if (((Mirror) object).canRotate) {
                 final float density = MASS / (object.getHeightScaled() * object.getWidthScaled());
@@ -108,7 +108,7 @@ public class JointsManager {
         mouseJointDef.frequencyHz = 30;
         mouseJointDef.maxForce = (100.0f * body.getMass());
         mouseJointDef.collideConnected = true;
-        mouseJointDef.target.set(body.getWorldPoint(localPoint));
+        mouseJointDef.target.set(localPoint);
         Vector2Pool.recycle(localPoint);
         mouseJoint = (MouseJoint) physicsWorld.createJoint(mouseJointDef);
     }

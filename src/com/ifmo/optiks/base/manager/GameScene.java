@@ -75,7 +75,7 @@ public class GameScene extends OptiksScene {
 
     private final ColorBackground colorBackground = new ColorBackground(0.0f, 0.0f, 0.0f);
     private final int seasonId;
-    private final  int levelIdex;
+    private final int levelIdex;
 
     public GameScene(final OptiksActivity optiksActivity, final PhysicsWorld world) {
         this.optiksActivity = optiksActivity;
@@ -86,7 +86,7 @@ public class GameScene extends OptiksScene {
         levelIdex = 1;
     }
 
-    public GameScene(final String json, final OptiksActivity optiksActivity, final int seasonId,final int levelIndex) {
+    public GameScene(final String json, final OptiksActivity optiksActivity, final int seasonId, final int levelIndex) {
         this.levelIdex = levelIndex;
         this.seasonId = seasonId;
         this.optiksActivity = optiksActivity;
@@ -207,6 +207,13 @@ public class GameScene extends OptiksScene {
                 mirror = new Mirror(mjc, textureManager.mirrorRectangleTextureRegion, BodyForm.RECTANGLE);
                 body = PhysicsFactory.createBoxBody(physicsWorld, mirror, BodyDef.BodyType.StaticBody, Fixtures.AIM_MIRROR_BARRIER);
                 final float meter = (mjc.width <= 200) ? mjc.width : 200;
+                if (mirror.canMove) {
+                    final AnimatedSprite mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
+                    mirrorSplash.setPosition((mirror.getWidth() - mirrorSplash.getWidth()) / 2, (mirror.getHeight() - mirrorSplash.getHeight()) / 2);
+                    mirrorSplash.setScaleX((meter * 3 / 5) / mirrorSplash.getHeight());
+                    mirrorSplash.setScaleY((meter * 3 / 5) / mirrorSplash.getHeight());
+                    mirror.attachChild(mirrorSplash);
+                }
                 if (mirror.canRotate) {
                     for (int i = 0; i < 2; i++) {
                         final AnimatedSprite mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
@@ -215,13 +222,6 @@ public class GameScene extends OptiksScene {
                         mirrorSplash.setScaleY((meter * 4 / 10) / mirrorSplash.getHeight());
                         mirror.attachChild(mirrorSplash);
                     }
-                }
-                if (mirror.canMove) {
-                    final AnimatedSprite mirrorSplash = new AnimatedSprite(0, 0, textureManager.mirrorSplash);
-                    mirrorSplash.setPosition((mirror.getWidth() - mirrorSplash.getWidth()) / 2, (mirror.getHeight() - mirrorSplash.getHeight()) / 2);
-                    mirrorSplash.setScaleX((meter * 3 / 5) / mirrorSplash.getHeight());
-                    mirrorSplash.setScaleY((meter * 3 / 5) / mirrorSplash.getHeight());
-                    mirror.attachChild(mirrorSplash);
                 }
                 break;
             case CIRCLE:
@@ -430,7 +430,7 @@ public class GameScene extends OptiksScene {
                         }
                     } else if (mirrorBodies.contains(objectParent.getUserData())) {
                         wasActionDown = 1;
-                        jointsManager.createJoints(objectParent, object, touchAreaLocalX, touchAreaLocalY);
+                        jointsManager.createJoints(objectParent, touchEvent.getX(), touchEvent.getY());
                         if (((Mirror) objectParent).canMove) {
                             filter.init(touchAreaLocalX, touchAreaLocalY);
                         }
@@ -477,7 +477,7 @@ public class GameScene extends OptiksScene {
             final ContentValues cv = new ContentValues();
             cv.put(OptiksProviderMetaData.SeasonsTable.MAX_LEVEL_REACHED, currentReached + 1);
             final OptiksLevelsScene levelsScene = (OptiksLevelsScene) optiksActivity.scenes.get(OptiksScenes.LEVELS_SCENE);
-            if (levelIdex <= currentReached){
+            if (levelIdex <= currentReached) {
                 optiksActivity.getContentResolver().update(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, cv, OptiksProviderMetaData.SeasonsTable._ID + "=" + seasonId, null);
                 levelsScene.setMaxLevelReached(currentReached + 1);
             }

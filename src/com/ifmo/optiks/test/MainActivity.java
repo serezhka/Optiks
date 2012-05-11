@@ -1,22 +1,9 @@
+//package com.ifmo.optiks.test;
+
+
 /*
-package com.ifmo.optiks.test;
-
-
-import com.ifmo.optiks.base.manager.GameScene;
-import com.ifmo.optiks.base.manager.OptiksSoundManager;
-import com.ifmo.optiks.base.manager.OptiksTextureManager;
-import org.anddev.andengine.engine.Engine;
-import org.anddev.andengine.engine.camera.Camera;
-import org.anddev.andengine.engine.options.EngineOptions;
-import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
-import org.anddev.andengine.entity.scene.Scene;
-import org.anddev.andengine.entity.util.FPSLogger;
-import org.anddev.andengine.ui.activity.BaseGameActivity;
-
-*/
-/**
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
- *//*
+
 
 public class MainActivity extends BaseGameActivity {
     private final static String TAG = "MainActivityTAG";
@@ -36,8 +23,7 @@ public class MainActivity extends BaseGameActivity {
     private Camera camera;
 
 
-    */
-/*protected void onCreate(Bundle pSavedInstanceState) {
+protected void onCreate(Bundle pSavedInstanceState) {
         super.onCreate(pSavedInstanceState);
         final int id = getIntent().getExtras().getInt(OptiksProviderMetaData.SeasonsTable._ID);
         final Cursor cursor = managedQuery(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, null, "_id=?", new String[]{id + ""}, null);
@@ -46,7 +32,7 @@ public class MainActivity extends BaseGameActivity {
         final int idValue = cursor.getColumnIndex(OptiksProviderMetaData.SeasonsTable.DESCRIPTION);
         level = cursor.getString(idValue);
 
-    }*//*
+    }
 
 
     @Override
@@ -73,8 +59,7 @@ public class MainActivity extends BaseGameActivity {
         this.mEngine.registerUpdateHandler(new FPSLogger());
         return new GameScene(level, this, textureManager, gameSoundManager);
 
-        */
-/*final Scene scene = new Scene();
+final Scene scene = new Scene();
        final PhysicsWorld physicsWorld = new PhysicsWorld(new Vector2(0, 0), false);
        final ConstructorGameScene constructorGameScene = new ConstructorGameScene(this, textureManager, gameSoundManager);
 
@@ -88,7 +73,7 @@ public class MainActivity extends BaseGameActivity {
        Log.d(TAG, constructorGameScene.getGson());
 
 
-       return scene;*//*
+       return scene;
 
 
     }
@@ -97,5 +82,4 @@ public class MainActivity extends BaseGameActivity {
     public void onLoadComplete() {
         mEngine.enableVibrator(this);
     }
-}
-*/
+}*/

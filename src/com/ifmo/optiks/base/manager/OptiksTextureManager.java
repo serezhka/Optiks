@@ -73,7 +73,7 @@ public class OptiksTextureManager {
 
         /* Toast font */
         final BitmapTextureAtlas toastFontAtlas = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR);
-        font = new Font(toastFontAtlas, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32, true, Color.BLACK);
+        font = new Font(toastFontAtlas, Typeface.create(Typeface.DEFAULT, Typeface.BOLD), 32, true, Color.WHITE);
         activity.getTextureManager().loadTexture(toastFontAtlas);
         activity.getFontManager().loadFont(font);
 

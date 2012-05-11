@@ -8,7 +8,7 @@ package com.ifmo.optiks.base.control;
 public class ActionMoveFilter {
 
     private final static float MAX_DX = 10;
-    private final static int MIN_TIME = 200;
+    private final static int MIN_TIME = 400;
 
     private float x;
     private float y;
@@ -60,6 +60,7 @@ public class ActionMoveFilter {
     private boolean isLocality(final float x, final float y) {
         if (!isCrossBorder) {
             isCrossBorder = Math.sqrt(Math.pow((this.x - x), 2) + Math.pow((this.y - y), 2)) > MAX_DX;
+            wasMove = isCrossBorder;
         }
         return !isCrossBorder;
     }
