@@ -7,5 +7,5 @@ import org.anddev.andengine.input.touch.TouchEvent;
  * Date: 09.05.12
  */
 public interface SelectedObject {
-    void handle(final TouchEvent touchEvent,final float touchAreaLocalX, final float touchAreaLocalY);
+    boolean handle(final TouchEvent touchEvent,final float touchAreaLocalX, final float touchAreaLocalY);
 }

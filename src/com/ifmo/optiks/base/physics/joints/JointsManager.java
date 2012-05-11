@@ -87,7 +87,6 @@ public class JointsManager {
             createMouseJoint(localPoint, body);
             if (((Mirror) object).canRotate) {
                 final float density = MASS / (object.getHeightScaled() * object.getWidthScaled());
-                Log.d(TAG, "density- " + density);
                 createRotateJoint(body, density);
             } else {
                 body.setType(BodyDef.BodyType.StaticBody);

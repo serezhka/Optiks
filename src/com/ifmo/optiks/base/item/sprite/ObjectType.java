@@ -11,7 +11,7 @@ public enum ObjectType {
     MIRROR("MIRROR"),
     BARRIER("BARRIER"),
     AIM("AIM"),
-    MENU_BUTTON("MENU_BUTTON");
+    ANTI_MIRROR_WALL("ANTI_MIRROR_WALL");
 
     final private String name;
 

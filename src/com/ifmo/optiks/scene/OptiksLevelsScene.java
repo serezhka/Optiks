@@ -205,13 +205,21 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
                         final int idCol = cursor.getColumnIndex(OptiksProviderMetaData.LevelsTable.LEVEL);*/
                     //final String json = cursor.getString(idCol);
                     final String json = "[" +
-                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":100.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
-                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"AIM\",\"pX\":600.0,\"pY\":400.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
-                            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":200.0,\"pY\":100.0,\"rotation\":0.0,\"height\":50.0,\"width\":400.0}," +
-//            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":200.0,\"pY\":300.0,\"rotation\":0.0,\"height\":50.0,\"width\":250.0}," +
-                            "{\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":400.0,\"pY\":400.0,\"rotation\":0.0,\"height\":50.0,\"width\":250.0}," +
-                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":600.0,\"pY\":100.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
-                            "{\"canMove\":true,\"canRotate\":false,\"bodyForm\":\"CIRCLE\",\"type\":\"MIRROR\",\"pX\":500.0,\"pY\":200.0,\"rotation\":0.0,\"height\":150.0,\"width\":150.0}" +
+                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":260.0,\"pY\":100.0,\"rotation\":0.0,\"height\":50.0,\"width\":50.0}," +
+                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"AIM\",\"pX\":410.0,\"pY\":150.0,\"rotation\":0.0,\"height\":70.0,\"width\":70.0}," +
+                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":360.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
+                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":360.0,\"pY\":100.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
+                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":360.0,\"pY\":300.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
+                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":260.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
+                            "{\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":460.0,\"pY\":200.0,\"rotation\":0.0,\"height\":100.0,\"width\":100.0}," +
+                            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":360.0,\"pY\":25.0,\"rotation\":90.0,\"height\":20.0,\"width\":50.0}," +
+                            "{\"canMove\":true,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":320.0,\"pY\":468.0,\"rotation\":0.0,\"height\":20.0,\"width\":150.0}," +
+                            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"ANTI_MIRROR_WALL\",\"pX\":200.0,\"pY\":468.0,\"rotation\":0.0,\"height\":10.0,\"width\":10.0}," +
+                            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"ANTI_MIRROR_WALL\",\"pX\":400.0,\"pY\":468.0,\"rotation\":0.0,\"height\":10.0,\"width\":10.0}," +
+                            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"ANTI_MIRROR_WALL\",\"pX\":260.0,\"pY\":448.0,\"rotation\":0.0,\"height\":10.0,\"width\":10.0}," +
+                            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"ANTI_MIRROR_WALL\",\"pX\":340.0,\"pY\":448.0,\"rotation\":0.0,\"height\":10.0,\"width\":10.0}," +
+                            "{\"canMove\":false,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":80.0,\"pY\":200.0,\"rotation\":90.0,\"height\":60.0,\"width\":150.0}," +
+                            "{\"canMove\":false,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":640.0,\"pY\":100.0,\"rotation\":0.0,\"height\":30.0,\"width\":150.0}," +
                             "]";
                     final OptiksScene gameScene = new GameScene(json, optiksActivity);
                     optiksActivity.scenes.put(OptiksScenes.GAME_SCENE, gameScene);

@@ -14,11 +14,13 @@ public class Fixtures {
     private static final short LASER_CAT = 2;
     private static final short AIM_MIRROR_BARRIER_CAT = 4;
     private static final short BULLET_CAT = 8;
+    private static final short ANTI_MIRROR_WALL_CAT = 16;
 
-    public static final FixtureDef WALL = PhysicsFactory.createFixtureDef(0, 0f, 0f, false, WALL_CAT, (short) (WALL_CAT + AIM_MIRROR_BARRIER_CAT + BULLET_CAT + LASER_CAT), (short) 0);
-    public static final FixtureDef LASER = PhysicsFactory.createFixtureDef(0, 0f, 0f, false, LASER_CAT, (short) (WALL_CAT + AIM_MIRROR_BARRIER_CAT + LASER_CAT), (short) 0);
-    public static final FixtureDef AIM_MIRROR_BARRIER = PhysicsFactory.createFixtureDef(0, 0f, 0f, false, AIM_MIRROR_BARRIER_CAT, (short) (WALL_CAT + AIM_MIRROR_BARRIER_CAT + BULLET_CAT + LASER_CAT), (short) 0);
+    public static final FixtureDef WALL = PhysicsFactory.createFixtureDef(0f, 0f, 0f, false, WALL_CAT, (short) (WALL_CAT + AIM_MIRROR_BARRIER_CAT + BULLET_CAT + LASER_CAT), (short) 0);
+    public static final FixtureDef LASER = PhysicsFactory.createFixtureDef(0f, 0f, 0f, false, LASER_CAT, (short) (WALL_CAT + AIM_MIRROR_BARRIER_CAT + LASER_CAT), (short) 0);
+    public static final FixtureDef AIM_MIRROR_BARRIER = PhysicsFactory.createFixtureDef(0f, 0f, 0f, false, AIM_MIRROR_BARRIER_CAT, (short) (WALL_CAT + AIM_MIRROR_BARRIER_CAT + BULLET_CAT + LASER_CAT), (short) 0);
     public static final FixtureDef BULLET = PhysicsFactory.createFixtureDef(10000000, 1f, 0f, false, BULLET_CAT, (short) (WALL_CAT + AIM_MIRROR_BARRIER_CAT + BULLET_CAT), (short) 0);
+    public static final FixtureDef ANTI_MIRROR_WALL = PhysicsFactory.createFixtureDef(0f, 0f, 0f, false, BULLET_CAT, (short) (AIM_MIRROR_BARRIER_CAT), (short) 0);
 
     /*public FixtureDef getWall() {
         return wall;
