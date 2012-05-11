@@ -1,5 +1,7 @@
 package com.ifmo.optiks.base.manager;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.view.KeyEvent;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -16,6 +18,7 @@ import com.ifmo.optiks.base.physics.CollisionHandler;
 import com.ifmo.optiks.base.physics.Fixtures;
 import com.ifmo.optiks.base.physics.LaserBullet;
 import com.ifmo.optiks.base.physics.joints.JointsManager;
+import com.ifmo.optiks.provider.OptiksProviderMetaData;
 import com.ifmo.optiks.scene.OptiksLevelsScene;
 import com.ifmo.optiks.scene.OptiksScene;
 import com.ifmo.optiks.scene.OptiksScenes;
@@ -31,6 +34,7 @@ import org.anddev.andengine.extension.physics.box2d.PhysicsConnector;
 import org.anddev.andengine.extension.physics.box2d.PhysicsFactory;
 import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
 import org.anddev.andengine.input.touch.TouchEvent;
+import org.anddev.andengine.util.HorizontalAlign;
 import org.anddev.andengine.util.MathUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,15 +74,21 @@ public class GameScene extends OptiksScene {
     private int numberOfShut;
 
     private final ColorBackground colorBackground = new ColorBackground(0.0f, 0.0f, 0.0f);
+    private final int seasonId;
+    private final  int levelIdex;
 
     public GameScene(final OptiksActivity optiksActivity, final PhysicsWorld world) {
         this.optiksActivity = optiksActivity;
         textureManager = optiksActivity.getOptiksTextureManager();
         soundManager = optiksActivity.getOptiksSoundManager();
         physicsWorld = world;
+        seasonId = -1;
+        levelIdex = 1;
     }
 
-    public GameScene(final String json, final OptiksActivity optiksActivity) {
+    public GameScene(final String json, final OptiksActivity optiksActivity, final int seasonId,final int levelIndex) {
+        this.levelIdex = levelIndex;
+        this.seasonId = seasonId;
         this.optiksActivity = optiksActivity;
         textureManager = optiksActivity.getOptiksTextureManager();
         soundManager = optiksActivity.getOptiksSoundManager();
@@ -191,6 +201,7 @@ public class GameScene extends OptiksScene {
     protected void addMirror(final MirrorJsonContainer mjc) {
         final Mirror mirror;
         final Body body;
+
         switch (mjc.bodyForm) {
             case RECTANGLE:
                 mirror = new Mirror(mjc, textureManager.mirrorRectangleTextureRegion, BodyForm.RECTANGLE);
@@ -350,6 +361,7 @@ public class GameScene extends OptiksScene {
         return false;
     }
 
+
     private class TouchListener implements IOnSceneTouchListener, IOnAreaTouchListener {
         private final ActionMoveFilter filter;
         private final JointsManager jointsManager;
@@ -361,15 +373,7 @@ public class GameScene extends OptiksScene {
             filter = new ActionMoveFilter();
             jointsManager = new JointsManager(physicsWorld);
         }
-        
-        
-        void succus(){
-            //todo....
-            //todo go to base
-            final OptiksLevelsScene levelsScene =(OptiksLevelsScene) optiksActivity.scenes.get(OptiksScenes.LEVELS_SCENE);
-            levelsScene.setMaxLevelReached(-1);
-            optiksActivity.setActiveScene(levelsScene);
-        }
+
 
         @Override
         public boolean onSceneTouchEvent(final Scene scene, final TouchEvent touchEvent) {
@@ -463,6 +467,33 @@ public class GameScene extends OptiksScene {
     }
 
     private class SampleCollisionHandler implements CollisionHandler {
+        void succus() {
+            //todo....
+            final Cursor cursor = optiksActivity.managedQuery(OptiksProviderMetaData.SeasonsTable.CONTENT_URI,
+                    null, OptiksProviderMetaData.SeasonsTable._ID + "=" + seasonId, null, null);
+            final int numReached = cursor.getColumnIndex(OptiksProviderMetaData.SeasonsTable.MAX_LEVEL_REACHED);
+            cursor.moveToFirst();
+            final int currentReached = cursor.getInt(numReached);
+            final ContentValues cv = new ContentValues();
+            cv.put(OptiksProviderMetaData.SeasonsTable.MAX_LEVEL_REACHED, currentReached + 1);
+            final OptiksLevelsScene levelsScene = (OptiksLevelsScene) optiksActivity.scenes.get(OptiksScenes.LEVELS_SCENE);
+            if (levelIdex <= currentReached){
+                optiksActivity.getContentResolver().update(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, cv, OptiksProviderMetaData.SeasonsTable._ID + "=" + seasonId, null);
+                levelsScene.setMaxLevelReached(currentReached + 1);
+            }
+            final Text txt = new Text(360, 240, textureManager.font, "Good Job! You're grate !", HorizontalAlign.CENTER);
+            GameScene.this.attachChild(txt);
+            GameScene.this.setOnAreaTouchListener(null);
+            GameScene.this.setOnSceneTouchListener(new IOnSceneTouchListener() {
+                @Override
+                public boolean onSceneTouchEvent(final Scene scene, final TouchEvent touchEvent) {
+                    if (touchEvent.isActionUp()) {
+                        optiksActivity.setActiveScene(levelsScene);
+                    }
+                    return true;
+                }
+            });
+        }
 
         @Override
         public void handle(final Contact contact, final LaserBullet bullet, final Body thing) {
@@ -472,9 +503,7 @@ public class GameScene extends OptiksScene {
                 bullet.stop();
             } else if (thing == aimBody) {
                 bullet.stop();
-                // Todo something great !
-                /* toast = new Text(360, 240, textureManager.font, "Good Shoot!", HorizontalAlign.CENTER);
-                attachChild(toast);*/
+                succus();
             }
         }
     }
