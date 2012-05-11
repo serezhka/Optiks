@@ -206,9 +206,6 @@ public class OptiksSeasonsScene extends OptiksScene implements OptiksScrollDetec
 
     private void createSeasonBoxes() {
 
-        // TODO load existing seasons
-        // TODO ask user to check for new seasons, load new seasons from server
-
         final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, null, null, null, null);
         final int nameNum = cursor.getColumnIndex(OptiksProviderMetaData.SeasonsTable.NAME);
         final int descriptionNum = cursor.getColumnIndex(OptiksProviderMetaData.SeasonsTable.DESCRIPTION);

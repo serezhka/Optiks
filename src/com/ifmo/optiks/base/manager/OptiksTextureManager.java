@@ -51,8 +51,7 @@ public class OptiksTextureManager {
     public final TextureRegion rightArrowTextureRegion;
 
     /* Levels Menu Items */
-    public final TextureRegion levelsMenuStar;
-    public final TextureRegion levelsMenuQuestion;
+    public final TiledTextureRegion levelsMenuItem;
 
     /* Seasons Images */
     public final Map<Integer, TextureRegion> seasons;
@@ -137,9 +136,8 @@ public class OptiksTextureManager {
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/level/");
 
         /* Levels menu items */
-        final BitmapTextureAtlas levelsMenuTextureAtlas = new BitmapTextureAtlas(512, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        levelsMenuStar = BitmapTextureAtlasTextureRegionFactory.createFromAsset(levelsMenuTextureAtlas, activity, "star.png", 0, 0);
-        levelsMenuQuestion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(levelsMenuTextureAtlas, activity, "question.png", 256, 0);
+        final BitmapTextureAtlas levelsMenuTextureAtlas = new BitmapTextureAtlas(256, 128, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        levelsMenuItem = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(levelsMenuTextureAtlas, activity, "level_item_1.png", 0, 0, 2, 1);
         activity.getEngine().getTextureManager().loadTexture(levelsMenuTextureAtlas);
 
         /* Settings menu assets path */
@@ -151,6 +149,22 @@ public class OptiksTextureManager {
         vibrationTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(settingsMenuTextureAtlas, activity, "vibration.png", 256, 0, 2, 1);
         musicTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(settingsMenuTextureAtlas, activity, "music.png", 0, 256, 2, 1);
         activity.getEngine().getTextureManager().loadTexture(settingsMenuTextureAtlas);
+    }
+
+    // TODO this is fuckin' stub for fukin' AndEngine
+    public TiledTextureRegion getLevelsMenuItemRegion() {
+
+        final TiledTextureRegion levelsMenuItem;
+
+        /* Levels menu assets path */
+        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/level/");
+
+        /* Levels menu items */
+        final BitmapTextureAtlas levelsMenuTextureAtlas = new BitmapTextureAtlas(256, 128, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        levelsMenuItem = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(levelsMenuTextureAtlas, activity, "level_item_1.png", 0, 0, 2, 1);
+        activity.getEngine().getTextureManager().loadTexture(levelsMenuTextureAtlas);
+
+        return levelsMenuItem;
     }
 
     public void addSeasonImageFromFile(final int seasonId, final File image) {
