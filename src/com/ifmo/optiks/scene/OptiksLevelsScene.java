@@ -285,7 +285,7 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
         cursor.moveToPosition(level);
         final int idCol = cursor.getColumnIndex(OptiksProviderMetaData.LevelsTable.LEVEL);
         final String json = cursor.getString(idCol);
-        final OptiksScene gameScene = new GameScene(json, optiksActivity);
+        final OptiksScene gameScene = new GameScene(json, optiksActivity,seasonId);
         optiksActivity.scenes.put(OptiksScenes.GAME_SCENE, gameScene);
         optiksActivity.setActiveScene(gameScene);
     }
