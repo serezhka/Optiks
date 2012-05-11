@@ -32,6 +32,7 @@ public class OptiksMenuScene extends OptiksScene implements MenuScene.IOnMenuIte
 
     private Menu activeMenu;
 
+    private int menuWidth;
     private int menuHeight;
 
     public OptiksMenuScene(final OptiksActivity optiksActivity, final Menu menu) {
@@ -45,12 +46,6 @@ public class OptiksMenuScene extends OptiksScene implements MenuScene.IOnMenuIte
         //scrollDetector = new OptiksSurfaceScrollDetector(this);
         //this.setOnSceneTouchListener(this);
     }
-
-    /*@Override
-    public void setEnabled(final boolean enabled) {
-        super.setEnabled(enabled);
-        menuScene.setIgnoreUpdate(!enabled);
-    }*/
 
     @Override
     public boolean onKeyDown(final int pKeyCode, final KeyEvent pEvent) {
@@ -71,11 +66,18 @@ public class OptiksMenuScene extends OptiksScene implements MenuScene.IOnMenuIte
                     final OptiksScene seasons = new OptiksSeasonsScene(optiksActivity);
                     optiksActivity.scenes.put(OptiksScenes.SEASONS_SCENE, seasons);
                     optiksActivity.setActiveScene(seasons);
-                    break;
+                    return true;
 
                 case SETTINGS:
+                    final OptiksScene settings = new OptiksSettingsScene(optiksActivity);
+                    optiksActivity.scenes.put(OptiksScenes.SETTINGS_SCENE, settings);
+                    optiksActivity.setActiveScene(settings);
+                    return true;
 
-                    // TODO implement settings scene
+                case GAME_INFO:
+
+                    // TODO implement game info Scene
+                    return false;
 
                 case QUIT:
                     optiksActivity.showExitDialog();
@@ -134,9 +136,16 @@ public class OptiksMenuScene extends OptiksScene implements MenuScene.IOnMenuIte
             menuItem.setText(new ChangeableText(0, 0, optiksActivity.getOptiksTextureManager().menuFont, menuItem.getName()));
             menuScene.addMenuItem(menuItem);
             menuHeight += menuItem.getHeight();
+            menuWidth = (menuItem.getWidth() > menuWidth) ? (int) menuItem.getWidth() : menuWidth;
         }
         menuScene.buildAnimations();
         menuScene.setBackgroundEnabled(false);
+        final float scale = menuWidth / (optiksActivity.getCamera().getWidth() + 105);
+        // TODO why need minus 100 * scale ?!
+        final float x = optiksActivity.getCamera().getWidth() / 2 - menuWidth * scale / 2 - 105 * scale;
+        final float y = optiksActivity.getCamera().getHeight() / 2 - menuHeight * scale / 2;
+        menuScene.setScale(scale);
+        menuScene.setPosition(x, y);
 
         // TODO fix this stub
         optiksActivity.getEngine().registerUpdateHandler(new TimerHandler(0.5f, new ITimerCallback() {
@@ -157,10 +166,8 @@ public class OptiksMenuScene extends OptiksScene implements MenuScene.IOnMenuIte
         this.setBackground(new ColorBackground(0.09804f, 0.6274f, 0.8784f));
         this.setBackgroundEnabled(false);
         final TextureRegion menuBackgroundTextureRegion = optiksActivity.getOptiksTextureManager().menuBackgroundTextureRegion;
-        final int x = ((int) optiksActivity.getCamera().getWidth() - menuBackgroundTextureRegion.getWidth()) / 2;
-        final int y = ((int) optiksActivity.getCamera().getHeight() - menuBackgroundTextureRegion.getHeight()) / 2;
-        final Sprite menuBackground = new Sprite(x, y, menuBackgroundTextureRegion);
-        menuBackground.setScale(1.25f);
+        final Sprite menuBackground = new Sprite(0, 0, menuBackgroundTextureRegion);
+        menuBackground.setSize(optiksActivity.getCamera().getWidth(), optiksActivity.getCamera().getHeight());
         this.attachChild(menuBackground);
     }
 }

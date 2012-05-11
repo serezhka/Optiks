@@ -3,14 +3,12 @@ package com.ifmo.optiks;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.KeyEvent;
-import com.ifmo.optiks.base.manager.GameSoundManager;
+import android.widget.Toast;
+import com.ifmo.optiks.base.manager.OptiksSoundManager;
 import com.ifmo.optiks.base.manager.OptiksTextureManager;
 import com.ifmo.optiks.menu.Menu;
 import com.ifmo.optiks.menu.OptiksMenu;
-import com.ifmo.optiks.scene.OptiksMenuScene;
-import com.ifmo.optiks.scene.OptiksScene;
-import com.ifmo.optiks.scene.OptiksScenes;
-import com.ifmo.optiks.scene.OptiksSplashScene;
+import com.ifmo.optiks.scene.*;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.handler.timer.ITimerCallback;
@@ -44,7 +42,7 @@ public class OptiksActivity extends BaseGameActivity {
 
     /* Texture and Sound Manager */
     private OptiksTextureManager textureManager;
-    private GameSoundManager soundManager;
+    private OptiksSoundManager soundManager;
 
     /* Splash */
     private TextureRegion splashTextureRegion;
@@ -65,6 +63,7 @@ public class OptiksActivity extends BaseGameActivity {
 
     @Override
     public void onLoadResources() {
+
         /* Splash assets path */
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/splash/");
 
@@ -87,7 +86,7 @@ public class OptiksActivity extends BaseGameActivity {
                 mEngine.unregisterUpdateHandler(pTimerHandler);
                 /* Create Texture Manager, Sound Manager, load other resources */
                 textureManager = new OptiksTextureManager(OptiksActivity.this);
-                soundManager = GameSoundManager.getInstance(OptiksActivity.this);
+                soundManager = new OptiksSoundManager(OptiksActivity.this);
                 loadScenes();
                 loadComplete = true;
             }
@@ -122,24 +121,46 @@ public class OptiksActivity extends BaseGameActivity {
         return camera;
     }
 
+    public OptiksTextureManager getOptiksTextureManager() {
+        return textureManager;
+    }
+
+    public OptiksSoundManager getOptiksSoundManager() {
+        return soundManager;
+    }
+
+    public void showToast(final String message, final int duration) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(OptiksActivity.this, message, duration).show();
+            }
+        });
+    }
+
     public void showExitDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(OptiksActivity.this);
-        builder.setMessage("Are you sure you want to exit?")
-                .setCancelable(false)
-                .setTitle("EXIT")
-                .setPositiveButton("Yes",
-                        new DialogInterface.OnClickListener() {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(OptiksActivity.this);
+                builder.setMessage("Are you sure you want to exit?")
+                        .setCancelable(false)
+                        .setTitle("EXIT")
+                        .setPositiveButton("Yes",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(final DialogInterface dialog, final int id) {
+                                        OptiksActivity.this.finish();
+                                    }
+                                })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             public void onClick(final DialogInterface dialog, final int id) {
-                                OptiksActivity.this.finish();
+                                dialog.cancel();
                             }
-                        })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, final int id) {
-                        dialog.cancel();
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
+                        });
+                final AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
     }
 
     private void loadScenes() {
@@ -152,13 +173,5 @@ public class OptiksActivity extends BaseGameActivity {
         final OptiksScene menuScene = new OptiksMenuScene(this, menu);
         menuScene.setEnabled(false);
         scenes.put(OptiksScenes.MENU_SCENE, menuScene);
-    }
-
-    public OptiksTextureManager getOptiksTextureManager() {
-        return textureManager;
-    }
-
-    public GameSoundManager getOptiksSoundManager() {
-        return soundManager;
     }
 }

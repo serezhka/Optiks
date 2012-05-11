@@ -10,6 +10,7 @@ import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
  * User: dududko@gmail.com
  * Date: 10.04.12
  */
+
 @Deprecated
 public class RevoluteJointOptiks extends RevoluteJointDef {
 

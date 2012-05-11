@@ -1,6 +1,7 @@
 package com.ifmo.optiks.base.manager;
 
 import com.badlogic.gdx.physics.box2d.Body;
+import com.ifmo.optiks.OptiksActivity;
 import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
 import com.ifmo.optiks.base.gson.Converter;
 import com.ifmo.optiks.base.gson.LevelGsonContainer;
@@ -18,12 +19,13 @@ import java.util.List;
 /**
  * Author: Aleksey Vladiev (Avladiev2@gmail.com)
  */
+
 public class ConstructorScene extends GameScene {
 
     private final List<GameSprite> objectsSprites = new LinkedList<GameSprite>();
 
-    public ConstructorScene(final BaseGameActivity activity, final OptiksTextureManager textureManager, final GameSoundManager soundManager, final PhysicsWorld world) {
-        super(activity, textureManager, soundManager, world);
+    public ConstructorScene(final OptiksActivity activity, final PhysicsWorld world) {
+        super(activity, world);
     }
 
     public void setBackground(final ColorBackground colorBackground) {

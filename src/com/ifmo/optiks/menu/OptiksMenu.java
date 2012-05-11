@@ -57,20 +57,9 @@ public class OptiksMenu implements Menu {
 
         final TextureRegion menuItemTextureRegion = optiksActivity.getOptiksTextureManager().menuItemTextureRegion;
 
-        final MenuItem seasonChoice = new SimpleMenuItem(MenuItemType.SEASON_CHOICE, menuItemTextureRegion);
-
-        final MenuItem loadSeasons = new SimpleMenuItem(MenuItemType.LOAD_SEASONS, menuItemTextureRegion);
-
-        final MenuItem settings = new SimpleMenuItem(MenuItemType.SETTINGS, menuItemTextureRegion);
-
-        final MenuItem gameInfo = new SimpleMenuItem(MenuItemType.GAME_INFO, menuItemTextureRegion);
-
-        final MenuItem quit = new SimpleMenuItem(MenuItemType.QUIT, menuItemTextureRegion);
-
-        menu.addMenuItem(seasonChoice);
-        menu.addMenuItem(loadSeasons);
-        menu.addMenuItem(settings);
-        menu.addMenuItem(gameInfo);
-        menu.addMenuItem(quit);
+        menu.addMenuItem(new SimpleMenuItem(MenuItemType.SEASON_CHOICE, menuItemTextureRegion));
+        menu.addMenuItem(new SimpleMenuItem(MenuItemType.SETTINGS, menuItemTextureRegion));
+        menu.addMenuItem(new SimpleMenuItem(MenuItemType.GAME_INFO, menuItemTextureRegion));
+        menu.addMenuItem(new SimpleMenuItem(MenuItemType.QUIT, menuItemTextureRegion));
     }
 }

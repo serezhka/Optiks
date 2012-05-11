@@ -27,8 +27,8 @@ public class TestConnector extends Activity {
             Log.d(TAG, "getLevelCount = " + connector.getLevelCount(id));
             Log.d(TAG, "getNameDescription = " + connector.getNameDescription(id));
 
-            Log.d(TAG,"call saveLevels") ;
-            connector.saveLevels(id, getContentResolver());
+            Log.d(TAG,"call saveSeason") ;
+            connector.saveSeason(id, getContentResolver());
             log();
             Log.d(TAG,"call updateLavels") ;
             connector.updateSeason(id, getContentResolver());

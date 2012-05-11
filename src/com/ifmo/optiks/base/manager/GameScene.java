@@ -16,7 +16,9 @@ import com.ifmo.optiks.base.physics.CollisionHandler;
 import com.ifmo.optiks.base.physics.Fixtures;
 import com.ifmo.optiks.base.physics.LaserBullet;
 import com.ifmo.optiks.base.physics.joints.JointsManager;
+import com.ifmo.optiks.scene.OptiksLevelsScene;
 import com.ifmo.optiks.scene.OptiksScene;
+import com.ifmo.optiks.scene.OptiksScenes;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.entity.primitive.Rectangle;
 import org.anddev.andengine.entity.scene.Scene;
@@ -29,7 +31,6 @@ import org.anddev.andengine.extension.physics.box2d.PhysicsConnector;
 import org.anddev.andengine.extension.physics.box2d.PhysicsFactory;
 import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
 import org.anddev.andengine.input.touch.TouchEvent;
-import org.anddev.andengine.ui.activity.BaseGameActivity;
 import org.anddev.andengine.util.MathUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,12 +46,12 @@ public class GameScene extends OptiksScene {
 
     private final static String TAG = "GameSceneTAG";
 
-    protected final BaseGameActivity activity;
+    protected final OptiksActivity optiksActivity;
 
     protected final PhysicsWorld physicsWorld;
 
     protected final OptiksTextureManager textureManager;
-    protected final GameSoundManager soundManager;
+    protected final OptiksSoundManager soundManager;
 
     protected Body aimBody;
     protected Body laserBody;
@@ -70,17 +71,15 @@ public class GameScene extends OptiksScene {
 
     private final ColorBackground colorBackground = new ColorBackground(0.0f, 0.0f, 0.0f);
 
-    public GameScene(final BaseGameActivity activity,
-                     final OptiksTextureManager textureManager,
-                     final GameSoundManager soundManager, final PhysicsWorld world) {
-        this.activity = activity;
-        this.textureManager = textureManager;
-        this.soundManager = soundManager;
+    public GameScene(final OptiksActivity optiksActivity, final PhysicsWorld world) {
+        this.optiksActivity = optiksActivity;
+        textureManager = optiksActivity.getOptiksTextureManager();
+        soundManager = optiksActivity.getOptiksSoundManager();
         physicsWorld = world;
     }
 
     public GameScene(final String json, final OptiksActivity optiksActivity) {
-        activity = optiksActivity;
+        this.optiksActivity = optiksActivity;
         textureManager = optiksActivity.getOptiksTextureManager();
         soundManager = optiksActivity.getOptiksSoundManager();
         physicsWorld = new PhysicsWorld(new Vector2(0, 0), false);
@@ -145,7 +144,7 @@ public class GameScene extends OptiksScene {
     }
 
     public void createBorder(final float a) {
-        final Camera camera = activity.getEngine().getCamera();
+        final Camera camera = optiksActivity.getEngine().getCamera();
         final float h = camera.getHeight();
         final float w = camera.getWidth();
 
@@ -341,6 +340,13 @@ public class GameScene extends OptiksScene {
 
     @Override
     public boolean onKeyDown(final int pKeyCode, final KeyEvent pEvent) {
+        if (pKeyCode == KeyEvent.KEYCODE_BACK && pEvent.getAction() == KeyEvent.ACTION_DOWN) {
+            optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.LEVELS_SCENE));
+            return true;
+        } else if (pKeyCode == KeyEvent.KEYCODE_MENU && pEvent.getAction() == KeyEvent.ACTION_DOWN) {
+            optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.MENU_SCENE));
+            return true;
+        }
         return false;
     }
 
@@ -354,6 +360,15 @@ public class GameScene extends OptiksScene {
         private TouchListener(final PhysicsWorld physicsWorld) {
             filter = new ActionMoveFilter();
             jointsManager = new JointsManager(physicsWorld);
+        }
+        
+        
+        void succus(){
+            //todo....
+            //todo go to base
+            final OptiksLevelsScene levelsScene =(OptiksLevelsScene) optiksActivity.scenes.get(OptiksScenes.LEVELS_SCENE);
+            levelsScene.setMaxLevelReached(-1);
+            optiksActivity.setActiveScene(levelsScene);
         }
 
         @Override

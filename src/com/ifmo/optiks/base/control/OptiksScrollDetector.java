@@ -73,6 +73,9 @@ public class OptiksScrollDetector extends BaseDetector {
                     return false;
                 }
             case TouchEvent.ACTION_UP:
+                if (!this.mTriggering) {
+                    return false;
+                }
             case TouchEvent.ACTION_CANCEL:
                 if (this.mPointerID == pSceneTouchEvent.getPointerID()) {
                     final float distanceX = touchX - this.mLastX;
