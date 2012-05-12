@@ -264,11 +264,11 @@ public class GameScene extends OptiksScene {
         final Body body;
         switch (ojc.bodyForm) {
             case RECTANGLE:
-                antiMirrorWall = new AntiMirrorWall(ojc, textureManager.emptyTexture, BodyForm.RECTANGLE);
+                antiMirrorWall = new AntiMirrorWall(ojc, textureManager.antiMirrorWallTexture, BodyForm.RECTANGLE);
                 body = PhysicsFactory.createBoxBody(physicsWorld, antiMirrorWall, BodyDef.BodyType.StaticBody, Fixtures.ANTI_MIRROR_WALL);
                 break;
             case CIRCLE:
-                antiMirrorWall = new AntiMirrorWall(ojc, textureManager.emptyTexture, BodyForm.CIRCLE);
+                antiMirrorWall = new AntiMirrorWall(ojc, textureManager.antiMirrorWallTexture, BodyForm.CIRCLE);
                 body = PhysicsFactory.createCircleBody(physicsWorld, antiMirrorWall, BodyDef.BodyType.StaticBody, Fixtures.ANTI_MIRROR_WALL);
                 break;
             default:
@@ -481,7 +481,7 @@ public class GameScene extends OptiksScene {
                 optiksActivity.getContentResolver().update(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, cv, OptiksProviderMetaData.SeasonsTable._ID + "=" + seasonId, null);
                 levelsScene.setMaxLevelReached(currentReached + 1);
             }
-            final Text txt = new Text(360, 240, textureManager.font, "Good Job! You're grate !", HorizontalAlign.CENTER);
+            final Text txt = new Text(260, 240, textureManager.font, "Good Job! You're grate !", HorizontalAlign.CENTER);
             GameScene.this.attachChild(txt);
             GameScene.this.setOnAreaTouchListener(null);
             GameScene.this.setOnSceneTouchListener(new IOnSceneTouchListener() {
