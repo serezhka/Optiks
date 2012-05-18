@@ -2,6 +2,7 @@ package com.ifmo.optiks.base.manager;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.KeyEvent;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -23,6 +24,8 @@ import com.ifmo.optiks.scene.OptiksLevelsScene;
 import com.ifmo.optiks.scene.OptiksScene;
 import com.ifmo.optiks.scene.OptiksScenes;
 import org.anddev.andengine.engine.camera.Camera;
+import org.anddev.andengine.entity.IEntity;
+import org.anddev.andengine.entity.modifier.ColorModifier;
 import org.anddev.andengine.entity.primitive.Rectangle;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
@@ -151,6 +154,7 @@ public class GameScene extends OptiksScene {
         final TouchListener touchListener = new TouchListener(physicsWorld);
         setOnSceneTouchListener(touchListener);
         setOnAreaTouchListener(touchListener);
+        appearScene(true);
     }
 
     public void createBorder(final float a) {
@@ -292,7 +296,7 @@ public class GameScene extends OptiksScene {
                     sprite.attachChild(emptySprite);
                     switch (container.bodyForm) {
                         case CIRCLE:
-                            emptySprite.setWidth((container.width >= 60) ? container.width : 60);
+                            emptySprite.setWidth((container.width >= 70) ? container.width : 70);
                             break;
                         case RECTANGLE:
                             emptySprite.setWidth(sprite.getWidth());
@@ -300,7 +304,7 @@ public class GameScene extends OptiksScene {
                         case DEFAULT:
                             break;
                     }
-                    emptySprite.setHeight((container.height >= 60) ? container.height : 60);
+                    emptySprite.setHeight((container.height >= 70) ? container.height : 70);
                     emptySprite.setPosition((sprite.getWidth() - emptySprite.getWidth()) / 2,
                             (sprite.getHeight() - emptySprite.getHeight()) / 2);
                     registerTouchArea(emptySprite);
@@ -311,9 +315,15 @@ public class GameScene extends OptiksScene {
                 barrierBodies.add(body);
                 break;
             case AIM:
-                registerTouchArea(sprite);
                 aimBody = body;
                 sprite.animate(50);
+                final AnimatedSprite emptySprite = new AnimatedSprite(0, 0, textureManager.emptyTexture);
+                sprite.attachChild(emptySprite);
+                emptySprite.setWidth((container.width >= 70) ? container.width : 70);
+                emptySprite.setHeight((container.height >= 70) ? container.height : 70);
+                emptySprite.setPosition((sprite.getWidth() - emptySprite.getWidth()) / 2,
+                        (sprite.getHeight() - emptySprite.getHeight()) / 2);
+                registerTouchArea(emptySprite);
                 break;
             case ANTI_MIRROR_WALL:
                 antiMirrorBodies.add(body);
@@ -405,29 +415,20 @@ public class GameScene extends OptiksScene {
                 default:
                     return false;
             }
-
         }
 
         @Override
         public boolean onAreaTouched(final TouchEvent touchEvent, final ITouchArea touchArea, final float touchAreaLocalX, final float touchAreaLocalY) {
             final IShape object = (AnimatedSprite) touchArea;
             IShape objectParent = null;
-            try {
-                objectParent = (AnimatedSprite) object.getParent();
-            } catch (ClassCastException e) {
-                //todo!!
-            }
+            objectParent = (AnimatedSprite) object.getParent();
+
             switch (touchEvent.getAction()) {
                 case TouchEvent.ACTION_DOWN:
                     if (object == sightChild) {
                         wasActionDown = 2;
                         dx = sight.getX() - touchEvent.getX();
                         dy = sight.getY() - touchEvent.getY();
-                    } else if (aimBody == object.getUserData()) {
-                        if (!bullet.isMoving()) {
-                            bullet.shoot();
-                            numberOfShut++;
-                        }
                     } else if (mirrorBodies.contains(objectParent.getUserData())) {
                         wasActionDown = 1;
                         jointsManager.createJoints(objectParent, touchEvent.getX(), touchEvent.getY());
@@ -460,6 +461,14 @@ public class GameScene extends OptiksScene {
                     jointsManager.destroyJoints();
                     filter.destroy();
                     wasActionDown = 0;
+                    Log.d(TAG, "UP");
+                    if (aimBody == objectParent.getUserData()) {
+                        Log.d(TAG, "shot boolet");
+                        if (!bullet.isMoving()) {
+                            bullet.shoot();
+                            numberOfShut++;
+                        }
+                    }
                     return true;
             }
             return true;
@@ -468,21 +477,25 @@ public class GameScene extends OptiksScene {
 
     private class SampleCollisionHandler implements CollisionHandler {
         void succus() {
+            appearScene(false);
             //todo....
             final Cursor cursor = optiksActivity.managedQuery(OptiksProviderMetaData.SeasonsTable.CONTENT_URI,
                     null, OptiksProviderMetaData.SeasonsTable._ID + "=" + seasonId, null, null);
             final int numReached = cursor.getColumnIndex(OptiksProviderMetaData.SeasonsTable.MAX_LEVEL_REACHED);
             cursor.moveToFirst();
             final int currentReached = cursor.getInt(numReached);
-            final ContentValues cv = new ContentValues();
-            cv.put(OptiksProviderMetaData.SeasonsTable.MAX_LEVEL_REACHED, currentReached + 1);
+
             final OptiksLevelsScene levelsScene = (OptiksLevelsScene) optiksActivity.scenes.get(OptiksScenes.LEVELS_SCENE);
-            if (levelIdex <= currentReached) {
+            if (levelIdex == currentReached) {
+                final ContentValues cv = new ContentValues();
+                cv.put(OptiksProviderMetaData.SeasonsTable.MAX_LEVEL_REACHED, currentReached + 1);
                 optiksActivity.getContentResolver().update(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, cv, OptiksProviderMetaData.SeasonsTable._ID + "=" + seasonId, null);
                 levelsScene.setMaxLevelReached(currentReached + 1);
             }
             final Text txt = new Text(260, 240, textureManager.font, "Good Job! You're grate !", HorizontalAlign.CENTER);
+            txt.setColor(0, 0, 0);
             GameScene.this.attachChild(txt);
+            txt.registerEntityModifier(new ColorModifier(5, 0, 0.8f, 0, 0.8f, 0, 0.8f));
             GameScene.this.setOnAreaTouchListener(null);
             GameScene.this.setOnSceneTouchListener(new IOnSceneTouchListener() {
                 @Override
@@ -504,6 +517,24 @@ public class GameScene extends OptiksScene {
             } else if (thing == aimBody) {
                 bullet.stop();
                 succus();
+            }
+        }
+    }
+
+    private void appearScene(final boolean appear) {
+        if (appear) {
+            for (final IEntity child : GameScene.this.mChildren) {
+                child.registerEntityModifier(new ColorModifier(4, 0, child.getRed(), 0, child.getGreen(), 0, child.getBlue()));
+                for (int i = 0; i < child.getChildCount(); i++) {
+                    child.getChild(i).registerEntityModifier(new ColorModifier(3, 0, child.getRed(), 0, child.getGreen(), 0, child.getBlue()));
+                }
+            }
+        } else {
+            for (final IEntity child : GameScene.this.mChildren) {
+                child.registerEntityModifier(new ColorModifier(3, child.getRed(), 0.15f, child.getGreen(), 0.15f, child.getBlue(), 0.15f));
+                for (int i = 0; i < child.getChildCount(); i++) {
+                    child.getChild(i).registerEntityModifier(new ColorModifier(3, child.getRed(), 0.15f, child.getGreen(), 0.15f, child.getBlue(), 0.15f));
+                }
             }
         }
     }
