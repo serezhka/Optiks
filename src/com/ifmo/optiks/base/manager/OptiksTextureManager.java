@@ -29,6 +29,9 @@ public class OptiksTextureManager {
     /* Menu Font */
     public final Font menuFont;
 
+    /* Settings Font */
+    public final Font settingsFont;
+
     /* Optiks Base Objects */
     public final TiledTextureRegion aimTextureRegion;
     public final TiledTextureRegion laserTextureRegion;
@@ -104,6 +107,12 @@ public class OptiksTextureManager {
         activity.getEngine().getTextureManager().loadTexture(menuFontTexture);
         activity.getFontManager().loadFont(menuFont);
 
+        /* Settings Path */
+        final BitmapTextureAtlas settingsFontTexture = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        settingsFont = FontFactory.createFromAsset(settingsFontTexture, activity, "Plok.ttf", 12, true, Color.rgb(255, 140, 0));
+        activity.getEngine().getTextureManager().loadTexture(settingsFontTexture);
+        activity.getFontManager().loadFont(settingsFont);
+
         /* Menu assets path */
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/main/");
 
@@ -154,7 +163,7 @@ public class OptiksTextureManager {
         activity.getEngine().getTextureManager().loadTexture(settingsMenuTextureAtlas);
     }
 
-    // TODO this is fuckin' stub for fukin' AndEngine
+    // TODO this is fuckin' stub for fuckin' AndEngine
     public TiledTextureRegion getLevelsMenuItemRegion() {
 
         final TiledTextureRegion levelsMenuItem;
