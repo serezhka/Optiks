@@ -8,7 +8,10 @@ import com.ifmo.optiks.base.manager.OptiksSoundManager;
 import com.ifmo.optiks.base.manager.OptiksTextureManager;
 import com.ifmo.optiks.menu.Menu;
 import com.ifmo.optiks.menu.OptiksMenu;
-import com.ifmo.optiks.scene.*;
+import com.ifmo.optiks.scene.OptiksMenuScene;
+import com.ifmo.optiks.scene.OptiksScene;
+import com.ifmo.optiks.scene.OptiksScenes;
+import com.ifmo.optiks.scene.OptiksSplashScene;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.handler.timer.ITimerCallback;
@@ -16,12 +19,14 @@ import org.anddev.andengine.engine.handler.timer.TimerHandler;
 import org.anddev.andengine.engine.options.EngineOptions;
 import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
 import org.anddev.andengine.entity.scene.Scene;
+import org.anddev.andengine.entity.sprite.AnimatedSprite;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.entity.util.FPSLogger;
 import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.anddev.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
+import org.anddev.andengine.opengl.texture.region.TiledTextureRegion;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
 import java.util.HashMap;
@@ -46,6 +51,8 @@ public class OptiksActivity extends BaseGameActivity {
 
     /* Splash */
     private TextureRegion splashTextureRegion;
+    private TextureRegion tapToScreenRegion;
+    private TiledTextureRegion mirrorTextureRegion;
 
     /* All Scenes */
     public Map<OptiksScenes, OptiksScene> scenes;
@@ -69,8 +76,18 @@ public class OptiksActivity extends BaseGameActivity {
 
         /* Game Splash */
         final BitmapTextureAtlas splashAtlas = new BitmapTextureAtlas(1024, 1024, TextureOptions.NEAREST);
-        splashTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(splashAtlas, this, "splash.png", 0, 0);
+        splashTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(splashAtlas, this, "splash.jpg", 0, 0);
         mEngine.getTextureManager().loadTextures(splashAtlas);
+
+        /* Laser Texture */
+        final BitmapTextureAtlas mirrorTextureAtlas = new BitmapTextureAtlas(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        mirrorTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(mirrorTextureAtlas, this, "mirror_circle.png", 0, 0, 3, 3);
+        mEngine.getTextureManager().loadTextures(mirrorTextureAtlas);
+
+        /* Tap to Screen Texture */
+        final BitmapTextureAtlas tapToScreenTextureAtlas = new BitmapTextureAtlas(512, 64, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        tapToScreenRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(tapToScreenTextureAtlas, this, "tap_to_screen.png", 0, 0);
+        mEngine.getTextureManager().loadTextures(tapToScreenTextureAtlas);
     }
 
     @Override
@@ -92,10 +109,17 @@ public class OptiksActivity extends BaseGameActivity {
             }
         }));
 
+        /*Damian "Junior Gong" Marley – Born to Be Wild*/
+
         /* Splash Scene */
         final Sprite splash = new Sprite(0, 0, splashTextureRegion);
         splash.setSize(CAMERA_WIDTH, CAMERA_HEIGHT);
-        return new OptiksSplashScene(this, splash);
+        final AnimatedSprite mirror = new AnimatedSprite(180, 170,
+                mirrorTextureRegion.getWidth() * 0.9f / 3, mirrorTextureRegion.getHeight() / 3, mirrorTextureRegion);
+        final Sprite tapToScreen = new Sprite(CAMERA_WIDTH / 2 - tapToScreenRegion.getWidth() / 4, CAMERA_HEIGHT * 2 / 3,
+                tapToScreenRegion.getWidth() / 2, tapToScreenRegion.getHeight() / 2, tapToScreenRegion);
+
+        return new OptiksSplashScene(this, splash, mirror, tapToScreen);
     }
 
     @Override

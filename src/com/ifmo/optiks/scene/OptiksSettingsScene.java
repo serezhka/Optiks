@@ -3,6 +3,7 @@ package com.ifmo.optiks.scene;
 import android.view.KeyEvent;
 import com.ifmo.optiks.OptiksActivity;
 import org.anddev.andengine.entity.sprite.TiledSprite;
+import org.anddev.andengine.entity.text.Text;
 import org.anddev.andengine.input.touch.TouchEvent;
 import org.anddev.andengine.opengl.texture.region.TiledTextureRegion;
 
@@ -64,6 +65,11 @@ public class OptiksSettingsScene extends OptiksScene {
         this.registerTouchArea(sound);
         this.attachChild(sound);
 
+        /* Sound button Label */
+        final Text soundLabel = new Text(0, 0, optiksActivity.getOptiksTextureManager().settingsFont, "Sound effects");
+        soundLabel.setPosition(sound.getX() + sound.getWidth() / 2 - soundLabel.getWidth() / 2, sound.getY() + sound.getHeight() + 20);
+        this.attachChild(soundLabel);
+
         /* Vibration button */
         final TiledSprite vibration = new TiledSprite(300, 200, vibrationTextureRegion) {
             @Override
@@ -83,6 +89,11 @@ public class OptiksSettingsScene extends OptiksScene {
         this.registerTouchArea(vibration);
         this.attachChild(vibration);
 
+        /* Vibration button Label */
+        final Text vibrationLabel = new Text(0, vibration.getY() + vibration.getHeight() + 20, optiksActivity.getOptiksTextureManager().settingsFont, "Vibration");
+        vibrationLabel.setPosition(vibration.getX() + vibration.getWidth() / 2 - vibrationLabel.getWidth() / 2, vibration.getY() + vibration.getHeight() + 20);
+        this.attachChild(vibrationLabel);
+
         /* Music button */
         final TiledSprite music = new TiledSprite(500, 200, 100, 100, musicTextureRegion) {
             @Override
@@ -101,6 +112,11 @@ public class OptiksSettingsScene extends OptiksScene {
         music.setCurrentTileIndex(tileIndex);
         this.registerTouchArea(music);
         this.attachChild(music);
+
+        /* Music button Label */
+        final Text musicLabel = new Text(music.getX(), music.getY() + music.getHeight() + 20, optiksActivity.getOptiksTextureManager().settingsFont, "Background music");
+        musicLabel.setPosition(music.getX() + music.getWidth() / 2 - musicLabel.getWidth() / 2, music.getY() + music.getHeight() + 20);
+        this.attachChild(musicLabel);
     }
 
     private void setVibrationEnabled(final boolean enabled) {
