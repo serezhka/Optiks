@@ -32,12 +32,12 @@ import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.entity.shape.IShape;
 import org.anddev.andengine.entity.shape.Shape;
 import org.anddev.andengine.entity.sprite.AnimatedSprite;
+import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.entity.text.Text;
 import org.anddev.andengine.extension.physics.box2d.PhysicsConnector;
 import org.anddev.andengine.extension.physics.box2d.PhysicsFactory;
 import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
 import org.anddev.andengine.input.touch.TouchEvent;
-import org.anddev.andengine.util.HorizontalAlign;
 import org.anddev.andengine.util.MathUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -77,21 +77,27 @@ public class GameScene extends OptiksScene {
     private int numberOfShut;
 
     private final ColorBackground colorBackground = new ColorBackground(0.0f, 0.0f, 0.0f);
+    private final String json;
     private final int seasonId;
-    private final int levelIdex;
+    private final int levelIndex;
+    private final int levelMaxIndex;
 
     public GameScene(final OptiksActivity optiksActivity, final PhysicsWorld world) {
+        this.json = "";
         this.optiksActivity = optiksActivity;
         textureManager = optiksActivity.getOptiksTextureManager();
         soundManager = optiksActivity.getOptiksSoundManager();
         physicsWorld = world;
         seasonId = -1;
-        levelIdex = 1;
+        levelIndex = 1;
+        levelMaxIndex = -1;
     }
 
-    public GameScene(final String json, final OptiksActivity optiksActivity, final int seasonId, final int levelIndex) {
-        this.levelIdex = levelIndex;
+    public GameScene(final String json, final OptiksActivity optiksActivity, final int seasonId, final int levelIndex, final int levelMaxIndex) {
+        this.json = json;
+        this.levelIndex = levelIndex;
         this.seasonId = seasonId;
+        this.levelMaxIndex = levelMaxIndex;
         this.optiksActivity = optiksActivity;
         textureManager = optiksActivity.getOptiksTextureManager();
         soundManager = optiksActivity.getOptiksSoundManager();
@@ -484,28 +490,20 @@ public class GameScene extends OptiksScene {
             final int numReached = cursor.getColumnIndex(OptiksProviderMetaData.SeasonsTable.MAX_LEVEL_REACHED);
             cursor.moveToFirst();
             final int currentReached = cursor.getInt(numReached);
-
             final OptiksLevelsScene levelsScene = (OptiksLevelsScene) optiksActivity.scenes.get(OptiksScenes.LEVELS_SCENE);
-            if (levelIdex == currentReached) {
+            if (levelIndex == currentReached) {
                 final ContentValues cv = new ContentValues();
                 cv.put(OptiksProviderMetaData.SeasonsTable.MAX_LEVEL_REACHED, currentReached + 1);
                 optiksActivity.getContentResolver().update(OptiksProviderMetaData.SeasonsTable.CONTENT_URI, cv, OptiksProviderMetaData.SeasonsTable._ID + "=" + seasonId, null);
                 levelsScene.setMaxLevelReached(currentReached + 1);
             }
-            final Text txt = new Text(260, 240, textureManager.font, "Good Job! You're grate !", HorizontalAlign.CENTER);
-            txt.setColor(0, 0, 0);
-            GameScene.this.attachChild(txt);
-            txt.registerEntityModifier(new ColorModifier(5, 0, 0.8f, 0, 0.8f, 0, 0.8f));
             GameScene.this.setOnAreaTouchListener(null);
-            GameScene.this.setOnSceneTouchListener(new IOnSceneTouchListener() {
-                @Override
-                public boolean onSceneTouchEvent(final Scene scene, final TouchEvent touchEvent) {
-                    if (touchEvent.isActionUp()) {
-                        optiksActivity.setActiveScene(levelsScene);
-                    }
-                    return true;
-                }
-            });
+            if (levelIndex == levelMaxIndex) {
+                addArrowReplay(1);
+            } else {
+                addArrowReplay(2);
+                addArrowNext();
+            }
         }
 
         @Override
@@ -537,5 +535,59 @@ public class GameScene extends OptiksScene {
                 }
             }
         }
+    }
+
+    private boolean addArrowReplay(final int numberOfArrows) {
+        final float x;
+        final float y;
+        switch (numberOfArrows) {
+            case 1:
+                x = 310;
+                break;
+            case 2:
+                x = 220;
+                break;
+            default:
+                x = -1;
+        }
+        final Sprite arrowReplay = new Sprite(x, 200, 100, 100, textureManager.arrowReplay) {
+            @Override
+            public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+                if (pSceneTouchEvent.isActionUp()) {
+                    final GameScene gameScene = new GameScene(json, optiksActivity, seasonId, levelIndex, levelMaxIndex);
+                    optiksActivity.scenes.put(OptiksScenes.GAME_SCENE, gameScene);
+                    optiksActivity.setActiveScene(gameScene);
+                    return true;
+                }
+                return false;
+            }
+        };
+
+        GameScene.this.attachChild(arrowReplay);
+        GameScene.this.registerTouchArea(arrowReplay);
+        return true;
+    }
+
+    private boolean addArrowNext() {
+        final Sprite arrowNext = new Sprite(400, 200, 100, 100, textureManager.arrowPlayNext) {
+            @Override
+            public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+                if (pSceneTouchEvent.isActionUp()) {
+                    final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
+                            OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId, null, null);
+                    cursor.moveToPosition(levelIndex);
+                    final int idCol = cursor.getColumnIndex(OptiksProviderMetaData.LevelsTable.LEVEL);
+                    final String json = cursor.getString(idCol);
+                    final OptiksScene gameScene = new GameScene(json, optiksActivity, seasonId, levelIndex + 1, levelMaxIndex);
+                    optiksActivity.scenes.put(OptiksScenes.GAME_SCENE, gameScene);
+                    optiksActivity.setActiveScene(gameScene);
+                    return true;
+                }
+                return false;
+            }
+        };
+        GameScene.this.attachChild(arrowNext);
+        GameScene.this.registerTouchArea(arrowNext);
+        return true;
     }
 }

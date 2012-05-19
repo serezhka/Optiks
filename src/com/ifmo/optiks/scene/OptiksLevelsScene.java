@@ -1,6 +1,7 @@
 package com.ifmo.optiks.scene;
 
 import android.database.Cursor;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
 import com.ifmo.optiks.OptiksActivity;
@@ -281,14 +282,14 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
 
     private void loadLevel(final int level) {
         optiksActivity.showToast("loading " + level + " level!", Toast.LENGTH_SHORT);
-
-        // TODO load game scene
         final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
                 OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId, null, null);
-        cursor.moveToPosition(level -1);
+        final int levelMaxIndex = cursor.getCount();
+        cursor.moveToPosition(level - 1);
         final int idCol = cursor.getColumnIndex(OptiksProviderMetaData.LevelsTable.LEVEL);
         final String json = cursor.getString(idCol);
-        final OptiksScene gameScene = new GameScene(json, optiksActivity,seasonId,level);
+        final OptiksScene gameScene = new GameScene(json, optiksActivity, seasonId, level, levelMaxIndex);
+        Log.d("TAG", ""+levelMaxIndex);
         optiksActivity.scenes.put(OptiksScenes.GAME_SCENE, gameScene);
         optiksActivity.setActiveScene(gameScene);
     }
