@@ -63,8 +63,7 @@ public class GameScene extends OptiksScene {
     protected Body aimBody;
     protected Body laserBody;
 
-    protected AnimatedSprite sight;
-    protected AnimatedSprite sightChild;
+    protected Sight sight;
 
     protected final List<Body> mirrorBodies = new LinkedList<Body>();
     protected final List<Body> barrierBodies = new LinkedList<Body>();
@@ -103,11 +102,8 @@ public class GameScene extends OptiksScene {
         soundManager = optiksActivity.getOptiksSoundManager();
         physicsWorld = new PhysicsWorld(new Vector2(0, 0), false);
         registerUpdateHandler(physicsWorld);
-        sight = new AnimatedSprite(360, 240, textureManager.sight);
-        sightChild = new AnimatedSprite(0, 0, sight.getWidth() * 2, sight.getHeight() * 2, textureManager.emptyTexture);
-        sight.attachChild(sightChild);
-        sightChild.setPosition(-sightChild.getWidth() / 4, -sightChild.getHeight() / 4);
-        registerTouchArea(sightChild);
+        sight = new Sight(360, 240, 30, 30, textureManager.sight, textureManager.emptyTexture);
+        registerTouchArea(sight.sightChild);
         try {
             final JSONArray jsonArray = new JSONArray(json);
             for (int i = 0; i < jsonArray.length(); ++i) {
@@ -431,7 +427,7 @@ public class GameScene extends OptiksScene {
 
             switch (touchEvent.getAction()) {
                 case TouchEvent.ACTION_DOWN:
-                    if (object == sightChild) {
+                    if (object == sight.sightChild) {
                         wasActionDown = 2;
                         dx = sight.getX() - touchEvent.getX();
                         dy = sight.getY() - touchEvent.getY();
@@ -471,6 +467,7 @@ public class GameScene extends OptiksScene {
                     if (aimBody == objectParent.getUserData()) {
                         Log.d(TAG, "shot boolet");
                         if (!bullet.isMoving()) {
+                            soundManager.playLaserShoot();
                             bullet.shoot();
                             numberOfShut++;
                         }

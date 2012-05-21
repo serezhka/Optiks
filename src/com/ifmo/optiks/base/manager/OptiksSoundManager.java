@@ -76,6 +76,7 @@ public class OptiksSoundManager {
     }
 
     public void setMusicEnabled(final boolean musicEnabled) {
+        //backgroundMusic.play();
         this.musicEnabled = musicEnabled;
         if (musicEnabled) {
             backgroundMusic.play();
