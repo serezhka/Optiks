@@ -135,6 +135,8 @@ public class GameScene extends OptiksScene {
             e.printStackTrace();
         }
 
+//        sight.addSightLine(textureManager.sightCircle, laserBody.getPosition().x, laserBody.getPosition().y);
+
         setBackground(colorBackground);
 
         createBorder(2);//  todo move  in json
