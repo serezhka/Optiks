@@ -12,6 +12,7 @@ import com.ifmo.optiks.OptiksActivity;
 import com.ifmo.optiks.base.control.ActionMoveFilter;
 import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
 import com.ifmo.optiks.base.gson.Constants;
+import com.ifmo.optiks.base.gson.Converter;
 import com.ifmo.optiks.base.gson.MirrorJsonContainer;
 import com.ifmo.optiks.base.item.line.LaserBeam;
 import com.ifmo.optiks.base.item.sprite.*;
@@ -161,6 +162,7 @@ public class GameScene extends OptiksScene {
         setOnSceneTouchListener(touchListener);
         setOnAreaTouchListener(touchListener);
         appearScene(true);
+
     }
 
     public void createBorder(final float a) {
@@ -335,10 +337,29 @@ public class GameScene extends OptiksScene {
                 antiMirrorBodies.add(body);
                 break;
         }
+
         body.setTransform(container.pX / PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT,
                 container.pY / PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT,
                 MathUtils.degToRad(container.rotation));
         attachChild(sprite);
+    }
+
+   private String getJson() {
+        final List<BaseObjectJsonContainer> list = new LinkedList<BaseObjectJsonContainer>();
+        list.add(((GameSprite) aimBody.getUserData()).getGsonContainer());
+        list.add(((GameSprite) laserBody.getUserData()).getGsonContainer());
+        for (final Body body : mirrorBodies) {
+            list.add(((GameSprite) body.getUserData()).getGsonContainer());
+        }
+        for (final Body body : barrierBodies) {
+            list.add(((GameSprite) body.getUserData()).getGsonContainer());
+        }
+        for (final Body body:antiMirrorBodies){
+            list.add(((GameSprite) body.getUserData()).getGsonContainer());
+        }
+        final    BaseObjectJsonContainer[] containers = new BaseObjectJsonContainer[list.size()];
+        list.toArray(containers);
+        return Converter.getInstance().toGson(containers);
     }
 
     public Body getLaser() {
@@ -364,6 +385,8 @@ public class GameScene extends OptiksScene {
     public PhysicsWorld getPhysicsWorld() {
         return physicsWorld;
     }
+
+
 
     @Override
     public boolean onKeyDown(final int pKeyCode, final KeyEvent pEvent) {
@@ -480,6 +503,7 @@ public class GameScene extends OptiksScene {
             return true;
         }
     }
+
 
     private class SampleCollisionHandler implements CollisionHandler {
         void succus() {

@@ -1,5 +1,6 @@
 package com.ifmo.optiks.base.gson;
 
+import com.badlogic.gdx.physics.box2d.Body;
 import com.ifmo.optiks.base.item.sprite.BodyForm;
 import com.ifmo.optiks.base.item.sprite.GameSprite;
 import com.ifmo.optiks.base.item.sprite.ObjectType;
@@ -17,7 +18,7 @@ public class MirrorJsonContainer extends BaseObjectJsonContainer {
     final public boolean canRotate;
 
     public MirrorJsonContainer(final GameSprite gs, final boolean canMove, final boolean canRotate, final BodyForm bodyForm) {
-        super(gs, bodyForm);
+        super((Body)gs.getUserData());
         this.canMove = canMove;
         this.canRotate = canRotate;
     }
