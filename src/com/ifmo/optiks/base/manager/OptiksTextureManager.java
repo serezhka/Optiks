@@ -41,6 +41,7 @@ public class OptiksTextureManager {
     public final TiledTextureRegion barrierCircleTextureRegion;
     public final TiledTextureRegion mirrorSplash;
     public final TiledTextureRegion sight;
+    public final TiledTextureRegion sightCircle;
     public final TiledTextureRegion emptyTexture;
     public final TiledTextureRegion antiMirrorWallTexture;
 
@@ -97,6 +98,7 @@ public class OptiksTextureManager {
         barrierCircleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "barrier_circle.png", 602, 271, 1, 1);
         mirrorSplash = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "mirror_splash.png", 703, 271, 1, 1);
         sight = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "sight.png", 804, 271, 1, 1);
+        sightCircle = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "sight_circle.png", 937, 271, 1, 1);
         emptyTexture = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "empty_texture.png", 835, 271, 1, 1);
         antiMirrorWallTexture = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(bitmapTextureAtlas, activity, "empty_texture__.png", 886, 271, 1, 1);
 

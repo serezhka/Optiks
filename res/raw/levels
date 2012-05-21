@@ -40,10 +40,20 @@
  {\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":490.0,\"pY\":330.0,\"rotation\":90.0,\"height\":60.0,\"width\":300.0},
  {\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":220.0,\"pY\":420.0,\"rotation\":-15.0,\"height\":30.0,\"width\":150.0},
  {\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":530.0,\"pY\":60.0,\"rotation\":15.0,\"height\":30.0,\"width\":150.0}],\"properties\":{}},
- {\"id\":\"30\",\"objects\":[{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":150.0,\"pY\":50.0,\"rotation\":0.0,\"height\":70.0,\"width\":70.0},
+ {\"id\":\"30\",\"objects\":[{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":650.0,\"pY\":50.0,\"rotation\":0.0,\"height\":70.0,\"width\":70.0},
+                                                         {\"bodyForm\":\"CIRCLE\",\"type\":\"AIM\",\"pX\":460.0,\"pY\":460.0,\"rotation\":0.0,\"height\":70.0,\"width\":70.0},
+                                                         {\"canMove\":false,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":480.0,\"pY\":370.0,\"rotation\":0.0,\"height\":20.0,\"width\":480.0},
+                                                         {\"canMove\":false,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":360.0,\"pY\":470.0,\"rotation\":0.0,\"height\":20.0,\"width\":720.0},
+                                                         {\"canMove\":false,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":10.0,\"pY\":240.0,\"rotation\":90.0,\"height\":20.0,\"width\":480.0},
+                                                         {\"canMove\":false,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":710.0,\"pY\":420.0,\"rotation\":90.0,\"height\":20.0,\"width\":80.0},
+                                                         {\"canMove\":false,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":400.0,\"pY\":435.0,\"rotation\":90.0,\"height\":20.0,\"width\":50.0},
+                                                         ],\"properties\":{}},
+ {\"id\":\"40\",\"objects\":[{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":150.0,\"pY\":50.0,\"rotation\":0.0,\"height\":70.0,\"width\":70.0},
  {\"bodyForm\":\"CIRCLE\",\"type\":\"AIM\",\"pX\":590.0,\"pY\":50.0,\"rotation\":0.0,\"height\":70.0,\"width\":70.0},
  {\"bodyForm\":\"CIRCLE\",\"type\":\"BARRIER\",\"pX\":360.0,\"pY\":200.0,\"rotation\":0.0,\"height\":400.0,\"width\":400.0},
  {\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":150.0,\"pY\":390.0,\"rotation\":0.0,\"height\":30.0,\"width\":150.0},
  {\"canMove\":true,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":360.0,\"pY\":465.0,\"rotation\":0.0,\"height\":30.0,\"width\":150.0},
- {\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":670.0,\"pY\":300.0,\"rotation\":90.0,\"height\":40.0,\"width\":200.0}],\"properties\":{}}]","description":"first experience with optiks","name":"introduction","id":"10"}
+ {\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":670.0,\"pY\":300.0,\"rotation\":90.0,\"height\":40.0,\"width\":200.0}],\"properties\":{}}
+
+ ]","description":"first experience with optiks","name":"introduction","id":"10"}
 ]
