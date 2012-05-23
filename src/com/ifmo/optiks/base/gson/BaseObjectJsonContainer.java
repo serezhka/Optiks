@@ -1,8 +1,12 @@
 package com.ifmo.optiks.base.gson;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.ifmo.optiks.base.item.sprite.BodyForm;
 import com.ifmo.optiks.base.item.sprite.GameSprite;
 import com.ifmo.optiks.base.item.sprite.ObjectType;
+import org.anddev.andengine.extension.physics.box2d.PhysicsConnector;
+import org.anddev.andengine.util.MathUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,14 +24,16 @@ public class BaseObjectJsonContainer {
     public final ObjectType type;
     public final BodyForm bodyForm;
 
-    public BaseObjectJsonContainer(final GameSprite gs, final BodyForm bodyForm) {
-        this.pX = gs.getX();
-        this.pY = gs.getY();
+    public BaseObjectJsonContainer(final Body body) {
+        final Vector2 v = body.getPosition();
+        this.pX = v.x * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT;
+        this.pY = v.y * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT;
+        final GameSprite gs = (GameSprite) body.getUserData() ;
         this.width = gs.getWidth();
         this.height = gs.getHeight();
-        rotation = gs.getRotation();
+        rotation =  MathUtils.radToDeg( body.getAngle());
         this.type = gs.getType();
-        this.bodyForm = bodyForm;
+        this.bodyForm = gs.bodyForm;
     }
 
     public BaseObjectJsonContainer(final float pX, final float pY, final float width,
