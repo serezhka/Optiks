@@ -135,7 +135,6 @@ public class GameScene extends OptiksScene {
             e.printStackTrace();
         }
 
-//        sight.addSightLine(textureManager.sightCircle, laserBody.getPosition().x, laserBody.getPosition().y);
 
         setBackground(colorBackground);
 
@@ -145,6 +144,9 @@ public class GameScene extends OptiksScene {
         final float x = laserBody.getPosition().x * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT;
         final float y = laserBody.getPosition().y * PhysicsConnector.PIXEL_TO_METER_RATIO_DEFAULT;
 
+        for (final AnimatedSprite childs : sight.addSightLine(textureManager.sightCircle, x, y)) {
+            attachChild(childs);
+        }
 //        numberOfTryToast = new Text(x, y, textureManager.font, "" + numberOfTry);
 //        attachChild(numberOfTryToast);
 
@@ -323,8 +325,8 @@ public class GameScene extends OptiksScene {
                 sprite.animate(50);
                 final AnimatedSprite emptySprite = new AnimatedSprite(0, 0, textureManager.emptyTexture);
                 sprite.attachChild(emptySprite);
-                emptySprite.setWidth((container.width >= 70) ? container.width : 70);
-                emptySprite.setHeight((container.height >= 70) ? container.height : 70);
+                emptySprite.setWidth((container.width >= 70) ? container.width + 30 : 70);
+                emptySprite.setHeight((container.height >= 70) ? container.height + 30 : 70);
                 emptySprite.setPosition((sprite.getWidth() - emptySprite.getWidth()) / 2,
                         (sprite.getHeight() - emptySprite.getHeight()) / 2);
                 registerTouchArea(emptySprite);
