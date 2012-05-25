@@ -37,7 +37,7 @@ public class OptiksSoundManager {
     public OptiksSoundManager(final BaseGameActivity activity) {
 
         this.activity = activity;
-        this.preferences = activity.getSharedPreferences(SOUND_PREFERENCES, Context.MODE_PRIVATE);
+        this.preferences = activity.getSharedPreferences(SOUND_PREFERENCES, Context.MODE_WORLD_WRITEABLE);
 
         /* Loading user's preferences */
         musicEnabled = (preferences.getInt(MUSIC, 0) > 0);
@@ -87,14 +87,15 @@ public class OptiksSoundManager {
     public void setMusicEnabled(final boolean musicEnabled) {
         //backgroundMusic.play();
         this.musicEnabled = musicEnabled;
+        final SharedPreferences.Editor editor =  preferences.edit();
         if (musicEnabled) {
             backgroundMusic.play();
-            preferences.edit().putInt(MUSIC, 1);
+           editor.putInt(MUSIC, 1);
         } else {
             backgroundMusic.stop();
-            preferences.edit().putInt(MUSIC, 0);
+           editor.putInt(MUSIC, 0);
         }
-        preferences.edit().commit();
+        editor.apply();
     }
 
     public boolean isVibrationEnabled() {
@@ -103,12 +104,13 @@ public class OptiksSoundManager {
 
     public void setVibrationEnabled(final boolean vibrationEnabled) {
         this.vibrationEnabled = vibrationEnabled;
+        final SharedPreferences.Editor editor =  preferences.edit();
         if (vibrationEnabled) {
-            preferences.edit().putInt(VIBRATION, 1);
+            editor.putInt(VIBRATION, 1);
         } else {
-            preferences.edit().putInt(VIBRATION, 0);
+            editor.putInt(VIBRATION, 0);
         }
-        preferences.edit().commit();
+        editor.apply();
     }
 
     public boolean isSoundEnabled() {
@@ -117,12 +119,12 @@ public class OptiksSoundManager {
 
     public void setSoundEnabled(final boolean soundEnabled) {
         this.soundEnabled = soundEnabled;
+        final SharedPreferences.Editor editor =  preferences.edit();
         if (soundEnabled) {
-            preferences.edit().putInt(SOUNDS, 1);
+            editor.putInt(SOUNDS, 1);
         } else {
-            preferences.edit().putInt(SOUNDS, 0);
+            editor.putInt(SOUNDS, 0);
         }
-        preferences.edit().commit();
-        preferences.edit().apply();
+        editor.apply();
     }
 }
