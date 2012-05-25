@@ -1,6 +1,7 @@
 package com.ifmo.optiks.scene;
 
 import android.database.Cursor;
+import android.util.Log;
 import com.ifmo.optiks.OptiksActivity;
 import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
 import com.ifmo.optiks.base.gson.Constants;
@@ -22,6 +23,7 @@ import org.json.JSONObject;
  * Date: 25.05.12
  */
 public class BackgroundScene extends Scene {
+
     private final OptiksActivity optiksActivity;
 
     private final OptiksTextureManager textureManager;
@@ -33,18 +35,16 @@ public class BackgroundScene extends Scene {
         final ColorBackground colorBackground = new ColorBackground(0.0f, 0.0f, 0.0f);
         setBackground(colorBackground);
         buildFromJson(getSeasonJson(seasonId));
-
-        appearScene(true); //todo can not to work
     }
 
     private String getSeasonJson(final int seasonId) {
         final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
                 OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId, null, null);
-
-        cursor.moveToPosition(cursor.getColumnCount());
-        final int idCol = cursor.getColumnIndex(OptiksProviderMetaData.LevelsTable.LEVEL);
-
-        return cursor.getString(idCol);
+        cursor.moveToLast();
+        Log.d("Huiok", cursor.getString(0));
+        Log.d("Huiok", cursor.getString(1));
+        Log.d("Huiok", cursor.getString(2));
+        return cursor.getString(1);
     }
 
     private void buildFromJson(final String json) {
