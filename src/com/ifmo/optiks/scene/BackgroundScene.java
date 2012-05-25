@@ -22,23 +22,19 @@ import org.json.JSONObject;
  * Date: 25.05.12
  */
 public class BackgroundScene extends Scene {
-    private OptiksActivity optiksActivity;
+    private final OptiksActivity optiksActivity;
 
-    private OptiksTextureManager textureManager;
+    private final OptiksTextureManager textureManager;
 
-    private final Scene scene = new Scene();
-
-    private final ColorBackground colorBackground = new ColorBackground(0.0f, 0.0f, 0.0f);
-
-    public Scene BackgroundScene(final OptiksActivity optiksActivity, final int seasonId) {
+    public BackgroundScene(final OptiksActivity optiksActivity, final int seasonId) {
         this.optiksActivity = optiksActivity;
         textureManager = optiksActivity.getOptiksTextureManager();
 
+        final ColorBackground colorBackground = new ColorBackground(0.0f, 0.0f, 0.0f);
         setBackground(colorBackground);
         buildFromJson(getSeasonJson(seasonId));
 
         appearScene(true); //todo can not to work
-        return scene;
     }
 
     private String getSeasonJson(final int seasonId) {
