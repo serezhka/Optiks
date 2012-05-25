@@ -344,7 +344,7 @@ public class GameScene extends OptiksScene {
         attachChild(sprite);
     }
 
-   private String getJson() {
+    private String getJson() {
         final List<BaseObjectJsonContainer> list = new LinkedList<BaseObjectJsonContainer>();
         list.add(((GameSprite) aimBody.getUserData()).getGsonContainer());
         list.add(((GameSprite) laserBody.getUserData()).getGsonContainer());
@@ -354,10 +354,10 @@ public class GameScene extends OptiksScene {
         for (final Body body : barrierBodies) {
             list.add(((GameSprite) body.getUserData()).getGsonContainer());
         }
-        for (final Body body:antiMirrorBodies){
+        for (final Body body : antiMirrorBodies) {
             list.add(((GameSprite) body.getUserData()).getGsonContainer());
         }
-        final    BaseObjectJsonContainer[] containers = new BaseObjectJsonContainer[list.size()];
+        final BaseObjectJsonContainer[] containers = new BaseObjectJsonContainer[list.size()];
         list.toArray(containers);
         return Converter.getInstance().toGson(containers);
     }
@@ -385,7 +385,6 @@ public class GameScene extends OptiksScene {
     public PhysicsWorld getPhysicsWorld() {
         return physicsWorld;
     }
-
 
 
     @Override
@@ -524,9 +523,11 @@ public class GameScene extends OptiksScene {
             }
             GameScene.this.setOnAreaTouchListener(null);
             if (levelIndex == levelMaxIndex) {
-                addArrowReplay(1);
+                addArrowReplay();
+                addArrowMenu();
             } else {
-                addArrowReplay(2);
+                addArrowReplay();
+                addArrowMenu();
                 addArrowNext();
             }
         }
@@ -562,20 +563,8 @@ public class GameScene extends OptiksScene {
         }
     }
 
-    private boolean addArrowReplay(final int numberOfArrows) {
-        final float x;
-        final float y;
-        switch (numberOfArrows) {
-            case 1:
-                x = 310;
-                break;
-            case 2:
-                x = 220;
-                break;
-            default:
-                x = -1;
-        }
-        final Sprite arrowReplay = new Sprite(x, 200, 100, 100, textureManager.arrowReplay) {
+    private boolean addArrowReplay() {
+        final Sprite arrowReplay = new Sprite(150, 150, 100, 100, textureManager.arrowReplay) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.isActionUp()) {
@@ -593,8 +582,25 @@ public class GameScene extends OptiksScene {
         return true;
     }
 
+    private boolean addArrowMenu() {
+        final Sprite arrowMenu = new Sprite(500, 140, 100, 100, textureManager.arrowMenu) {
+            @Override
+            public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+                if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
+                    optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.LEVELS_SCENE));
+                    return true;
+                }
+                return false;
+            }
+        };
+
+        GameScene.this.attachChild(arrowMenu);
+        GameScene.this.registerTouchArea(arrowMenu);
+        return true;
+    }
+
     private boolean addArrowNext() {
-        final Sprite arrowNext = new Sprite(400, 200, 100, 100, textureManager.arrowPlayNext) {
+        final Sprite arrowNext = new Sprite(325, 270, 100, 100, textureManager.arrowPlayNext) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.isActionUp()) {
