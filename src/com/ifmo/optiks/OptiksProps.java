@@ -1,5 +1,8 @@
 package com.ifmo.optiks;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import java.io.*;
 import java.util.Properties;
 
@@ -10,15 +13,29 @@ import java.util.Properties;
 
 public class OptiksProps {
 
-    public static final String PROPS_FILE = "com/ifmo/optiks/Optiks.properties";
-    public static final String LOCAL_PROPS_FILE = "com/ifmo/optiks/Optiks.properties";
+    private static final String PROPS_FILE = "com/ifmo/optiks/Optiks.properties";
+    private static final String LOCAL_PROPS_FILE = "com/ifmo/optiks/Optiks.properties";
 
-    private static final OptiksProps props = new OptiksProps();
+    private static final OptiksProps propsInstance = new OptiksProps();
 
     private static Properties properties;
 
+    private OptiksProps() {
+
+        /* Optiks Props Instance */
+        try {
+            final Reader reader = new BufferedReader(
+                    new InputStreamReader(propsInstance.getClass().getClassLoader().getResourceAsStream(PROPS_FILE)));
+            properties = new Properties();
+            properties.load(reader);
+        } catch (FileNotFoundException e) {
+            /* Do nothing. Log */
+        } catch (IOException e) {
+            /* Do nothing. Log */
+        }
+    }
+
     public static String getProperty(final String key) {
-        init();
         if (properties == null) {
             return null;
         }
@@ -27,21 +44,6 @@ public class OptiksProps {
 
     public static String getProperty(final Keys key) {
         return getProperty(key.name);
-    }
-
-    private static void init() {
-        if (properties == null) {
-            try {
-                final Reader reader = new BufferedReader(
-                        new InputStreamReader(props.getClass().getClassLoader().getResourceAsStream(PROPS_FILE)));
-                properties = new Properties();
-                properties.load(reader);
-            } catch (FileNotFoundException e) {
-                /* Do nothing. Log */
-            } catch (IOException e) {
-                /* Do nothing. Log */
-            }
-        }
     }
 
     public enum Keys {

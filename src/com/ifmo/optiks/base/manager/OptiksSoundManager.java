@@ -1,5 +1,7 @@
 package com.ifmo.optiks.base.manager;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import org.anddev.andengine.audio.music.Music;
 import org.anddev.andengine.audio.music.MusicFactory;
 import org.anddev.andengine.audio.sound.Sound;
@@ -15,9 +17,15 @@ import java.io.IOException;
 
 public class OptiksSoundManager {
 
-    private final static int DEFAULT_VIBRATION_TIME = 50;
+    private static final int DEFAULT_VIBRATION_TIME = 50;
+    private static final String SOUND_PREFERENCES = "sound_prefs";
+    private static final String MUSIC = "Music";
+    private static final String SOUNDS = "Sounds";
+    private static final String VIBRATION = "Vibration";
 
     private final BaseGameActivity activity;
+
+    private final SharedPreferences preferences;
 
     public final Music backgroundMusic;
     public final Sound shootLaser;
@@ -29,11 +37,12 @@ public class OptiksSoundManager {
     public OptiksSoundManager(final BaseGameActivity activity) {
 
         this.activity = activity;
+        this.preferences = activity.getSharedPreferences(SOUND_PREFERENCES, Context.MODE_PRIVATE);
 
-        // TODO load user settings
-        musicEnabled = true;
-        soundEnabled = true;
-        vibrationEnabled = true;
+        /* Loading user's preferences */
+        musicEnabled = (preferences.getInt(MUSIC, 0) > 0);
+        soundEnabled = (preferences.getInt(SOUNDS, 0) > 0);
+        vibrationEnabled = (preferences.getInt(VIBRATION, 0) > 0);
 
         /* Musics & sounds assets paths */
         MusicFactory.setAssetBasePath("mfx/");
@@ -80,9 +89,12 @@ public class OptiksSoundManager {
         this.musicEnabled = musicEnabled;
         if (musicEnabled) {
             backgroundMusic.play();
+            preferences.edit().putInt(MUSIC, 1);
         } else {
             backgroundMusic.stop();
+            preferences.edit().putInt(MUSIC, 0);
         }
+        preferences.edit().commit();
     }
 
     public boolean isVibrationEnabled() {
@@ -91,6 +103,12 @@ public class OptiksSoundManager {
 
     public void setVibrationEnabled(final boolean vibrationEnabled) {
         this.vibrationEnabled = vibrationEnabled;
+        if (vibrationEnabled) {
+            preferences.edit().putInt(VIBRATION, 1);
+        } else {
+            preferences.edit().putInt(VIBRATION, 0);
+        }
+        preferences.edit().commit();
     }
 
     public boolean isSoundEnabled() {
@@ -99,5 +117,12 @@ public class OptiksSoundManager {
 
     public void setSoundEnabled(final boolean soundEnabled) {
         this.soundEnabled = soundEnabled;
+        if (soundEnabled) {
+            preferences.edit().putInt(SOUNDS, 1);
+        } else {
+            preferences.edit().putInt(SOUNDS, 0);
+        }
+        preferences.edit().commit();
+        preferences.edit().apply();
     }
 }

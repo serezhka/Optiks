@@ -237,6 +237,7 @@ public class OptiksSeasonsScene extends OptiksScene implements OptiksScrollDetec
             // TODO this is stub: get(0) -> to load default picture
             final TextureRegion region = optiksActivity.getOptiksTextureManager().seasons.get(0);
             final Sprite sprite = new Sprite(spriteX, 0, region);
+            sprite.attachChild(new BackgroundScene(optiksActivity, season.getId()));
             sprite.setSize(camera.getWidth(), camera.getHeight());
             sprite.attachChild(new Text(100, 20, optiksActivity.getOptiksTextureManager().font, season.getName()));
             sprite.attachChild(new Text(10, 200, optiksActivity.getOptiksTextureManager().font, season.getDescription()));
