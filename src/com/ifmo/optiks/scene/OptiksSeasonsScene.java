@@ -14,6 +14,7 @@ import org.anddev.andengine.engine.handler.timer.TimerHandler;
 import org.anddev.andengine.entity.primitive.Rectangle;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
+import org.anddev.andengine.entity.sprite.AnimatedSprite;
 import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.entity.text.Text;
 import org.anddev.andengine.input.touch.TouchEvent;
@@ -234,10 +235,8 @@ public class OptiksSeasonsScene extends OptiksScene implements OptiksScrollDetec
         int spriteX = 0;
         for (final SeasonMenuItem season : seasons) {
             spriteX = index++ * (int) camera.getWidth();
-            // TODO this is stub: get(0) -> to load default picture
             final TextureRegion region = optiksActivity.getOptiksTextureManager().seasons.get(0);
-            final Sprite sprite = new Sprite(spriteX, 0, region);
-            sprite.attachChild(new BackgroundScene(optiksActivity, season.getId()));
+            final AnimatedSprite sprite = new BackgroundScene(spriteX, optiksActivity, season.getId());
             sprite.setSize(camera.getWidth(), camera.getHeight());
             sprite.attachChild(new Text(100, 20, optiksActivity.getOptiksTextureManager().font, season.getName()));
             sprite.attachChild(new Text(10, 200, optiksActivity.getOptiksTextureManager().font, season.getDescription()));
@@ -257,8 +256,8 @@ public class OptiksSeasonsScene extends OptiksScene implements OptiksScrollDetec
         final TextureRegion leftArrowTextureRegion = optiksActivity.getOptiksTextureManager().leftArrowTextureRegion;
         final TextureRegion rightArrowTextureRegion = optiksActivity.getOptiksTextureManager().rightArrowTextureRegion;
 
-        menuleft = new Sprite(0, CAMERA_HEIGHT / 2 - leftArrowTextureRegion.getHeight() / 2, leftArrowTextureRegion);
-        menuright = new Sprite(CAMERA_WIDTH - rightArrowTextureRegion.getWidth(), CAMERA_HEIGHT / 2 - rightArrowTextureRegion.getHeight() / 2, rightArrowTextureRegion);
+        menuleft = new Sprite(0, CAMERA_HEIGHT / 2 - 30 / 2, 20, 20, leftArrowTextureRegion);
+        menuright = new Sprite(CAMERA_WIDTH - 30, CAMERA_HEIGHT / 2 - 30 / 2, 20, 20, rightArrowTextureRegion);
         menuleft.setVisible(false);
         if (seasons.size() == 1) {
             menuright.setVisible(false);

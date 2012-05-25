@@ -55,5 +55,5 @@
  {\"canMove\":true,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":360.0,\"pY\":465.0,\"rotation\":0.0,\"height\":30.0,\"width\":150.0},
  {\"canMove\":true,\"canRotate\":true,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":670.0,\"pY\":300.0,\"rotation\":90.0,\"height\":40.0,\"width\":200.0}],\"properties\":{}}
 
- ]","description":"first experience with optiks","name":"introduction","id":"10"}
+ ]","description":"Get ready, just mirror items... ","name":"Mirror World","id":"2"}
 ]

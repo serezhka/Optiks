@@ -1,7 +1,6 @@
 package com.ifmo.optiks.scene;
 
 import android.database.Cursor;
-import android.util.Log;
 import com.ifmo.optiks.OptiksActivity;
 import com.ifmo.optiks.base.gson.BaseObjectJsonContainer;
 import com.ifmo.optiks.base.gson.Constants;
@@ -10,8 +9,6 @@ import com.ifmo.optiks.base.item.sprite.*;
 import com.ifmo.optiks.base.manager.OptiksTextureManager;
 import com.ifmo.optiks.provider.OptiksProviderMetaData;
 import org.anddev.andengine.entity.IEntity;
-import org.anddev.andengine.entity.modifier.ColorModifier;
-import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.entity.sprite.AnimatedSprite;
 import org.json.JSONArray;
@@ -22,28 +19,35 @@ import org.json.JSONObject;
  * Author: Dudko Alex (dududko@gmail.com)
  * Date: 25.05.12
  */
-public class BackgroundScene extends Scene {
+public class BackgroundScene extends AnimatedSprite {
 
     private final OptiksActivity optiksActivity;
 
     private final OptiksTextureManager textureManager;
 
-    public BackgroundScene(final OptiksActivity optiksActivity, final int seasonId) {
+    public BackgroundScene(final int x, final OptiksActivity optiksActivity, final int seasonId) {
+        super(x, 0, optiksActivity.getOptiksTextureManager().emptyTexture);
+        this.optiksActivity = optiksActivity;
+        textureManager = optiksActivity.getOptiksTextureManager();
+
+        final ColorBackground colorBackground = new ColorBackground(0.0f, 0.0f, 0.0f);
+        buildFromJson(getSeasonJson(seasonId));
+        setHalfAlpha();
+    }
+
+    /*public BackgroundScene(final OptiksActivity optiksActivity, final int seasonId) {
         this.optiksActivity = optiksActivity;
         textureManager = optiksActivity.getOptiksTextureManager();
 
         final ColorBackground colorBackground = new ColorBackground(0.0f, 0.0f, 0.0f);
         setBackground(colorBackground);
         buildFromJson(getSeasonJson(seasonId));
-    }
+    }*/
 
     private String getSeasonJson(final int seasonId) {
         final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
                 OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId, null, null);
         cursor.moveToLast();
-        Log.d("Huiok", cursor.getString(0));
-        Log.d("Huiok", cursor.getString(1));
-        Log.d("Huiok", cursor.getString(2));
         return cursor.getString(1);
     }
 
@@ -191,20 +195,11 @@ public class BackgroundScene extends Scene {
         attachChild(sprite);
     }
 
-    private void appearScene(final boolean appear) {
-        if (appear) {
-            for (final IEntity child : BackgroundScene.this.mChildren) {
-                child.registerEntityModifier(new ColorModifier(4, 0, child.getRed(), 0, child.getGreen(), 0, child.getBlue()));
-                for (int i = 0; i < child.getChildCount(); i++) {
-                    child.getChild(i).registerEntityModifier(new ColorModifier(3, 0, child.getRed(), 0, child.getGreen(), 0, child.getBlue()));
-                }
-            }
-        } else {
-            for (final IEntity child : BackgroundScene.this.mChildren) {
-                child.registerEntityModifier(new ColorModifier(3, child.getRed(), 0.15f, child.getGreen(), 0.15f, child.getBlue(), 0.15f));
-                for (int i = 0; i < child.getChildCount(); i++) {
-                    child.getChild(i).registerEntityModifier(new ColorModifier(3, child.getRed(), 0.15f, child.getGreen(), 0.15f, child.getBlue(), 0.15f));
-                }
+    private void setHalfAlpha() {
+        for (final IEntity child : BackgroundScene.this.mChildren) {
+            child.setColor(0.15f, 0.15f, 0.15f, 0.5f);
+            for (int i = 0; i < child.getChildCount(); i++) {
+                child.getChild(i).setColor(0.15f, 0.15f, 0.15f, 0.5f);
             }
         }
     }
