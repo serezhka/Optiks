@@ -38,7 +38,7 @@ public class OptiksSettingsScene extends OptiksScene {
     private void init() {
 
         musicEnabled = optiksActivity.getOptiksSoundManager().isMusicEnabled();
-        soundEnabled = optiksActivity.getOptiksSoundManager().isMusicEnabled();
+        soundEnabled = optiksActivity.getOptiksSoundManager().isSoundEnabled();
         vibrationEnabled = optiksActivity.getOptiksSoundManager().isVibrationEnabled();
 
         /* Texture regions */

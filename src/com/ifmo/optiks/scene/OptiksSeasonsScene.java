@@ -238,8 +238,10 @@ public class OptiksSeasonsScene extends OptiksScene implements OptiksScrollDetec
             final TextureRegion region = optiksActivity.getOptiksTextureManager().seasons.get(0);
             final AnimatedSprite sprite = new BackgroundScene(spriteX, optiksActivity, season.getId());
             sprite.setSize(camera.getWidth(), camera.getHeight());
-            sprite.attachChild(new Text(100, 20, optiksActivity.getOptiksTextureManager().font, season.getName()));
-            sprite.attachChild(new Text(10, 200, optiksActivity.getOptiksTextureManager().font, season.getDescription()));
+            final Text name = new Text(100, 100, optiksActivity.getOptiksTextureManager().menuFont, season.getName());
+            name.setScale(1.5f);
+            sprite.attachChild(name);
+            sprite.attachChild(new Text(10, 300, optiksActivity.getOptiksTextureManager().descriptionFont, season.getDescription()));
             this.seasonsScene.attachChild(sprite);
             this.seasonsScene.registerTouchArea(sprite);
         }

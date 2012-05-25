@@ -29,6 +29,9 @@ public class OptiksTextureManager {
     /* Menu Font */
     public final Font menuFont;
 
+    /*Description Font*/
+    public final Font descriptionFont;
+
     /* Settings Font */
     public final Font settingsFont;
 
@@ -111,7 +114,7 @@ public class OptiksTextureManager {
         arrowPlayNext = BitmapTextureAtlasTextureRegionFactory.createFromAsset(baseArrowsTextureAtlas, activity, "arrow_right.png", 128, 0);
         arrowMenu = BitmapTextureAtlasTextureRegionFactory.createFromAsset(baseArrowsTextureAtlas, activity, "arrow_menu.png", 0, 128);
         activity.getEngine().getTextureManager().loadTexture(baseArrowsTextureAtlas);
-        
+
         /* Font assets path */
         FontFactory.setAssetBasePath("font/");
 
@@ -120,6 +123,12 @@ public class OptiksTextureManager {
         menuFont = FontFactory.createFromAsset(menuFontTexture, activity, "Plok.ttf", 24, true, Color.rgb(255, 140, 0));
         activity.getEngine().getTextureManager().loadTexture(menuFontTexture);
         activity.getFontManager().loadFont(menuFont);
+
+        /*Description Font*/
+        final BitmapTextureAtlas descriptionFontAtlas = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR);
+        descriptionFont = FontFactory.createFromAsset(descriptionFontAtlas, activity, "Plok.ttf", 24, true, Color.rgb(100, 255, 0));
+        activity.getTextureManager().loadTexture(descriptionFontAtlas);
+        activity.getFontManager().loadFont(descriptionFont);
 
         /* Settings Path */
         final BitmapTextureAtlas settingsFontTexture = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);

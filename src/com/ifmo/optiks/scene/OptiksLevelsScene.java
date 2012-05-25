@@ -1,9 +1,7 @@
 package com.ifmo.optiks.scene;
 
 import android.database.Cursor;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.widget.Toast;
 import com.ifmo.optiks.OptiksActivity;
 import com.ifmo.optiks.base.control.OptiksScrollDetector;
 import com.ifmo.optiks.base.control.OptiksSurfaceScrollDetector;
@@ -218,34 +216,25 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
         updateBoxes();
     }
 
-/*    private void loadLevel(final int level) {
+    /*private void loadLevel(final int level) {
         if (level != -1) {
             optiksActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(optiksActivity, "Loading the " + (level + 1) + " level!", Toast.LENGTH_SHORT)
-                            .show();
-                    *//*final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
-                            "(" + OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId + ") AND(" + OptiksProviderMetaData.LevelsTable.LEVEL_ID + "=" + level + ")"
-                            , null, null);
-                    cursor.moveToFirst();
-                    if (cursor.getCount() == 1) {
-                        final int idCol = cursor.getColumnIndex(OptiksProviderMetaData.LevelsTable.LEVEL);*//*
                     //final String json = cursor.getString(idCol);
                     final String json = "[" +
                             "{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":650.0,\"pY\":50.0,\"rotation\":0.0,\"height\":70.0,\"width\":70.0}," +
                             "{\"bodyForm\":\"CIRCLE\",\"type\":\"AIM\",\"pX\":460.0,\"pY\":460.0,\"rotation\":0.0,\"height\":70.0,\"width\":70.0}," +
-                            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":480.0,\"pY\":180.0,\"rotation\":0.0,\"height\":50.0,\"width\":480.0}," +
-                            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":480.0,\"pY\":360.0,\"rotation\":0.0,\"height\":50.0,\"width\":480.0}," +
-                            "{\"canMove\":true,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":710.0,\"pY\":270.0,\"rotation\":90.0,\"height\":20.0,\"width\":130.0}," +
+                            "{\"canMove\":false,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":480.0,\"pY\":370.0,\"rotation\":0.0,\"height\":20.0,\"width\":480.0}," +
+                            "{\"canMove\":false,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":360.0,\"pY\":470.0,\"rotation\":0.0,\"height\":20.0,\"width\":720.0}," +
                             "{\"canMove\":false,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":10.0,\"pY\":240.0,\"rotation\":90.0,\"height\":20.0,\"width\":480.0}," +
-//                            "{\"bodyForm\":\"RECTANGLE\",\"type\":\"ANTI_MIRROR_WALL\",\"pX\":450.0,\"pY\":20.0,\"rotation\":0.0,\"height\":10.0,\"width\":10.0}" +
+                            "{\"canMove\":false,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":710.0,\"pY\":420.0,\"rotation\":90.0,\"height\":20.0,\"width\":80.0}," +
+                            "{\"canMove\":false,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":400.0,\"pY\":435.0,\"rotation\":90.0,\"height\":20.0,\"width\":50.0}," +
                             "]";
                     System.out.println(json);
-                    final OptiksScene gameScene = new GameScene(json, optiksActivity, 1, 1);
+                    final OptiksScene gameScene = new GameScene(json, optiksActivity, 1, 1, 1);
                     optiksActivity.scenes.put(OptiksScenes.GAME_SCENE, gameScene);
                     optiksActivity.setActiveScene(gameScene);
-                    //}
                 }
             });
         }
@@ -281,7 +270,6 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
 
 
     private void loadLevel(final int level) {
-        optiksActivity.showToast("loading " + level + " level!", Toast.LENGTH_SHORT);
         final Cursor cursor = optiksActivity.getContentResolver().query(OptiksProviderMetaData.LevelsTable.CONTENT_URI, null,
                 OptiksProviderMetaData.LevelsTable.SEASON_ID + "=" + seasonId, null, null);
         final int levelMaxIndex = cursor.getCount();
@@ -289,7 +277,6 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
         final int idCol = cursor.getColumnIndex(OptiksProviderMetaData.LevelsTable.LEVEL);
         final String json = cursor.getString(idCol);
         final OptiksScene gameScene = new GameScene(json, optiksActivity, seasonId, level, levelMaxIndex);
-        Log.d("TAG", ""+levelMaxIndex);
         optiksActivity.scenes.put(OptiksScenes.GAME_SCENE, gameScene);
         optiksActivity.setActiveScene(gameScene);
     }

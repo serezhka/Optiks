@@ -27,6 +27,7 @@ import com.ifmo.optiks.scene.OptiksScenes;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.entity.IEntity;
 import org.anddev.andengine.entity.modifier.ColorModifier;
+import org.anddev.andengine.entity.modifier.IEntityModifier;
 import org.anddev.andengine.entity.primitive.Rectangle;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
@@ -34,7 +35,7 @@ import org.anddev.andengine.entity.shape.IShape;
 import org.anddev.andengine.entity.shape.Shape;
 import org.anddev.andengine.entity.sprite.AnimatedSprite;
 import org.anddev.andengine.entity.sprite.Sprite;
-import org.anddev.andengine.entity.text.Text;
+import org.anddev.andengine.entity.text.ChangeableText;
 import org.anddev.andengine.extension.physics.box2d.PhysicsConnector;
 import org.anddev.andengine.extension.physics.box2d.PhysicsFactory;
 import org.anddev.andengine.extension.physics.box2d.PhysicsWorld;
@@ -73,7 +74,15 @@ public class GameScene extends OptiksScene {
 
     private LaserBullet bullet;
 
-    private Text toast;
+    private ChangeableText textPause;
+    private ChangeableText textWin;
+    
+    private IOnAreaTouchListener secondListener; 
+
+    private Sprite arrowReplay;
+    private Sprite arrowMenu;
+    private boolean pause = false;
+    private boolean gameWin = false;
     private int numberOfShut;
 
     private final ColorBackground colorBackground = new ColorBackground(0.0f, 0.0f, 0.0f);
@@ -103,6 +112,7 @@ public class GameScene extends OptiksScene {
         soundManager = optiksActivity.getOptiksSoundManager();
         physicsWorld = new PhysicsWorld(new Vector2(0, 0), false);
         registerUpdateHandler(physicsWorld);
+        addArrows();
         sight = new Sight(360, 240, 30, 30, textureManager.sight, textureManager.emptyTexture);
         registerTouchArea(sight.sightChild);
         try {
@@ -148,8 +158,6 @@ public class GameScene extends OptiksScene {
         for (final AnimatedSprite childs : sight.addSightLine(textureManager.sightCircle, x, y)) {
             attachChild(childs);
         }
-//        numberOfTryToast = new Text(x, y, textureManager.font, "" + numberOfTry);
-//        attachChild(numberOfTryToast);
 
         final LaserBeam laserBeam = new LaserBeam(this, new LaserBeam.Color(0, 1, 0, 0.5f), x, y);
 
@@ -162,7 +170,6 @@ public class GameScene extends OptiksScene {
         setOnSceneTouchListener(touchListener);
         setOnAreaTouchListener(touchListener);
         appearScene(true);
-
     }
 
     public void createBorder(final float a) {
@@ -389,11 +396,18 @@ public class GameScene extends OptiksScene {
 
     @Override
     public boolean onKeyDown(final int pKeyCode, final KeyEvent pEvent) {
+        if (gameWin) {
+            return false;
+        }
         if (pKeyCode == KeyEvent.KEYCODE_BACK && pEvent.getAction() == KeyEvent.ACTION_DOWN) {
-            optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.LEVELS_SCENE));
+            pause = !pause;
+            pause(pause);
+//            optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.LEVELS_SCENE));
             return true;
         } else if (pKeyCode == KeyEvent.KEYCODE_MENU && pEvent.getAction() == KeyEvent.ACTION_DOWN) {
-            optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.MENU_SCENE));
+            pause = !pause;
+            pause(pause);
+//            optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.MENU_SCENE));
             return true;
         }
         return false;
@@ -417,10 +431,6 @@ public class GameScene extends OptiksScene {
         public boolean onSceneTouchEvent(final Scene scene, final TouchEvent touchEvent) {
             switch (touchEvent.getAction()) {
                 case TouchEvent.ACTION_DOWN:
-                    if (toast != null) {
-                        detachChild(toast);
-                        toast = null;
-                    }
                     return true;
                 case TouchEvent.ACTION_MOVE:
                     switch (wasActionDown) {
@@ -495,6 +505,7 @@ public class GameScene extends OptiksScene {
                         if (!bullet.isMoving()) {
                             soundManager.playLaserShoot();
                             bullet.shoot();
+                            gameWin = true;
                             numberOfShut++;
                         }
                     }
@@ -506,9 +517,8 @@ public class GameScene extends OptiksScene {
 
 
     private class SampleCollisionHandler implements CollisionHandler {
-        void succus() {
-            appearScene(false);
-            //todo....
+        void success() {
+//            appearScene(false);
             final Cursor cursor = optiksActivity.managedQuery(OptiksProviderMetaData.SeasonsTable.CONTENT_URI,
                     null, OptiksProviderMetaData.SeasonsTable._ID + "=" + seasonId, null, null);
             final int numReached = cursor.getColumnIndex(OptiksProviderMetaData.SeasonsTable.MAX_LEVEL_REACHED);
@@ -522,12 +532,8 @@ public class GameScene extends OptiksScene {
                 levelsScene.setMaxLevelReached(currentReached + 1);
             }
             GameScene.this.setOnAreaTouchListener(null);
-            if (levelIndex == levelMaxIndex) {
-                addArrowReplay();
-                addArrowMenu();
-            } else {
-                addArrowReplay();
-                addArrowMenu();
+            pause(true);
+            if (levelIndex != levelMaxIndex) {
                 addArrowNext();
             }
         }
@@ -540,31 +546,77 @@ public class GameScene extends OptiksScene {
                 bullet.stop();
             } else if (thing == aimBody) {
                 bullet.stop();
-                succus();
+                success();
             }
         }
     }
 
     private void appearScene(final boolean appear) {
         if (appear) {
+
             for (final IEntity child : GameScene.this.mChildren) {
-                child.registerEntityModifier(new ColorModifier(4, 0, child.getRed(), 0, child.getGreen(), 0, child.getBlue()));
+                child.registerEntityModifier(new ColorModifier(3, 0.15f, 1, 0.15f, 1, 0.15f, 1));
                 for (int i = 0; i < child.getChildCount(); i++) {
-                    child.getChild(i).registerEntityModifier(new ColorModifier(3, 0, child.getRed(), 0, child.getGreen(), 0, child.getBlue()));
+                    child.getChild(i).registerEntityModifier(new ColorModifier(3, 0.15f, 1, 0.15f, 1, 0.15f, 1));
                 }
             }
         } else {
             for (final IEntity child : GameScene.this.mChildren) {
-                child.registerEntityModifier(new ColorModifier(3, child.getRed(), 0.15f, child.getGreen(), 0.15f, child.getBlue(), 0.15f));
+                child.registerEntityModifier(new ColorModifier(3, 1, 0.15f, 1, 0.15f, 1, 0.15f));
                 for (int i = 0; i < child.getChildCount(); i++) {
-                    child.getChild(i).registerEntityModifier(new ColorModifier(3, child.getRed(), 0.15f, child.getGreen(), 0.15f, child.getBlue(), 0.15f));
+                    child.getChild(i).registerEntityModifier(new ColorModifier(3, 1, 0.15f, 1, 0.15f, 1, 0.15f));
                 }
             }
         }
     }
 
+    private void addArrows() {
+        addArrowMenu();
+        addArrowReplay();
+        secondListener = getOnAreaTouchListener();
+        setOnAreaTouchListener(null);
+
+        textPause = new ChangeableText(300, 100, textureManager.menuFont, "Pause") {
+            public void registerEntityModifier(final IEntityModifier pEntityModifier) {
+
+            }
+        };
+        textWin = new ChangeableText(220, 100, textureManager.menuFont, "Level Complete!") {
+            public void registerEntityModifier(final IEntityModifier pEntityModifier) {
+
+            }
+        };
+
+        attachChild(textPause);
+        textPause.setVisible(false);
+        textPause.setScale(1.7f);
+
+        attachChild(textWin);
+        textWin.setVisible(false);
+        textWin.setScale(1.5f);
+    }
+    
+    private void pause(final boolean pause) {
+        appearScene(!pause);
+        if (gameWin) {
+            textWin.setVisible(pause);
+        } else {
+            textPause.setVisible(pause);
+        }
+        if (pause) {
+            arrowMenu.unregisterEntityModifier(new ColorModifier(3, 1, 0.15f, 1, 0.15f, 1, 0.15f));
+            arrowReplay.unregisterEntityModifier(new ColorModifier(3, 1, 0.15f, 1, 0.15f, 1, 0.15f));
+        }
+        arrowMenu.setVisible(pause);
+        arrowReplay.setVisible(pause);
+
+        final IOnAreaTouchListener tmp = getOnAreaTouchListener();
+        setOnAreaTouchListener(secondListener);
+        secondListener = tmp;
+    }
+    
     private boolean addArrowReplay() {
-        final Sprite arrowReplay = new Sprite(150, 150, 100, 100, textureManager.arrowReplay) {
+        arrowReplay = new Sprite(150, 210, 100, 100, textureManager.arrowReplay) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.isActionUp()) {
@@ -575,7 +627,13 @@ public class GameScene extends OptiksScene {
                 }
                 return false;
             }
+
+            @Override
+            public void registerEntityModifier(final IEntityModifier pEntityModifier) {
+
+            }
         };
+        arrowReplay.setVisible(false);
 
         GameScene.this.attachChild(arrowReplay);
         GameScene.this.registerTouchArea(arrowReplay);
@@ -583,7 +641,7 @@ public class GameScene extends OptiksScene {
     }
 
     private boolean addArrowMenu() {
-        final Sprite arrowMenu = new Sprite(500, 140, 100, 100, textureManager.arrowMenu) {
+        arrowMenu = new Sprite(500, 200, 100, 100, textureManager.arrowMenu) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
@@ -592,7 +650,11 @@ public class GameScene extends OptiksScene {
                 }
                 return false;
             }
+            public void registerEntityModifier(final IEntityModifier pEntityModifier) {
+
+            }
         };
+        arrowMenu.setVisible(false);
 
         GameScene.this.attachChild(arrowMenu);
         GameScene.this.registerTouchArea(arrowMenu);
@@ -600,7 +662,7 @@ public class GameScene extends OptiksScene {
     }
 
     private boolean addArrowNext() {
-        final Sprite arrowNext = new Sprite(325, 270, 100, 100, textureManager.arrowPlayNext) {
+        final Sprite arrowNext = new Sprite(325, 320, 100, 100, textureManager.arrowPlayNext) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.isActionUp()) {

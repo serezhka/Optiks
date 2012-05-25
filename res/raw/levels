@@ -28,7 +28,7 @@
                         {\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":480.0,\"pY\":180.0,\"rotation\":0.0,\"height\":50.0,\"width\":480.0},
                         {\"bodyForm\":\"RECTANGLE\",\"type\":\"BARRIER\",\"pX\":480.0,\"pY\":360.0,\"rotation\":0.0,\"height\":50.0,\"width\":480.0},
                         {\"canMove\":true,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":710.0,\"pY\":270.0,\"rotation\":90.0,\"height\":20.0,\"width\":130.0},
-                        {\"canMove\":false,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":10.0,\"pY\":240.0,\"rotation\":90.0,\"height\":20.0,\"width\":480.0}],\"properties\":{}}]","description":"first experience with optiks","name":"introduction","id":"1"}
+                        {\"canMove\":false,\"canRotate\":false,\"bodyForm\":\"RECTANGLE\",\"type\":\"MIRROR\",\"pX\":10.0,\"pY\":240.0,\"rotation\":90.0,\"height\":20.0,\"width\":480.0}],\"properties\":{}}]","description":"first experience with optiks","name":"Introduction","id":"1"}
 ,
  {"levels":"[{\"id\":\"10\",\"objects\":[{\"bodyForm\":\"CIRCLE\",\"type\":\"LASER\",\"pX\":50.0,\"pY\":50.0,\"rotation\":0.0,\"height\":70.0,\"width\":70.0},
  {\"bodyForm\":\"CIRCLE\",\"type\":\"AIM\",\"pX\":650.0,\"pY\":300.0,\"rotation\":0.0,\"height\":70.0,\"width\":70.0},
