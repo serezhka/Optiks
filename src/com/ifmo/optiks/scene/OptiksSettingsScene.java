@@ -29,7 +29,7 @@ public class OptiksSettingsScene extends OptiksScene {
     @Override
     public boolean onKeyDown(final int pKeyCode, final KeyEvent pEvent) {
         if (pKeyCode == KeyEvent.KEYCODE_BACK && pEvent.getAction() == KeyEvent.ACTION_DOWN) {
-            optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.MENU_SCENE));
+            optiksActivity.setActiveScene(optiksActivity.getScene(OptiksScenes.MENU_SCENE));
             return true;
         }
         return false;

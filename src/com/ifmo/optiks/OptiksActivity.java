@@ -55,7 +55,7 @@ public class OptiksActivity extends BaseGameActivity {
     private TiledTextureRegion mirrorTextureRegion;
 
     /* All Scenes */
-    public Map<OptiksScenes, OptiksScene> scenes;
+    private Map<OptiksScenes, OptiksScene> scenes;
 
     /* Activity is loaded flag */
     public boolean loadComplete = false;
@@ -151,6 +151,14 @@ public class OptiksActivity extends BaseGameActivity {
 
     public OptiksSoundManager getOptiksSoundManager() {
         return soundManager;
+    }
+
+    public OptiksScene getScene(final OptiksScenes key) {
+        return scenes.get(key);
+    }
+
+    public OptiksScene putScene(final OptiksScenes type, final OptiksScene scene) {
+        return scenes.put(type, scene);
     }
 
     public void showToast(final String message, final int duration) {

@@ -523,7 +523,7 @@ public class GameScene extends OptiksScene {
             final int numReached = cursor.getColumnIndex(OptiksProviderMetaData.SeasonsTable.MAX_LEVEL_REACHED);
             cursor.moveToFirst();
             final int currentReached = cursor.getInt(numReached);
-            final OptiksLevelsScene levelsScene = (OptiksLevelsScene) optiksActivity.scenes.get(OptiksScenes.LEVELS_SCENE);
+            final OptiksLevelsScene levelsScene = (OptiksLevelsScene) optiksActivity.getScene(OptiksScenes.LEVELS_SCENE);
             if (levelIndex == currentReached) {
                 final ContentValues cv = new ContentValues();
                 cv.put(OptiksProviderMetaData.SeasonsTable.MAX_LEVEL_REACHED, currentReached + 1);
@@ -627,7 +627,7 @@ public class GameScene extends OptiksScene {
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.isActionUp()) {
                     final GameScene gameScene = new GameScene(json, optiksActivity, seasonId, levelIndex, levelMaxIndex);
-                    optiksActivity.scenes.put(OptiksScenes.GAME_SCENE, gameScene);
+                    optiksActivity.putScene(OptiksScenes.GAME_SCENE, gameScene);
                     optiksActivity.setActiveScene(gameScene);
                     return true;
                 }
@@ -651,7 +651,7 @@ public class GameScene extends OptiksScene {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
-                    optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.LEVELS_SCENE));
+                    optiksActivity.setActiveScene(optiksActivity.getScene(OptiksScenes.LEVELS_SCENE));
                     return true;
                 }
                 return false;
@@ -678,7 +678,7 @@ public class GameScene extends OptiksScene {
                     final int idCol = cursor.getColumnIndex(OptiksProviderMetaData.LevelsTable.LEVEL);
                     final String json = cursor.getString(idCol);
                     final OptiksScene gameScene = new GameScene(json, optiksActivity, seasonId, levelIndex + 1, levelMaxIndex);
-                    optiksActivity.scenes.put(OptiksScenes.GAME_SCENE, gameScene);
+                    optiksActivity.putScene(OptiksScenes.GAME_SCENE, gameScene);
                     optiksActivity.setActiveScene(gameScene);
                     return true;
                 }

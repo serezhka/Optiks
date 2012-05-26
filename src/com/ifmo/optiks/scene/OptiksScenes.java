@@ -11,5 +11,6 @@ public enum OptiksScenes {
     SEASONS_SCENE,
     LEVELS_SCENE,
     SETTINGS_SCENE,
-    SPLASH_SCENE
+    SPLASH_SCENE,
+    ABOUT_SCENE
 }

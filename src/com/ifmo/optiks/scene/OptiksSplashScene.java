@@ -60,7 +60,7 @@ public class OptiksSplashScene extends OptiksScene implements Scene.IOnSceneTouc
 
     private boolean launchGame() {
         if (optiksActivity.loadComplete) {
-            optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.MENU_SCENE));
+            optiksActivity.setActiveScene(optiksActivity.getScene(OptiksScenes.MENU_SCENE));
             return true;
         }
         return false;

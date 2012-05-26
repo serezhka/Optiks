@@ -80,10 +80,10 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
     @Override
     public boolean onKeyDown(final int pKeyCode, final KeyEvent pEvent) {
         if (pKeyCode == KeyEvent.KEYCODE_BACK && pEvent.getAction() == KeyEvent.ACTION_DOWN) {
-            optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.SEASONS_SCENE));
+            optiksActivity.setActiveScene(optiksActivity.getScene(OptiksScenes.SEASONS_SCENE));
             return true;
         } else if (pKeyCode == KeyEvent.KEYCODE_MENU && pEvent.getAction() == KeyEvent.ACTION_DOWN) {
-            optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.MENU_SCENE));
+            optiksActivity.setActiveScene(optiksActivity.getScene(OptiksScenes.MENU_SCENE));
             return true;
         }
         return false;
@@ -277,7 +277,7 @@ public class OptiksLevelsScene extends OptiksScene implements OptiksScrollDetect
         final int idCol = cursor.getColumnIndex(OptiksProviderMetaData.LevelsTable.LEVEL);
         final String json = cursor.getString(idCol);
         final OptiksScene gameScene = new GameScene(json, optiksActivity, seasonId, level, levelMaxIndex);
-        optiksActivity.scenes.put(OptiksScenes.GAME_SCENE, gameScene);
+        optiksActivity.putScene(OptiksScenes.GAME_SCENE, gameScene);
         optiksActivity.setActiveScene(gameScene);
     }
 }

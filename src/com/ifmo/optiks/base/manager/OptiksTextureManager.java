@@ -23,17 +23,12 @@ import java.util.Map;
 
 public class OptiksTextureManager {
 
-    /* toast Font */
+    /* Fonts */
     public final Font font;
-
-    /* Menu Font */
     public final Font menuFont;
-
-    /*Description Font*/
     public final Font descriptionFont;
-
-    /* Settings Font */
     public final Font settingsFont;
+    public final Font aboutFont;
 
     /* Optiks Base Objects */
     public final TiledTextureRegion aimTextureRegion;
@@ -55,6 +50,9 @@ public class OptiksTextureManager {
 
     /* Menu Background */
     public final TextureRegion menuBackgroundTextureRegion;
+
+    /* About Menu Background */
+    public final TextureRegion aboutBackgroundTextureRegion;
 
     /* Menu Item */
     public final TextureRegion menuItemTextureRegion;
@@ -119,6 +117,12 @@ public class OptiksTextureManager {
 
         /* Font assets path */
         FontFactory.setAssetBasePath("font/");
+
+        /* Game Info Font */
+        final BitmapTextureAtlas aboutFontTexture = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        aboutFont = FontFactory.createFromAsset(aboutFontTexture, activity, "Plok.ttf", 18, true, Color.rgb(50, 255, 50));
+        activity.getEngine().getTextureManager().loadTexture(aboutFontTexture);
+        activity.getFontManager().loadFont(aboutFont);
 
         /* Menu Font */
         final BitmapTextureAtlas menuFontTexture = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
@@ -191,6 +195,12 @@ public class OptiksTextureManager {
         vibrationTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(settingsMenuTextureAtlas, activity, "vibration.png", 256, 0, 2, 1);
         musicTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(settingsMenuTextureAtlas, activity, "music.png", 0, 256, 2, 1);
         activity.getEngine().getTextureManager().loadTexture(settingsMenuTextureAtlas);
+
+        /* Game Info menu assets path */
+        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/about/");
+        final BitmapTextureAtlas aboutBackgroundAtlas = new BitmapTextureAtlas(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        aboutBackgroundTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(aboutBackgroundAtlas, activity, "background.jpg", 0, 0);
+        activity.getEngine().getTextureManager().loadTexture(aboutBackgroundAtlas);
     }
 
     // TODO this is fuckin' stub for fuckin' AndEngine

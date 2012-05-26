@@ -91,7 +91,7 @@ public class OptiksSeasonsScene extends OptiksScene implements OptiksScrollDetec
     @Override
     public boolean onKeyDown(final int pKeyCode, final KeyEvent pEvent) {
         if (pKeyCode == KeyEvent.KEYCODE_BACK && pEvent.getAction() == KeyEvent.ACTION_DOWN) {
-            optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.MENU_SCENE));
+            optiksActivity.setActiveScene(optiksActivity.getScene(OptiksScenes.MENU_SCENE));
             return true;
         }
         return false;
@@ -272,9 +272,8 @@ public class OptiksSeasonsScene extends OptiksScene implements OptiksScrollDetec
     private void loadSeason(final int seasonNumber) {
         final int seasonId = seasons.get(seasonNumber).getId();
         if (seasonId > 0) {
-            optiksActivity.showToast("Load Season with id " + seasonId, Toast.LENGTH_SHORT);
-            optiksActivity.scenes.put(OptiksScenes.LEVELS_SCENE, new OptiksLevelsScene(seasonId, optiksActivity));
-            optiksActivity.setActiveScene(optiksActivity.scenes.get(OptiksScenes.LEVELS_SCENE));
+            optiksActivity.putScene(OptiksScenes.LEVELS_SCENE, new OptiksLevelsScene(seasonId, optiksActivity));
+            optiksActivity.setActiveScene(optiksActivity.getScene(OptiksScenes.LEVELS_SCENE));
         } else {
             // TODO just for tests
         }

@@ -65,21 +65,34 @@ public class OptiksMenuScene extends OptiksScene implements MenuScene.IOnMenuIte
             switch (menuItem.getType()) {
 
                 case SEASON_CHOICE:
-                    final OptiksScene seasons = new OptiksSeasonsScene(optiksActivity);
-                    optiksActivity.scenes.put(OptiksScenes.SEASONS_SCENE, seasons);
+
+                    OptiksScene seasons = optiksActivity.getScene(OptiksScenes.SEASONS_SCENE);
+                    if (seasons == null) {
+                        seasons = new OptiksSeasonsScene(optiksActivity);
+                        optiksActivity.putScene(OptiksScenes.SEASONS_SCENE, seasons);
+                    }
                     optiksActivity.setActiveScene(seasons);
                     return true;
 
                 case SETTINGS:
-                    final OptiksScene settings = new OptiksSettingsScene(optiksActivity);
-                    optiksActivity.scenes.put(OptiksScenes.SETTINGS_SCENE, settings);
+
+                    OptiksScene settings = optiksActivity.getScene(OptiksScenes.SETTINGS_SCENE);
+                    if (settings == null) {
+                        settings = new OptiksSettingsScene(optiksActivity);
+                        optiksActivity.putScene(OptiksScenes.SETTINGS_SCENE, settings);
+                    }
                     optiksActivity.setActiveScene(settings);
                     return true;
 
                 case GAME_INFO:
 
-                    // TODO implement game info Scene
-                    return false;
+                    OptiksScene about = optiksActivity.getScene(OptiksScenes.ABOUT_SCENE);
+                    if (about == null) {
+                        about = new OptiksAboutScene(optiksActivity);
+                        optiksActivity.putScene(OptiksScenes.ABOUT_SCENE, about);
+                    }
+                    optiksActivity.setActiveScene(about);
+                    return true;
 
                 case QUIT:
                     optiksActivity.showExitDialog();
