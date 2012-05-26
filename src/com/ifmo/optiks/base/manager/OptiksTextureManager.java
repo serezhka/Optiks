@@ -49,9 +49,9 @@ public class OptiksTextureManager {
     public final TiledTextureRegion antiMirrorWallTexture;
 
     /* Optiks Base Arrows*/
-    public final TextureRegion arrowReplay;
-    public final TextureRegion arrowPlayNext;
-    public final TextureRegion arrowMenu;
+    public final TiledTextureRegion arrowReplay;
+    public final TiledTextureRegion arrowPlayNext;
+    public final TiledTextureRegion arrowMenu;
 
     /* Menu Background */
     public final TextureRegion menuBackgroundTextureRegion;
@@ -110,9 +110,9 @@ public class OptiksTextureManager {
 
         /* Optiks Base Arrows*/
         final BitmapTextureAtlas baseArrowsTextureAtlas = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        arrowReplay = BitmapTextureAtlasTextureRegionFactory.createFromAsset(baseArrowsTextureAtlas, activity, "arrow_replay.png", 0, 0);
-        arrowPlayNext = BitmapTextureAtlasTextureRegionFactory.createFromAsset(baseArrowsTextureAtlas, activity, "arrow_right.png", 128, 0);
-        arrowMenu = BitmapTextureAtlasTextureRegionFactory.createFromAsset(baseArrowsTextureAtlas, activity, "arrow_menu.png", 0, 128);
+        arrowReplay = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(baseArrowsTextureAtlas, activity, "arrow_replay.png", 0, 0, 1, 1);
+        arrowPlayNext = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(baseArrowsTextureAtlas, activity, "arrow_right.png", 128, 0, 1, 1);
+        arrowMenu = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(baseArrowsTextureAtlas, activity, "arrow_menu.png", 0, 128, 1, 1);
         activity.getEngine().getTextureManager().loadTexture(baseArrowsTextureAtlas);
 
         /* Font assets path */

@@ -34,7 +34,6 @@ import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.entity.shape.IShape;
 import org.anddev.andengine.entity.shape.Shape;
 import org.anddev.andengine.entity.sprite.AnimatedSprite;
-import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.entity.text.ChangeableText;
 import org.anddev.andengine.extension.physics.box2d.PhysicsConnector;
 import org.anddev.andengine.extension.physics.box2d.PhysicsFactory;
@@ -79,8 +78,8 @@ public class GameScene extends OptiksScene {
     
     private IOnAreaTouchListener secondListener; 
 
-    private Sprite arrowReplay;
-    private Sprite arrowMenu;
+    private AnimatedSprite arrowReplay;
+    private AnimatedSprite arrowMenu;
     private boolean pause = false;
     private boolean gameWin = false;
     private int numberOfShut;
@@ -457,9 +456,9 @@ public class GameScene extends OptiksScene {
 
         @Override
         public boolean onAreaTouched(final TouchEvent touchEvent, final ITouchArea touchArea, final float touchAreaLocalX, final float touchAreaLocalY) {
-            final IShape object = (AnimatedSprite) touchArea;
+            final IShape object = (IShape) touchArea;
             IShape objectParent = null;
-            objectParent = (AnimatedSprite) object.getParent();
+            objectParent = (IShape) object.getParent();
 
             switch (touchEvent.getAction()) {
                 case TouchEvent.ACTION_DOWN:
@@ -575,6 +574,8 @@ public class GameScene extends OptiksScene {
         addArrowReplay();
         secondListener = getOnAreaTouchListener();
         setOnAreaTouchListener(null);
+        unregisterTouchArea(arrowMenu);
+        unregisterTouchArea(arrowReplay);
 
         textPause = new ChangeableText(300, 100, textureManager.menuFont, "Pause") {
             public void registerEntityModifier(final IEntityModifier pEntityModifier) {
@@ -604,8 +605,13 @@ public class GameScene extends OptiksScene {
             textPause.setVisible(pause);
         }
         if (pause) {
+            registerTouchArea(arrowMenu);
+            registerTouchArea(arrowReplay);
             arrowMenu.unregisterEntityModifier(new ColorModifier(3, 1, 0.15f, 1, 0.15f, 1, 0.15f));
             arrowReplay.unregisterEntityModifier(new ColorModifier(3, 1, 0.15f, 1, 0.15f, 1, 0.15f));
+        } else {
+            unregisterTouchArea(arrowMenu);
+            unregisterTouchArea(arrowReplay);
         }
         arrowMenu.setVisible(pause);
         arrowReplay.setVisible(pause);
@@ -616,7 +622,7 @@ public class GameScene extends OptiksScene {
     }
     
     private boolean addArrowReplay() {
-        arrowReplay = new Sprite(150, 210, 100, 100, textureManager.arrowReplay) {
+        arrowReplay = new AnimatedSprite(150, 210, 100, 100, textureManager.arrowReplay) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.isActionUp()) {
@@ -641,7 +647,7 @@ public class GameScene extends OptiksScene {
     }
 
     private boolean addArrowMenu() {
-        arrowMenu = new Sprite(500, 200, 100, 100, textureManager.arrowMenu) {
+        arrowMenu = new AnimatedSprite(500, 200, 100, 100, textureManager.arrowMenu) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.getAction() == TouchEvent.ACTION_UP) {
@@ -662,7 +668,7 @@ public class GameScene extends OptiksScene {
     }
 
     private boolean addArrowNext() {
-        final Sprite arrowNext = new Sprite(325, 320, 100, 100, textureManager.arrowPlayNext) {
+        final AnimatedSprite arrowNext = new AnimatedSprite(325, 320, 100, 100, textureManager.arrowPlayNext) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
                 if (pSceneTouchEvent.isActionUp()) {
