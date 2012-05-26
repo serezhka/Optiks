@@ -15,11 +15,9 @@ import org.anddev.andengine.entity.primitive.Rectangle;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.entity.sprite.AnimatedSprite;
-import org.anddev.andengine.entity.sprite.Sprite;
 import org.anddev.andengine.entity.text.Text;
 import org.anddev.andengine.input.touch.TouchEvent;
 import org.anddev.andengine.input.touch.detector.ClickDetector;
-import org.anddev.andengine.opengl.texture.region.TextureRegion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +39,8 @@ public class OptiksSeasonsScene extends OptiksScene implements OptiksScrollDetec
 
     private final List<SeasonMenuItem> seasons = new ArrayList<SeasonMenuItem>();
 
-    private Sprite menuleft;
-    private Sprite menuright;
+    //private Sprite menuleft;
+    //private Sprite menuright;
 
     private Rectangle scrollBar;
 
@@ -112,8 +110,8 @@ public class OptiksSeasonsScene extends OptiksScene implements OptiksScrollDetec
     @Override
     public void onScrollStarted(final OptiksScrollDetector pScollDetector, final int pPointerID, final float pDistanceX, final float pDistanceY) {
         distanceX = 0;
-        menuleft.setVisible(false);
-        menuright.setVisible(false);
+        //menuleft.setVisible(false);
+        //menuright.setVisible(false);
         scrollBar.setVisible(true);
     }
 
@@ -138,8 +136,8 @@ public class OptiksSeasonsScene extends OptiksScene implements OptiksScrollDetec
         tempX += (tempX / (maxX + CAMERA_WIDTH)) * CAMERA_WIDTH;
         scrollBar.setPosition(tempX, scrollBar.getY());
 
-        menuright.setPosition(camera.getCenterX() + CAMERA_WIDTH / 2 - menuright.getWidth(), menuright.getY());
-        menuleft.setPosition(camera.getCenterX() - CAMERA_WIDTH / 2, menuleft.getY());
+        //menuright.setPosition(camera.getCenterX() + CAMERA_WIDTH / 2 - menuright.getWidth(), menuright.getY());
+        //menuleft.setPosition(camera.getCenterX() - CAMERA_WIDTH / 2, menuleft.getY());
     }
 
     @Override
@@ -188,7 +186,7 @@ public class OptiksSeasonsScene extends OptiksScene implements OptiksScrollDetec
                     scrollBar.setPosition(tempX, scrollBar.getY());
                 }
 
-                menuright.setPosition(camera.getCenterX() + CAMERA_WIDTH / 2 - menuright.getWidth(), menuright.getY());
+                /*menuright.setPosition(camera.getCenterX() + CAMERA_WIDTH / 2 - menuright.getWidth(), menuright.getY());
                 menuleft.setPosition(camera.getCenterX() - CAMERA_WIDTH / 2, menuleft.getY());
                 if (camera.getMinX() <= 15) {
                     menuleft.setVisible(false);
@@ -200,7 +198,7 @@ public class OptiksSeasonsScene extends OptiksScene implements OptiksScrollDetec
                 } else {
                     menuright.setVisible(true);
                 }
-                scrollBar.setVisible(false);
+                scrollBar.setVisible(false);*/
             }
         });
     }
@@ -235,8 +233,8 @@ public class OptiksSeasonsScene extends OptiksScene implements OptiksScrollDetec
         int spriteX = 0;
         for (final SeasonMenuItem season : seasons) {
             spriteX = index++ * (int) camera.getWidth();
-            final TextureRegion region = optiksActivity.getOptiksTextureManager().seasons.get(0);
-            final AnimatedSprite sprite = new BackgroundScene(spriteX, optiksActivity, season.getId());
+            //final TextureRegion region = optiksActivity.getOptiksTextureManager().seasons.get(0);
+            final AnimatedSprite sprite = new BackgroundSprite(spriteX, optiksActivity, season.getId());
             sprite.setSize(camera.getWidth(), camera.getHeight());
             final Text name = new Text(100, 100, optiksActivity.getOptiksTextureManager().menuFont, season.getName());
             name.setScale(1.5f);
@@ -252,20 +250,20 @@ public class OptiksSeasonsScene extends OptiksScene implements OptiksScrollDetec
         final float scrollbarsize = CAMERA_WIDTH / ((maxX + CAMERA_WIDTH) / CAMERA_WIDTH);
         scrollBar = new Rectangle(0, CAMERA_HEIGHT - 20, scrollbarsize, 20);
         scrollBar.setColor(1, 0, 0);
-        scrollBar.setVisible(false);
+        //scrollBar.setVisible(false);
         this.seasonsScene.attachChild(scrollBar);
 
-        final TextureRegion leftArrowTextureRegion = optiksActivity.getOptiksTextureManager().leftArrowTextureRegion;
-        final TextureRegion rightArrowTextureRegion = optiksActivity.getOptiksTextureManager().rightArrowTextureRegion;
+        //final TextureRegion leftArrowTextureRegion = optiksActivity.getOptiksTextureManager().leftArrowTextureRegion;
+        //final TextureRegion rightArrowTextureRegion = optiksActivity.getOptiksTextureManager().rightArrowTextureRegion;
 
-        menuleft = new Sprite(0, CAMERA_HEIGHT / 2 - 30 / 2, 20, 20, leftArrowTextureRegion);
+        /*menuleft = new Sprite(0, CAMERA_HEIGHT / 2 - 30 / 2, 20, 20, leftArrowTextureRegion);
         menuright = new Sprite(CAMERA_WIDTH - 30, CAMERA_HEIGHT / 2 - 30 / 2, 20, 20, rightArrowTextureRegion);
         menuleft.setVisible(false);
         if (seasons.size() == 1) {
             menuright.setVisible(false);
         }
         this.seasonsScene.attachChild(menuright);
-        this.seasonsScene.attachChild(menuleft);
+        this.seasonsScene.attachChild(menuleft);*/
 
         scrollDetector = new OptiksSurfaceScrollDetector(this);
         clickDetector = new ClickDetector(this);

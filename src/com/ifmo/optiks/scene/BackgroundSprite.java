@@ -19,13 +19,13 @@ import org.json.JSONObject;
  * Author: Dudko Alex (dududko@gmail.com)
  * Date: 25.05.12
  */
-public class BackgroundScene extends AnimatedSprite {
+public class BackgroundSprite extends AnimatedSprite {
 
     private final OptiksActivity optiksActivity;
 
     private final OptiksTextureManager textureManager;
 
-    public BackgroundScene(final int x, final OptiksActivity optiksActivity, final int seasonId) {
+    public BackgroundSprite(final int x, final OptiksActivity optiksActivity, final int seasonId) {
         super(x, 0, optiksActivity.getOptiksTextureManager().emptyTexture);
         this.optiksActivity = optiksActivity;
         textureManager = optiksActivity.getOptiksTextureManager();
@@ -35,7 +35,7 @@ public class BackgroundScene extends AnimatedSprite {
         setHalfAlpha();
     }
 
-    /*public BackgroundScene(final OptiksActivity optiksActivity, final int seasonId) {
+    /*public BackgroundSprite(final OptiksActivity optiksActivity, final int seasonId) {
         this.optiksActivity = optiksActivity;
         textureManager = optiksActivity.getOptiksTextureManager();
 
@@ -196,7 +196,7 @@ public class BackgroundScene extends AnimatedSprite {
     }
 
     private void setHalfAlpha() {
-        for (final IEntity child : BackgroundScene.this.mChildren) {
+        for (final IEntity child : BackgroundSprite.this.mChildren) {
             child.setColor(0.15f, 0.15f, 0.15f, 0.5f);
             for (int i = 0; i < child.getChildCount(); i++) {
                 child.getChild(i).setColor(0.15f, 0.15f, 0.15f, 0.5f);

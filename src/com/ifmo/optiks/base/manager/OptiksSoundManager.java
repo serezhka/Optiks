@@ -56,10 +56,13 @@ public class OptiksSoundManager {
             e.printStackTrace();
             throw new RuntimeException();
         }
+
+        playBackgroundMusic();
     }
 
     public void playBackgroundMusic() {
         if (musicEnabled) {
+            backgroundMusic.getMediaPlayer().start();
             backgroundMusic.play();
         }
     }
@@ -87,13 +90,19 @@ public class OptiksSoundManager {
     public void setMusicEnabled(final boolean musicEnabled) {
         //backgroundMusic.play();
         this.musicEnabled = musicEnabled;
-        final SharedPreferences.Editor editor =  preferences.edit();
+        final SharedPreferences.Editor editor = preferences.edit();
         if (musicEnabled) {
-            backgroundMusic.play();
-           editor.putInt(MUSIC, 1);
+            if (!backgroundMusic.isPlaying()) {
+                backgroundMusic.getMediaPlayer().start();
+                backgroundMusic.play();
+            }
+            editor.putInt(MUSIC, 1);
         } else {
-            backgroundMusic.pause();
-           editor.putInt(MUSIC, 0);
+            if (backgroundMusic.isPlaying()) {
+                backgroundMusic.getMediaPlayer().pause();
+                backgroundMusic.pause();
+            }
+            editor.putInt(MUSIC, 0);
         }
         editor.apply();
     }
@@ -104,7 +113,7 @@ public class OptiksSoundManager {
 
     public void setVibrationEnabled(final boolean vibrationEnabled) {
         this.vibrationEnabled = vibrationEnabled;
-        final SharedPreferences.Editor editor =  preferences.edit();
+        final SharedPreferences.Editor editor = preferences.edit();
         if (vibrationEnabled) {
             editor.putInt(VIBRATION, 1);
         } else {
@@ -119,7 +128,7 @@ public class OptiksSoundManager {
 
     public void setSoundEnabled(final boolean soundEnabled) {
         this.soundEnabled = soundEnabled;
-        final SharedPreferences.Editor editor =  preferences.edit();
+        final SharedPreferences.Editor editor = preferences.edit();
         if (soundEnabled) {
             editor.putInt(SOUNDS, 1);
         } else {
