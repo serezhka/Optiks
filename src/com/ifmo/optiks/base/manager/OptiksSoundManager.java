@@ -92,7 +92,7 @@ public class OptiksSoundManager {
             backgroundMusic.play();
            editor.putInt(MUSIC, 1);
         } else {
-            backgroundMusic.stop();
+            backgroundMusic.pause();
            editor.putInt(MUSIC, 0);
         }
         editor.apply();

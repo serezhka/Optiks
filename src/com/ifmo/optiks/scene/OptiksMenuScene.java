@@ -32,6 +32,8 @@ public class OptiksMenuScene extends OptiksScene implements MenuScene.IOnMenuIte
 
     private Menu activeMenu;
 
+    private Sprite malevichBox;
+
     private int menuWidth;
     private int menuHeight;
 
@@ -140,7 +142,7 @@ public class OptiksMenuScene extends OptiksScene implements MenuScene.IOnMenuIte
         }
         menuScene.buildAnimations();
         menuScene.setBackgroundEnabled(false);
-        final float scale = menuWidth / (optiksActivity.getCamera().getWidth() + 105);
+        final float scale = menuWidth / optiksActivity.getCamera().getWidth();
         // TODO why need minus 100 * scale ?!
         final float x = optiksActivity.getCamera().getWidth() / 2 - menuWidth * scale / 2 - 105 * scale;
         final float y = optiksActivity.getCamera().getHeight() / 2 - menuHeight * scale / 2;
@@ -158,6 +160,8 @@ public class OptiksMenuScene extends OptiksScene implements MenuScene.IOnMenuIte
             }
         }));
 
+        malevichBox.setScale((menuWidth * 1.44f) / malevichBox.getWidth() / 2);
+
         //menuScene.setPosition(menuScene.getX(), menuHeight / 4);
         return menuScene;
     }
@@ -165,9 +169,19 @@ public class OptiksMenuScene extends OptiksScene implements MenuScene.IOnMenuIte
     private void setBackground() {
         this.setBackground(new ColorBackground(0.09804f, 0.6274f, 0.8784f));
         this.setBackgroundEnabled(false);
+
+        /* Main Background */
         final TextureRegion menuBackgroundTextureRegion = optiksActivity.getOptiksTextureManager().menuBackgroundTextureRegion;
         final Sprite menuBackground = new Sprite(0, 0, menuBackgroundTextureRegion);
         menuBackground.setSize(optiksActivity.getCamera().getWidth(), optiksActivity.getCamera().getHeight());
         this.attachChild(menuBackground);
+
+        /* Malevich box */
+        final TextureRegion malevichTextureRegion = optiksActivity.getOptiksTextureManager().malevichTextureRegion;
+        malevichBox = new Sprite(
+                optiksActivity.getCamera().getWidth() / 2 - malevichTextureRegion.getWidth() / 2,
+                optiksActivity.getCamera().getHeight() / 2 - malevichTextureRegion.getHeight() / 2,
+                malevichTextureRegion);
+        this.attachChild(malevichBox);
     }
 }

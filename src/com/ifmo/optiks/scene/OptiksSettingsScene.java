@@ -47,7 +47,7 @@ public class OptiksSettingsScene extends OptiksScene {
         final TiledTextureRegion vibrationTextureRegion = optiksActivity.getOptiksTextureManager().vibrationTextureRegion;
 
         /* Sound button */
-        final TiledSprite sound = new TiledSprite(100, 200, soundTextureRegion) {
+        final TiledSprite sound = new TiledSprite(70, 120, 130, 130, soundTextureRegion) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX,
                                          final float pTouchAreaLocalY) {
@@ -71,7 +71,7 @@ public class OptiksSettingsScene extends OptiksScene {
         this.attachChild(soundLabel);
 
         /* Vibration button */
-        final TiledSprite vibration = new TiledSprite(300, 200, vibrationTextureRegion) {
+        final TiledSprite vibration = new TiledSprite(550, 130, 130, 130, vibrationTextureRegion) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX,
                                          final float pTouchAreaLocalY) {
@@ -95,7 +95,7 @@ public class OptiksSettingsScene extends OptiksScene {
         this.attachChild(vibrationLabel);
 
         /* Music button */
-        final TiledSprite music = new TiledSprite(500, 200, 100, 100, musicTextureRegion) {
+        final TiledSprite music = new TiledSprite(310, 230, 130, 130, musicTextureRegion) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX,
                                          final float pTouchAreaLocalY) {

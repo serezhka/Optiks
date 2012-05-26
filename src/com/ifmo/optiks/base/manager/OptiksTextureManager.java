@@ -58,6 +58,7 @@ public class OptiksTextureManager {
 
     /* Menu Item */
     public final TextureRegion menuItemTextureRegion;
+    public final TextureRegion malevichTextureRegion;
 
     /* Season Select Menu Arrows */
     public final TextureRegion leftArrowTextureRegion;
@@ -73,6 +74,7 @@ public class OptiksTextureManager {
     public final TiledTextureRegion musicTextureRegion;
     public final TiledTextureRegion soundTextureRegion;
     public final TiledTextureRegion vibrationTextureRegion;
+
     /* Activity */
     final BaseGameActivity activity;
 
@@ -130,9 +132,9 @@ public class OptiksTextureManager {
         activity.getTextureManager().loadTexture(descriptionFontAtlas);
         activity.getFontManager().loadFont(descriptionFont);
 
-        /* Settings Path */
+        /* Settings Font */
         final BitmapTextureAtlas settingsFontTexture = new BitmapTextureAtlas(256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
-        settingsFont = FontFactory.createFromAsset(settingsFontTexture, activity, "Plok.ttf", 12, true, Color.rgb(255, 140, 0));
+        settingsFont = FontFactory.createFromAsset(settingsFontTexture, activity, "Plok.ttf", 18, true, Color.rgb(255, 140, 0));
         activity.getEngine().getTextureManager().loadTexture(settingsFontTexture);
         activity.getFontManager().loadFont(settingsFont);
 
@@ -148,6 +150,11 @@ public class OptiksTextureManager {
         final BitmapTextureAtlas menuAtlas = new BitmapTextureAtlas(512, 512, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
         menuItemTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuAtlas, activity, "menu_empty.png", 0, 0);
         activity.getEngine().getTextureManager().loadTexture(menuAtlas);
+
+        /* Malevich */
+        final BitmapTextureAtlas malevichAtlas = new BitmapTextureAtlas(128, 128, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
+        malevichTextureRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(malevichAtlas, activity, "malevich.png", 0, 0);
+        activity.getEngine().getTextureManager().loadTexture(malevichAtlas);
 
         /* Season menu assets path */
         BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/menu/season/");
