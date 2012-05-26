@@ -504,7 +504,6 @@ public class GameScene extends OptiksScene {
                         if (!bullet.isMoving()) {
                             soundManager.playLaserShoot();
                             bullet.shoot();
-                            gameWin = true;
                             numberOfShut++;
                         }
                     }
@@ -545,6 +544,7 @@ public class GameScene extends OptiksScene {
                 bullet.stop();
             } else if (thing == aimBody) {
                 bullet.stop();
+                gameWin = true;
                 success();
             }
         }
